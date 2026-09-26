@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Heraldry Designer — Coat of Arms Builder</title>
+<link rel="icon" href="assets/simple-fleur.svg" type="image/svg+xml">
+<link rel="stylesheet" href="designer-catalog.css">
+<style>
+  :root{
+    --bg:#14161c; --panel:#1c1f28; --panel2:#232734; --line:#333949;
+    --text:#e8eaf0; --muted:#9aa3b8; --accent:#c9a227; --accent2:#7aa2ff;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:14px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    overflow:hidden;
+  }
+  #app{display:grid; grid-template-columns:300px 1fr 280px; grid-template-rows:100%; height:100vh; min-height:0}
+  #app>*{min-height:0}
+  aside{background:var(--panel); overflow-y:auto; border-right:1px solid var(--line)}
+  aside.right{border-right:none; border-left:1px solid var(--line)}
+  header.brand{
+    padding:12px 14px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:9px; position:sticky; top:0; background:var(--panel); z-index:5;
+  }
+  header.brand h1{font-size:15px; margin:0; letter-spacing:.4px; font-weight:600}
+  header.brand small{display:block; color:var(--muted); font-size:11px; font-weight:400; letter-spacing:0}
+  .crest{width:22px;height:26px;flex:none}
+
+  section.pnl{border-bottom:1px solid var(--line)}
+  section.pnl>h2{
+    margin:0; padding:10px 14px; font-size:11px; letter-spacing:1.2px; text-transform:uppercase;
+    color:var(--muted); cursor:pointer; display:flex; justify-content:space-between; align-items:center;
+    user-select:none;
+  }
+  section.pnl>h2:hover{color:var(--text)}
+  section.pnl>h2 .chev{transition:transform .18s; font-size:10px}
+  section.pnl.collapsed>h2 .chev{transform:rotate(-90deg)}
+  section.pnl.collapsed>.body{display:none}
+  .body{padding:0 12px 14px}
+
+  .grid{display:grid; gap:6px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+
+  button.opt{
+    background:var(--panel2); border:1px solid var(--line); color:var(--text);
+    border-radius:8px; padding:6px 4px 4px; cursor:pointer; display:flex; flex-direction:column;
+    align-items:center; gap:3px; font-size:10px; line-height:1.15; text-align:center; transition:.13s;
+  }
+  button.opt:hover{border-color:var(--accent2); background:#293049}
+  button.opt.sel{border-color:var(--accent); background:#3a3320; color:#ffe9a8}
+  button.opt svg{display:block; pointer-events:none}
+
+  .btn{
+    background:var(--panel2); border:1px solid var(--line); color:var(--text); border-radius:8px;
+    padding:8px 10px; cursor:pointer; font-size:12.5px; transition:.13s; width:100%;
+  }
+  .btn:hover{border-color:var(--accent2); background:#293049}
+  .btn.primary{background:linear-gradient(180deg,#d4ab2c,#a8801a); border-color:#e0bc4d; color:#1a1405; font-weight:700}
+  .btn.primary:hover{filter:brightness(1.1)}
+  .btn.danger:hover{border-color:#e0534d; color:#ff9b95}
+  .btn.sm{padding:5px 7px; font-size:11.5px; width:auto}
+
+  label.fld{display:block; font-size:11px; color:var(--muted); margin:10px 0 4px; letter-spacing:.3px}
+  select,input[type=text],input[type=number]{
+    width:100%; background:var(--panel2); color:var(--text); border:1px solid var(--line);
+    border-radius:7px; padding:6px 8px; font-size:12.5px;
+  }
+  input[type=range]{width:100%; accent-color:var(--accent)}
+  input[type=color]{
+    width:100%; height:34px; background:var(--panel2); border:1px solid var(--line);
+    border-radius:7px; padding:2px; cursor:pointer;
+  }
+
+  /* region chips */
+  .regions{display:flex; flex-wrap:wrap; gap:6px}
+  .rchip{
+    display:flex; align-items:center; gap:6px; background:var(--panel2); border:1px solid var(--line);
+    border-radius:20px; padding:3px 9px 3px 3px; cursor:pointer; font-size:11px; transition:.13s;
+  }
+  .rchip:hover{border-color:var(--accent2)}
+  .rchip.sel{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset}
+  .rchip i{width:18px;height:18px;border-radius:50%; border:1px solid #0006; display:block}
+
+  .tinctures{display:grid; grid-template-columns:repeat(7,1fr); gap:5px}
+  .tinctures button{
+    aspect-ratio:1; border-radius:6px; border:1px solid #0007; cursor:pointer; padding:0;
+    position:relative; transition:transform .1s;
+  }
+  .tinctures button:hover{transform:scale(1.14); z-index:2; box-shadow:0 2px 8px #000a}
+  .tinctures button.sel{outline:2px solid var(--accent); outline-offset:1px}
+
+  /* stage */
+  main{position:relative; display:flex; flex-direction:column; overflow:hidden; background:
+    radial-gradient(circle at 50% 35%, #262b38 0%, #14161c 70%);}
+  .toolbar{
+    display:flex; gap:6px; align-items:center; padding:8px 12px; border-bottom:1px solid var(--line);
+    background:#181b23; flex-wrap:wrap;
+  }
+  .toolbar .sp{flex:1}
+  .hint{color:var(--muted); font-size:11.5px}
+  #stagewrap{flex:1; display:flex; align-items:center; justify-content:center; padding:18px; min-height:0}
+  #stage{
+    height:100%; max-height:100%; width:auto; max-width:100%;
+    background-image:
+      linear-gradient(45deg,#00000022 25%,transparent 25%,transparent 75%,#00000022 75%),
+      linear-gradient(45deg,#00000022 25%,transparent 25%,transparent 75%,#00000022 75%);
+    background-size:22px 22px; background-position:0 0,11px 11px;
+    background-color:#2b303c; border-radius:6px; box-shadow:0 10px 40px #000a; touch-action:none;
+  }
+  #stage.nochecker{background-image:none}
+
+  /* layers */
+  .layer{
+    display:flex; gap:8px; align-items:center; background:var(--panel2); border:1px solid var(--line);
+    border-radius:8px; padding:6px; margin-bottom:6px; cursor:pointer; transition:.13s;
+  }
+  .layer:hover{border-color:var(--accent2)}
+  .layer.sel{border-color:var(--accent); background:#332d1c}
+  .layer .th{width:38px;height:38px;flex:none;border-radius:5px;background:#0006;object-fit:contain}
+  .layer .nm{flex:1; font-size:11.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .layer .acts{display:flex; gap:2px}
+  .iconbtn{
+    background:transparent;border:1px solid transparent;color:var(--muted);border-radius:5px;
+    width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;padding:0;
+  }
+  .iconbtn:hover{background:#0004;color:var(--text);border-color:var(--line)}
+  .empty{color:var(--muted); font-size:11.5px; text-align:center; padding:16px 8px; border:1px dashed var(--line); border-radius:8px}
+
+  .drop{border:2px dashed var(--line); border-radius:10px; padding:14px 10px; text-align:center; color:var(--muted); font-size:11.5px; cursor:pointer; transition:.15s}
+  .drop:hover,.drop.over{border-color:var(--accent); color:var(--text); background:#ffffff08}
+
+  .row{display:flex; gap:6px; align-items:center}
+  .row>*{flex:1}
+  .toggle{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text); cursor:pointer; margin:8px 0}
+  .toggle input{accent-color:var(--accent); width:15px; height:15px}
+  .val{color:var(--muted); font-size:11px; min-width:38px; text-align:right; flex:none}
+  .blazon{
+    font-size:11.5px; color:#d8c99a; background:#0004; border:1px solid var(--line);
+    border-radius:7px; padding:8px 9px; font-style:italic; line-height:1.4;
+  }
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:#394054;border-radius:5px}
+  ::-webkit-scrollbar-track{background:transparent}
+  @media (max-width:1000px){
+    #app{grid-template-columns:1fr; grid-template-rows:auto 1fr auto; overflow:auto}
+    aside{max-height:38vh}
+    #stagewrap{min-height:46vh}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ============ LEFT ============ -->
+<aside class="left">
+  <header class="brand">
+    <svg class="crest" viewBox="0 0 200 240"><path d="M14,14 H186 V104 C186,168 146,214 100,232 C54,214 14,168 14,104 Z" fill="#c9a227" stroke="#1c1f28" stroke-width="10"/></svg>
+    <h1>Heraldry Designer<small><a href="./" style="color:inherit">← Heraldry catalog</a></small></h1>
+  </header>
+
+  <section class="pnl" id="p-shape"><h2>Device / Shield Type <span class="chev">▼</span></h2>
+    <div class="body"><div class="grid g3" id="shapeGrid"></div></div>
+  </section>
+
+  <section class="pnl" id="p-div"><h2>Division of the Field <span class="chev">▼</span></h2>
+    <div class="body"><div class="grid g4" id="divGrid"></div></div>
+  </section>
+
+  <section class="pnl" id="p-ord"><h2>Ordinary <span class="chev">▼</span></h2>
+    <div class="body">
+      <div class="grid g4" id="ordGrid"></div>
+      <label class="fld">Split the ordinary itself</label>
+      <select id="ordSplitSel"></select>
+      <div class="hint" style="margin-top:5px">e.g. a bordure split <i>per pale</i>, each half <i>bendy</i> in its own colors.</div>
+      <div id="edgeWrap" style="display:none">
+        <label class="fld">Line of division (edge)</label>
+        <select id="ordEdgeSel"></select>
+        <label class="fld">Band width <span class="val" id="ordWidthV">17</span></label>
+        <input type="range" id="ordWidth" min="6" max="40" step="1" value="17">
+        <label class="fld">Repeats <span class="val" id="ordEdgeKV">18</span></label>
+        <input type="range" id="ordEdgeK" min="4" max="42" step="1" value="18">
+        <label class="fld">Cut depth <span class="val" id="ordDepthV">80%</span></label>
+        <input type="range" id="ordDepth" min="10" max="150" step="5" value="80">
+      </div>
+    </div>
+  </section>
+
+  <section class="pnl" id="p-preset"><h2>Presets <span class="chev">▼</span></h2>
+    <div class="body"><div class="grid g2" id="presetGrid"></div></div>
+  </section>
+
+  <section class="pnl" id="p-col"><h2>Tinctures &amp; Colors <span class="chev">▼</span></h2>
+    <div class="body">
+      <label class="fld">Part to color</label>
+      <div class="regions" id="regionList"></div>
+      <label class="fld">Heraldic tinctures</label>
+      <div class="tinctures" id="tinctureGrid"></div>
+      <label class="fld">Custom color</label>
+      <input type="color" id="customColor" value="#2e71c4">
+      <label class="fld">Treatment / fur</label>
+      <select id="patSel"></select>
+      <div id="patColorWrap" style="display:none">
+        <label class="fld">Treatment color</label>
+        <input type="color" id="patColor" value="#1a1a1a">
+        <label class="fld">Treatment scale <span class="val" id="patScaleV">100%</span></label>
+        <input type="range" id="patScale" min="40" max="400" value="100">
+      </div>
+    </div>
+  </section>
+
+  <section class="pnl collapsed" id="p-style"><h2>Shield Style <span class="chev">▼</span></h2>
+    <div class="body">
+      <label class="toggle"><input type="checkbox" id="shading" checked> 3D shading &amp; gloss</label>
+      <label class="toggle"><input type="checkbox" id="outline" checked> Outline border</label>
+      <div class="row"><div><label class="fld">Outline color</label><input type="color" id="outlineColor" value="#111111"></div>
+      <div><label class="fld">Width <span class="val" id="outlineWV">5</span></label><input type="range" id="outlineW" min="0" max="14" step="0.5" value="5"></div></div>
+      <label class="toggle"><input type="checkbox" id="bgOn"> Solid background behind shield</label>
+      <input type="color" id="bgColor" value="#ffffff">
+    </div>
+  </section>
+</aside>
+
+<!-- ============ CENTER ============ -->
+<main>
+  <div class="toolbar">
+    <button class="btn sm" id="addImgBtn">＋ Add Image</button>
+    <button class="btn sm" id="addTextBtn">＋ Add Text</button>
+    <button class="btn sm" id="centerBtn">Center</button>
+    <button class="btn sm" id="fitBtn">Fit to Shield</button>
+    <button class="btn sm" id="dupBtn">Duplicate</button>
+    <button class="btn sm danger" id="delBtn">Delete</button>
+    <span class="sp"></span>
+    <label class="toggle" style="margin:0"><input type="checkbox" id="checker" checked> Transparency grid</label>
+    <span class="hint" id="hint">Drag to move · corners resize (Shift = free stretch) · top handle rotates</span>
+  </div>
+  <div id="stagewrap">
+    <svg id="stage" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <defs id="defs">
+        <clipPath id="shieldClip" clipPathUnits="userSpaceOnUse"><path id="clipShape" d=""/></clipPath>
+        <radialGradient id="gloss" cx="35%" cy="22%" r="78%">
+          <stop offset="0%" stop-color="#fff" stop-opacity=".42"/>
+          <stop offset="45%" stop-color="#fff" stop-opacity=".08"/>
+          <stop offset="100%" stop-color="#000" stop-opacity=".34"/>
+        </radialGradient>
+      </defs>
+      <g id="scene">
+        <rect id="bgRect" x="0" y="0" width="200" height="240" fill="none"/>
+        <g id="fieldLayer" clip-path="url(#shieldClip)"></g>
+        <g id="ordLayer" clip-path="url(#shieldClip)"></g>
+        <g id="layersLayer"></g>
+        <g id="shadeLayer" clip-path="url(#shieldClip)"></g>
+        <g id="outlineLayer"></g>
+      </g>
+      <g id="ui"></g>
+    </svg>
+  </div>
+</main>
+
+<!-- ============ RIGHT ============ -->
+<aside class="right">
+  <header class="brand"><h1>Layers &amp; Export</h1></header>
+
+  <section class="pnl"><h2>Charges / Images <span class="chev">▼</span></h2>
+    <div class="body">
+      <button class="btn primary" id="browseCatalog" style="margin-bottom:10px">Browse the image catalog</button>
+      <p id="catalogStatus" class="hint" role="status" style="margin:0 0 10px"></p>
+      <label class="fld" style="margin-top:0">Built-in charges</label>
+      <div class="grid g4" id="chargeGrid" style="margin-bottom:10px"></div>
+      <label class="fld">Your own artwork</label>
+      <div class="drop" id="dropZone">Drop images here<br>or click to browse (multiple OK)</div>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+      <div id="layerList" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <section class="pnl" id="p-sel"><h2>Selected Layer <span class="chev">▼</span></h2>
+    <div class="body" id="selBody"><div class="empty">No layer selected</div></div>
+  </section>
+
+  <section class="pnl"><h2>Export <span class="chev">▼</span></h2>
+    <div class="body">
+      <label class="fld">Image width</label>
+      <select id="expSize">
+        <option value="800">800 px</option>
+        <option value="1200">1200 px</option>
+        <option value="2000" selected>2000 px (recommended)</option>
+        <option value="3000">3000 px</option>
+        <option value="4000">4000 px</option>
+      </select>
+      <label class="toggle"><input type="checkbox" id="expTrim" checked> Transparent background</label>
+      <button class="btn primary" id="saveBtn" style="margin-top:8px">⬇ Save &amp; Download PNG</button>
+      <button class="btn" id="saveSvgBtn" style="margin-top:6px">Download SVG</button>
+      <button class="btn" id="saveCreditsBtn" style="margin-top:6px">Download artwork credits</button>
+      <label class="fld">Blazon (auto)</label>
+      <div class="blazon" id="blazon">—</div>
+      <p class="hint" style="margin:10px 0 0">Catalog artwork keeps its source license. Download the credits with your design.</p>
+    </div>
+  </section>
+</aside>
+</div>
+
+<dialog id="catalogPicker" aria-labelledby="pickerTitle">
+  <div class="picker-heading"><div><h2 id="pickerTitle">Choose a heraldic charge</h2><p>Transparent artwork, ready to add to your shield.</p></div><button class="btn sm" id="closePicker" aria-label="Close catalog">Close ×</button></div>
+  <div class="picker-controls"><label>Search<input id="pickerSearch" type="search" placeholder="Lion, rose, sword…"></label><label>Category<select id="pickerCategory"><option>All charges</option><option>Beasts</option><option>Birds</option><option>Mythical</option><option>Plants</option><option>Symbols</option><option>Objects</option></select></label></div>
+  <p id="pickerCount" role="status"></p><div id="pickerGrid"></div>
+</dialog>
+
+<script>
+"use strict";
+/* ============================================================
+   HERALDRY DESIGNER
+   Shapes / divisions / ordinaries modelled on the
+   Drawshield.net Guide to Blazonry reference sheet.
+   Coordinate space: 200 x 240 viewBox. Shield body ~14..186 x, 14..232 y.
+   ============================================================ */
+const SVGNS = "http://www.w3.org/2000/svg";
+const CX = 100, CY = 105;                    // fess point
+const L = -60, R = 260, T = -60, B = 300;    // oversized bounds (clipped to shield)
+
+/* ---------- 1. SHIELD / DEVICE SHAPES ---------- */
+const SHAPES = {
+  heater:   {name:"Heater",   d:"M14,14 H186 V104 C186,168 146,214 100,232 C54,214 14,168 14,104 Z"},
+  french:   {name:"French",   d:"M14,14 H186 V176 C186,198 172,212 152,220 C132,228 114,228 100,236 C86,228 68,228 48,220 C28,212 14,198 14,176 Z"},
+  spanish:  {name:"Spanish",  d:"M14,14 H186 V146 A86,86 0 0 1 14,146 Z"},
+  norman:   {name:"Norman",   d:"M100,10 C142,10 170,19 182,30 C185,33 186,37 186,42 C186,122 156,196 100,234 C44,196 14,122 14,42 C14,37 15,33 18,30 C30,19 58,10 100,10 Z"},
+  english:  {name:"English",  d:"M14,14 H186 V150 C186,194 150,222 100,234 C50,222 14,194 14,150 Z"},
+  italian:  {name:"Italian",  d:"M14,44 C14,24 32,12 62,12 C82,12 93,20 100,30 C107,20 118,12 138,12 C168,12 186,24 186,44 V148 C186,194 148,222 100,234 C52,222 14,194 14,148 Z"},
+  bouche:   {name:"Bouché",   d:"M14,14 H126 A22,22 0 0 1 170,14 H186 V104 C186,168 146,214 100,232 C54,214 14,168 14,104 Z"},
+  lozenge:  {name:"Lozenge",  d:"M100,8 L192,123 L100,238 L8,123 Z"},
+  oval:     {name:"Oval",     d:"M100,10 C148,10 187,60 187,123 C187,186 148,236 100,236 C52,236 13,186 13,123 C13,60 52,10 100,10 Z"},
+  roundel:  {name:"Roundel",  d:"M100,26 A97,97 0 1 1 99.9,26 Z"},
+  banner:   {name:"Banner",   d:"M20,32 H180 A9,9 0 0 1 189,41 V203 A9,9 0 0 1 180,212 H20 A9,9 0 0 1 11,203 V41 A9,9 0 0 1 20,32 Z"},
+  pennant:  {name:"Pennant",  d:"M14,16 H186 L100,236 Z"}
+};
+
+/* ---------- geometry helpers ---------- */
+const P = (...pts)=> "M" + pts.map(p=>p[0].toFixed(2)+","+p[1].toFixed(2)).join(" L") + " Z";
+const rect = (x,y,w,h)=> P([x,y],[x+w,y],[x+w,y+h],[x,y+h]);
+const ray  = (a,r=900)=> [CX + Math.cos(a*Math.PI/180)*r, CY + Math.sin(a*Math.PI/180)*r];
+const sect = (a1,a2)=>{                      // pie wedge from fess point
+  const pts=[[CX,CY]]; const step=(a2-a1)/Math.max(1,Math.ceil(Math.abs(a2-a1)/45));
+  for(let a=a1;a<=a2+.001;a+=step) pts.push(ray(a));
+  return P(...pts);
+};
+// band where c1 <= (y - x) <= c2   → bend direction
+const bandBend=(c1,c2)=> P([-500,-500+c1],[500,500+c1],[500,500+c2],[-500,-500+c2]);
+// band where c1 <= (y + x) <= c2   → bend sinister
+const bandBendS=(c1,c2)=> P([-500,c1+500],[500,c1-500],[500,c2-500],[-500,c2+500]);
+// band where c1 <= (y - |x-CX|) <= c2 → chevron
+const bandChev=(c1,c2)=> P([-500,c1+600],[CX,c1],[700,c1+600],[700,c2+600],[CX,c2],[-500,c2+600]);
+// evenly split a span into n strips, outer ones extended to bounds
+function strips(a,b,n,vertical){
+  const w=(b-a)/n, out=[];
+  for(let i=0;i<n;i++){
+    const s = i===0 ? (vertical?L:T) : a+i*w;
+    const e = i===n-1 ? (vertical?R:B) : a+(i+1)*w;
+    out.push(vertical ? rect(s,T,e-s,B-T) : rect(L,s,R-L,e-s));
+  }
+  return out;
+}
+function diagBands(c0,c1,n,sinister){
+  const w=(c1-c0)/n, out=[];
+  for(let i=0;i<n;i++){
+    const s=i===0?c0-600:c0+i*w, e=i===n-1?c1+600:c0+(i+1)*w;
+    out.push(sinister?bandBendS(s,e):bandBend(s,e));
+  }
+  return out;
+}
+
+/* ---------- 2. DIVISIONS OF THE FIELD ---------- */
+const DIVS = {
+  plain:      {name:"Plain",        labels:["Field"],                       paths:()=>[rect(L,T,R-L,B-T)]},
+  perPale:    {name:"Per Pale",     labels:["Dexter","Sinister"],           paths:()=>[rect(L,T,CX-L,B-T), rect(CX,T,R-CX,B-T)]},
+  perFess:    {name:"Per Fess",     labels:["Chief","Base"],                paths:()=>[rect(L,T,R-L,CY-T), rect(L,CY,R-L,B-CY)]},
+  perBend:    {name:"Per Bend",     labels:["Chief","Base"],                paths:()=>[bandBend(-900,CY-CX), bandBend(CY-CX,900)]},
+  perBendS:   {name:"Per Bend Sin", labels:["Chief","Base"],                paths:()=>[bandBendS(-900,CY+CX), bandBendS(CY+CX,900)]},
+  perChevron: {name:"Per Chevron",  labels:["Chief","Base"],                paths:()=>[bandChev(-900,88), bandChev(88,900)]},
+  perSaltire: {name:"Per Saltire",  labels:["Chief","Dexter","Sinister","Base"], paths:()=>[sect(225,315), sect(135,225), sect(-45,45), sect(45,135)]},
+  quarterly:  {name:"Quarterly",    labels:["I","II","III","IV"],           paths:()=>[rect(L,T,CX-L,CY-T), rect(CX,T,R-CX,CY-T), rect(L,CY,CX-L,B-CY), rect(CX,CY,R-CX,B-CY)]},
+  gyronny:    {name:"Gyronny",      labels:["1","2","3","4","5","6","7","8"],
+               paths:()=>[sect(-90,-45),sect(-45,0),sect(0,45),sect(45,90),sect(90,135),sect(135,180),sect(180,225),sect(225,270)]},
+  tiercePale: {name:"Tierced Pale", labels:["Dexter","Middle","Sinister"],  paths:()=>strips(14,186,3,true)},
+  tierceFess: {name:"Tierced Fess", labels:["Chief","Middle","Base"],       paths:()=>strips(14,232,3,false)},
+  tiercePairle:{name:"Tierced Pairle", labels:["Dexter","Sinister","Base"], paths:()=>[sect(135,270), sect(270,405), sect(45,135)]},
+  paly:       {name:"Paly",         labels:null, n:6,                       paths:()=>strips(14,186,6,true)},
+  barry:      {name:"Barry",        labels:null, n:6,                       paths:()=>strips(14,232,6,false)},
+  bendy:      {name:"Bendy",        labels:null, n:6,                       paths:()=>diagBands(-172,218,6,false)},
+  bendyS:     {name:"Bendy Sin",    labels:null, n:6,                       paths:()=>diagBands(28,418,6,true)},
+  chevronny:  {name:"Chevronny",    labels:null, n:6,                       paths:()=>{const o=[],c0=-72,c1=232,w=(c1-c0)/6;
+                 for(let i=0;i<6;i++) o.push(bandChev(i===0?c0-600:c0+i*w, i===5?c1+600:c0+(i+1)*w)); return o;}},
+  pily:       {name:"Pily",         labels:null, n:7,                       paths:()=>{const o=[]; const n=6, w=172/n;
+                 for(let i=0;i<n;i++){const x=14+i*w; o.push(i%2===0?P([x-.5,T],[x+w+.5,T],[x+w/2,236]):P([x-.5,236],[x+w+.5,236],[x+w/2,T]));}
+                 o.unshift(rect(L,T,R-L,B-T)); return o;}}
+};
+// generate numeric labels for repeating divisions
+for(const k in DIVS){ const d=DIVS[k]; if(!d.labels) d.labels=Array.from({length:d.n||d.paths().length},(_,i)=>"Part "+(i+1)); }
+
+/* ---------- 3. ORDINARIES ---------- */
+const ORDS = {
+  none:     {name:"None"},
+  fesse:    {name:"Fesse",     d:rect(L,90,R-L,54)},
+  pale:     {name:"Pale",      d:rect(73,T,54,B-T)},
+  cross:    {name:"Cross",     d:rect(L,90,R-L,54)+" "+rect(73,T,54,B-T)},
+  // "nowy" = a square / round boss where the limbs cross
+  crossNowy:{name:"Cross Nowy", d:rect(L,90,R-L,54)+" "+rect(73,T,54,B-T)+" "+rect(60,77,80,80)},
+  crossNowyR:{name:"Cross Nowy Rd", d:rect(L,90,R-L,54)+" "+rect(73,T,54,B-T)+
+                " M100,74 A43,43 0 1 1 99.9,74 Z"},
+  crossCouped:{name:"Cross Couped", d:rect(28,90,144,54)+" "+rect(73,32,54,170)},
+  crossPatty:{name:"Cross Patty", d:"M74,14 C80,52 78,72 60,84 L14,60 V174 L60,150 C78,162 80,182 74,220 H126 "+
+                "C120,182 122,162 140,150 L186,174 V60 L140,84 C122,72 120,52 126,14 Z"},
+  bend:     {name:"Bend",      d:bandBend(-24,32)},
+  bendS:    {name:"Bend Sin",  d:bandBendS(177,233)},
+  saltire:  {name:"Saltire",   d:bandBend(-24,32)+" "+bandBendS(177,233)},
+  chief:    {name:"Chief",     d:rect(L,T,R-L,72-T)},
+  base:     {name:"Base",      d:rect(L,186,R-L,B-186)},
+  chevron:  {name:"Chevron",   d:bandChev(96,142)},
+  pall:     {name:"Pall",      stroke:"M14,10 L100,105 M186,10 L100,105 M100,105 L100,250", sw:44},
+  bordure:  {name:"Bordure",   edgeBand:{outer:0,  width:17}, previewSw:32},
+  orle:     {name:"Orle",      edgeBand:{outer:15, width:9},  previewSw:11, inset:.84},
+  pile:     {name:"Pile",      d:P([14,10],[186,10],[100,206])},
+  canton:   {name:"Canton",    d:rect(L,T,84-L,84-T)},
+  quarterI: {name:"Quarter",   d:rect(L,T,CX-L,CY-T)},
+  gyron:    {name:"Gyron",     d:P([10,10],[CX,CY],[10,CY])},
+  flaunches:{name:"Flaunches", d:"M14,6 C56,60 56,180 14,240 L-40,240 L-40,6 Z M186,6 C144,60 144,180 186,240 L240,240 L240,6 Z"},
+  label:    {name:"Label",     d:rect(L,20,R-L,20)+" "+rect(46,40,20,30)+" "+rect(90,40,20,30)+" "+rect(134,40,20,30)}
+};
+
+/* ---------- 3a. LINES OF DIVISION (edge treatments) ----------
+   The outline of any shield is sampled once into points + inward normals.
+   An edge style is then just a list of [t, depth] control points repeated
+   around that outline — which is why embattled, dovetailed and potenty
+   (whose profiles double back on themselves) all work the same way.      */
+function wavePoints(fn,steps){
+  const a=[]; for(let j=0;j<steps;j++) a.push(fn(j/steps)); return a;
+}
+const EDGES = {
+  plain:     {name:"Plain",      k:1,  prof:[[0,0]], smooth:true},
+  embattled: {name:"Embattled",  k:18, prof:[[0,0],[0.5,0],[0.5,1],[1,1]]},
+  indented:  {name:"Indented",   k:20, prof:[[0,0],[0.5,1]]},
+  dancetty:  {name:"Dancetty",   k:7,  prof:[[0,0],[0.5,1]]},
+  urdy:      {name:"Urdy",       k:14, prof:[[0,0],[0.2,1],[0.5,1],[0.7,0]]},
+  raguly:    {name:"Raguly",     k:14, prof:[[0,0],[0.42,0],[0.62,1],[1,1]]},
+  dovetailed:{name:"Dovetailed", k:13, prof:[[0,0],[0.5,0],[0.4,1],[1.1,1]]},
+  potenty:   {name:"Potenty",    k:11, prof:[[0,0],[0.34,0],[0.34,0.5],[0.16,0.5],
+                                            [0.16,1],[0.84,1],[0.84,0.5],[0.66,0.5],[0.66,0],[1,0]]},
+  wavy:      {name:"Wavy",       k:13, prof:wavePoints(a=>[a,(1-Math.cos(2*Math.PI*a))/2],28)},
+  nebuly:    {name:"Nebuly",     k:10, prof:wavePoints(a=>[a-0.2*Math.sin(2*Math.PI*a),
+                                            (1-Math.cos(2*Math.PI*a))/2],32)},
+  engrailed: {name:"Engrailed",  k:15, prof:wavePoints(a=>[a,1-Math.sqrt(Math.max(0,1-(2*a-1)**2))],24)},
+  invected:  {name:"Invected",   k:15, prof:wavePoints(a=>[a,Math.sqrt(Math.max(0,1-(2*a-1)**2))],24)},
+  rayonny:   {name:"Rayonny",    k:12, prof:wavePoints(a=>[a,a<0.6?Math.pow(a/0.6,1.7):(1-a)/0.4],24)}
+};
+
+const _sampleCache=new Map();
+function samplesFor(shapeKey){
+  if(_sampleCache.has(shapeKey)) return _sampleCache.get(shapeKey);
+  const path=document.createElementNS(SVGNS,"path");
+  path.setAttribute("d",SHAPES[shapeKey].d);
+  defs.appendChild(path);                       // must be in the document to measure
+  const total=path.getTotalLength(), N=900, pts=[];
+  for(let i=0;i<N;i++){
+    const s=total*i/N;
+    const a=path.getPointAtLength(s), b=path.getPointAtLength((s+total/N*0.9)%total);
+    let tx=b.x-a.x, ty=b.y-a.y; const m=Math.hypot(tx,ty)||1; tx/=m; ty/=m;
+    pts.push({x:a.x,y:a.y,tx,ty,nx:-ty,ny:tx});  // left normal for a clockwise path
+  }
+  path.remove();
+  // decide which way is "inward" by testing against the centroid
+  let cx=0,cy=0; pts.forEach(p=>{cx+=p.x;cy+=p.y;}); cx/=N; cy/=N;
+  const p0=pts[0], near=(sx)=>Math.hypot(p0.x+p0.nx*sx*8-cx, p0.y+p0.ny*sx*8-cy);
+  const sign = near(1)<near(-1) ? 1 : -1;
+  // corners: where the tangent turns sharply between two samples. Offsetting
+  // across one would bevel the corner, so we mitre it instead.
+  const raw=[];
+  for(let i=0;i<N;i++){
+    const a=pts[i], b=pts[(i+1)%N];
+    if(Math.acos(Math.max(-1,Math.min(1,a.tx*b.tx+a.ty*b.ty)))>0.22) raw.push(i);
+  }
+  // a single corner often trips two adjacent samples — cluster them or it gets
+  // mitred twice and throws a spike into the field
+  const groups=[];
+  raw.forEach(i=>{
+    const g=groups[groups.length-1];
+    if(g && i-g[g.length-1]<=2) g.push(i); else groups.push([i]);
+  });
+  if(groups.length>1){                                   // stitch the wrap-around
+    const first=groups[0], last=groups[groups.length-1];
+    if(first[0]===0 && last[last.length-1]===N-1){ groups.pop(); groups[0]=last.concat(first); }
+  }
+  const corners=groups.map(g=>{
+    const a=pts[g[0]], b=pts[(g[g.length-1]+1)%N];
+    const den=-a.tx*b.ty+b.tx*a.ty;
+    let vx=(a.x+b.x)/2, vy=(a.y+b.y)/2;                  // fall back to the midpoint
+    if(Math.abs(den)>1e-6){
+      const s=(-(b.x-a.x)*b.ty + b.tx*(b.y-a.y))/den;
+      if(Math.abs(s)<12){ vx=a.x+a.tx*s; vy=a.y+a.ty*s; }
+    }
+    let u=(g[0]+(g.length)/2)/N; if(u>=1) u-=1;
+    const turn=Math.acos(Math.max(-1,Math.min(1,a.tx*b.tx+a.ty*b.ty)));
+    const conv=(a.tx*b.ty-a.ty*b.tx)*sign > 0;           // corner folds inward?
+    return {u, x:vx, y:vy, conv, ext:Math.min(3.2,Math.tan(turn/2)),
+            n1x:a.nx,n1y:a.ny,t1x:a.tx,t1y:a.ty, n2x:b.nx,n2y:b.ny,t2x:b.tx,t2y:b.ty};
+  });
+  // Rotate the sample array so the polygon's seam falls in the middle of the
+  // longest corner-free run. A seam sitting on a corner leaves a sliver.
+  let best=0, bestGap=-1;
+  const cu=corners.map(c=>c.u).sort((a,b)=>a-b);
+  if(cu.length){
+    for(let i=0;i<cu.length;i++){
+      const a=cu[i], b=(i+1<cu.length?cu[i+1]:cu[0]+1);
+      if(b-a>bestGap){ bestGap=b-a; best=(a+b)/2; }
+    }
+  }
+  const r=Math.round((best%1)*N)%N;
+  const rot=pts.slice(r).concat(pts.slice(0,r));
+  corners.forEach(c=>{ c.u=((c.u-r/N)%1+1)%1; });
+  const S={pts:rot, sign, corners, total};
+  _sampleCache.set(shapeKey,S);
+  return S;
+}
+function mitrePt(S,c,d){
+  const ax=c.x+c.n1x*S.sign*d, ay=c.y+c.n1y*S.sign*d;
+  const bx=c.x+c.n2x*S.sign*d, by=c.y+c.n2y*S.sign*d;
+  const den = -c.t1x*c.t2y + c.t2x*c.t1y;
+  if(Math.abs(den)<1e-6) return [ax,ay];
+  const dx=bx-ax, dy=by-ay;
+  const s=(-dx*c.t2y + c.t2x*dy)/den;
+  const mx=ax+c.t1x*s, my=ay+c.t1y*s;
+  // very acute corners would throw the mitre miles away — fall back to a bevel
+  return Math.hypot(mx-c.x,my-c.y) > Math.abs(d)*4+2 ? [ax,ay] : [mx,my];
+}
+function ptAt(S,u,depth){
+  const N=S.pts.length, f=(((u%1)+1)%1)*N, i=Math.floor(f), w=f-i;
+  const a=S.pts[i%N], b=S.pts[(i+1)%N];
+  // never blend normals across a corner — that bends the offset the wrong way.
+  // Snap to the nearer sample and let the mitre point square the corner off.
+  const sharp = a.tx*b.tx+a.ty*b.ty < 0.955;
+  let nx,ny;
+  if(sharp){ const c=w<0.5?a:b; nx=c.nx; ny=c.ny; }
+  else { nx=a.nx+(b.nx-a.nx)*w; ny=a.ny+(b.ny-a.ny)*w; }
+  const m=Math.hypot(nx,ny)||1;
+  return [ (a.x+(b.x-a.x)*w)+nx/m*S.sign*depth, (a.y+(b.y-a.y)*w)+ny/m*S.sign*depth ];
+}
+/* Build a closed polygon that follows the shield outline at `base` depth,
+   with `edge` repeated `k` times adding up to `amp` of extra depth. */
+function edgePoly(shapeKey, base, amp, edgeKey, k, reverse){
+  const S=samplesFor(shapeKey), E=EDGES[edgeKey]||EDGES.plain;
+  if(E.smooth || !amp) k=1;
+  const ctrl=[];
+  if(E.smooth || !amp){
+    for(let j=0;j<240;j++) ctrl.push([j/240, 0]);
+  } else {
+    for(let i=0;i<k;i++) E.prof.forEach(([t,d])=>ctrl.push([(i+t)/k, d]));
+  }
+  // expand control points into a dense (u, depth) sequence
+  const seq=[];
+  for(let i=0;i<ctrl.length;i++){
+    const a=ctrl[i], b=ctrl[(i+1)%ctrl.length];
+    let du=b[0]-a[0]; if(i===ctrl.length-1) du+=1;
+    const steps=Math.max(1,Math.min(40,Math.ceil(Math.abs(du)*S.pts.length/4)));
+    for(let s=0;s<steps;s++){
+      const w=s/steps;
+      seq.push([a[0]+du*w, base+amp*(a[1]+(b[1]-a[1])*w)]);
+    }
+  }
+  // walk it, dropping in a mitre wherever we cross a corner of the outline
+  const pts=[], done=new Set();
+  for(let i=0;i<seq.length;i++){
+    const [u,d]=seq[i], pu=(i?seq[i-1][0]:seq[seq.length-1][0]-1);
+    // only look for corners on a short forward step — profiles like dovetailed
+    // and potenty deliberately double back, and those steps must be skipped
+    let du=u-pu; if(du>0.5) du-=1; if(du<-0.5) du+=1;
+    if(du>=0 && du<0.05){
+      // a zero-length step (the vertical jump of a crenel) still needs the mitre
+      // if it happens to land right on a corner, so always scan a half-sample window
+      const win=Math.max(du, 0.6/S.pts.length);
+      S.corners.forEach((c,ci)=>{
+        if(done.has(ci) || !c.conv) return;      // each convex corner gets one mitre
+        for(let off=-1;off<=1;off++){
+          const cu=c.u+off;
+          if(cu>pu-1e-9 && cu<pu+win){ done.add(ci); pts.push(mitrePt(S,c,d)); return; }
+        }
+      });
+    }
+    // a sample sitting *on* a corner has an ambiguous normal and pokes out as a
+    // spike — the mitre point already covers that span, so drop it
+    // the mitre already spans `depth * tan(turn/2)` of arc either side of a convex
+    // corner — samples inside that span double back and show up as spikes
+    let onCorner=false;
+    S.corners.forEach(c=>{
+      if(!c.conv) return;
+      // size the window off the DEEPEST the band ever gets, not this point's depth,
+      // or a shallow neighbour slips inside a deeper point's mitre
+      const win=Math.max(2.2/S.pts.length, (base+amp)*c.ext/S.total*1.15);
+      for(let off=-1;off<=1;off++) if(Math.abs(u-(c.u+off))<win) onCorner=true;
+    });
+    if(!onCorner) pts.push(ptAt(S,u,d));
+  }
+  if(reverse) pts.reverse();   // opposite winding, so nonzero fill subtracts it
+  return "M"+pts.map(p=>p[0].toFixed(2)+","+p[1].toFixed(2)).join("L")+"Z";
+}
+
+/* ---------- 3b. SIMPLE CHARGES (vector, 24x24 box) ---------- */
+const FLEUR = "M12 1.6c-1.6 2.4-2.4 4.3-2.4 6 0 1.4.8 2.6 2.4 3.7 1.6-1.1 2.4-2.3 2.4-3.7 0-1.7-.8-3.6-2.4-6zM5.2 8c-2.2 1.7-2.8 4.3-1.5 6.4 1.1 1.7 3.3 2.5 5.7 2-.4-2.8-1.8-5.7-4.2-8.4zm13.6 0c-2.4 2.7-3.8 5.6-4.2 8.4 2.4.5 4.6-.3 5.7-2 1.3-2.1.7-4.7-1.5-6.4zM8.7 17.4h6.6v1.7H8.7zm2 2.3h2.6V23h-2.6z";
+function starPath(pts,ro,ri){
+  let d="";
+  for(let i=0;i<pts*2;i++){
+    const r=i%2?ri:ro, a=(-90+i*180/pts)*Math.PI/180;
+    d+=(i?"L":"M")+(12+Math.cos(a)*r).toFixed(2)+","+(12+Math.sin(a)*r).toFixed(2);
+  }
+  return d+"Z";
+}
+const CHARGES = {
+  roundel:  {name:"Roundel",  d:"M12,2 A10,10 0 1 1 11.9,2 Z"},
+  annulet:  {name:"Annulet",  d:"M12,2 A10,10 0 1 1 11.9,2 Z M12,7 A5,5 0 1 0 12.1,7 Z", even:true},
+  mullet:   {name:"Mullet",   d:starPath(5,11,4.4)},
+  estoile:  {name:"Estoile",  d:starPath(6,11,3.4)},
+  lozenge:  {name:"Lozenge",  d:"M12,2 L21,12 L12,22 L3,12 Z"},
+  fusil:    {name:"Fusil",    d:"M12,1 L18.5,12 L12,23 L5.5,12 Z"},
+  mascle:   {name:"Mascle",   d:"M12,2 L21,12 L12,22 L3,12 Z M12,7 L17,12 L12,17 L7,12 Z", even:true},
+  billet:   {name:"Billet",   d:"M7,3 H17 V21 H7 Z"},
+  crescent: {name:"Crescent", d:"M12,2 A10,10 0 1 0 18.4,19.6 A8.4,8.4 0 1 1 12,2 Z"},
+  fleur:    {name:"Fleur-de-lys", d:FLEUR},
+  crosslet: {name:"Cross",    d:"M10,2 H14 V10 H22 V14 H14 V22 H10 V14 H2 V10 H10 Z"},
+  crossPat: {name:"Cross Patty", d:"M9,2 C9.7,7 9,9.4 6,10.6 L2,9 V15 L6,13.4 C9,14.6 9.7,17 9,22 H15 C14.3,17 15,14.6 18,13.4 L22,15 V9 L18,10.6 C15,9.4 14.3,7 15,2 Z"},
+  heart:    {name:"Heart",    d:"M12,21.5 C3.6,14.2 1.8,10 4.6,7 C7.2,4.2 10.6,5.2 12,8.2 C13.4,5.2 16.8,4.2 19.4,7 C22.2,10 20.4,14.2 12,21.5 Z"},
+  escallop: {name:"Escallop", d:"M12,22 C6.5,22 2,16.5 2,10 C2,6 4,3 5.5,3 C6.8,3 7,5 7.2,8 C7.6,4.5 9,2 12,2 C15,2 16.4,4.5 16.8,8 C17,5 17.2,3 18.5,3 C20,3 22,6 22,10 C22,16.5 17.5,22 12,22 Z"},
+  tower:    {name:"Tower",    d:"M4,8 V6 H7 V8 H10.5 V6 H13.5 V8 H17 V6 H20 V8 L18.5,10 V21 H5.5 V10 Z M9.5,21 V15 A2.5,2.5 0 0 1 14.5,15 V21 Z", even:true},
+  keyC:     {name:"Key",      d:"M8,2 A5,5 0 1 1 8,12 A5,5 0 0 1 8,2 Z M8,5.5 A1.5,1.5 0 1 0 8,8.5 A1.5,1.5 0 0 0 8,5.5 Z M11.5,8.5 L21,8.5 V12 H19 V10.2 H17.5 V12.6 H15.5 V10.2 H11.5 Z", even:true}
+};
+
+/* ---------- 4. TINCTURES ---------- */
+const TINCTURES = [
+  ["Or","#ffcc00"],["Argent","#f7f7f5"],["Azure","#2e71c4"],["Vert","#1e8b3f"],
+  ["Gules","#d9302f"],["Sable","#1b1b1b"],["Purpure","#9a4a96"],
+  ["Carnation","#fbc6ac"],["Sanguine","#8e2323"],["Tenné","#f0a22e"],
+  ["Bisque","#f5e7c3"],["Murrey","#8c1c4e"],["Celestial","#57b3ea"],["Cendrée","#9aa0a6"]
+];
+
+/* ---------- 5. TREATMENTS / FURS (parametric patterns) ---------- */
+const TREATMENTS = {
+  none:      {name:"None (solid)"},
+  ermine:    {name:"Ermine spots", size:24, draw:(f)=>{
+                const spot=(x,y,s)=>`<g transform="translate(${x},${y}) scale(${s})" fill="${f}">
+                  <path d="M0,3 C-1.7,5.6 -2.8,8.4 -2.8,10 C-2.8,12.6 2.8,12.6 2.8,10 C2.8,8.4 1.7,5.6 0,3 Z"/>
+                  <circle cx="0" cy="1" r="0.95"/><circle cx="-2.2" cy="-0.2" r="0.85"/><circle cx="2.2" cy="-0.2" r="0.85"/></g>`;
+                return spot(6,3,.9)+spot(18,15,.9);}},
+  crusilly:  {name:"Crusilly", size:20, draw:(f)=>{
+                const cr=(x,y)=>`<path d="M${x-1},${y-4} h2 v3 h3 v2 h-3 v4 h-2 v-4 h-3 v-2 h3 z" fill="${f}"/>`;
+                return cr(5,5)+cr(15,15);}},
+  semy:      {name:"Semy-de-lys", size:26, draw:(f)=>
+                `<g fill="${f}"><g transform="translate(2,1) scale(.42)"><path d="${FLEUR}"/></g>
+                 <g transform="translate(15,14) scale(.42)"><path d="${FLEUR}"/></g></g>`},
+  billetty:  {name:"Billetty", size:18, draw:(f)=>`<g fill="${f}"><rect x="2" y="2" width="4" height="6" rx=".6"/><rect x="11" y="11" width="4" height="6" rx=".6"/></g>`},
+  gutty:     {name:"Gutty (drops)", size:18, draw:(f)=>{
+                const d=(x,y)=>`<path d="M${x},${y} C${x-2.4},${y+3.4} ${x-3},${y+5} ${x-3},${y+6.2} a3,3 0 0 0 6,0 C${x+3},${y+5} ${x+2.4},${y+3.4} ${x},${y} Z" fill="${f}"/>`;
+                return d(5,3)+d(14,12);}},
+  checky:    {name:"Checky", size:20, draw:(f)=>`<g fill="${f}"><rect x="0" y="0" width="10" height="10"/><rect x="10" y="10" width="10" height="10"/></g>`},
+  // barry bendy = horizontal (barry) lines crossed with diagonal (bendy) lines
+  // → a sheared checker, which is exactly skewX applied to a checky tile
+  barryBendy:{name:"Barry bendy ╲", size:20, skew:45, draw:(f)=>
+                `<g fill="${f}"><rect x="0" y="0" width="10" height="10"/><rect x="10" y="10" width="10" height="10"/></g>`},
+  barryBendyS:{name:"Barry bendy sinister ╱", size:20, skew:-45, draw:(f)=>
+                `<g fill="${f}"><rect x="0" y="0" width="10" height="10"/><rect x="10" y="10" width="10" height="10"/></g>`},
+  lozengy:   {name:"Lozengy", size:24, draw:(f)=>`<g fill="${f}"><path d="M12,0 L24,12 L12,24 L0,12 Z"/><path d="M0,0 L6,0 L0,6 Z M24,0 L24,6 L18,0 Z M0,24 L0,18 L6,24 Z M24,24 L18,24 L24,18 Z"/></g>`},
+  bendy:     {name:"Bendy (diagonal ╲)", size:16, rot:-45, draw:(f)=>`<rect x="-1" y="0" width="18" height="8" fill="${f}"/>`},
+  bendySin:  {name:"Bendy sinister (╱)",  size:16, rot:45,  draw:(f)=>`<rect x="-1" y="0" width="18" height="8" fill="${f}"/>`},
+  barrulet:  {name:"Barry (horizontal)",  size:16, rot:0,   draw:(f)=>`<rect x="-1" y="0" width="18" height="8" fill="${f}"/>`},
+  paletty:   {name:"Paly (vertical)",     size:16, rot:90,  draw:(f)=>`<rect x="-1" y="0" width="18" height="8" fill="${f}"/>`},
+  fretty:    {name:"Fretty", size:22, draw:(f)=>`<g stroke="${f}" stroke-width="2.2" fill="none">
+                <path d="M-4,4 L18,26 M-4,18 L4,26 M4,-4 L26,18 M18,-4 L26,4"/>
+                <path d="M-4,18 L18,-4 M-4,4 L4,-4 M4,26 L26,4 M18,26 L26,18"/></g>`},
+  masoned:   {name:"Masoned", size:24, draw:(f)=>`<g stroke="${f}" stroke-width="1.3" fill="none">
+                <path d="M0,0 H24 M0,12 H24 M6,0 V12 M18,12 V24 M0,24 H24"/></g>`},
+  papelonny: {name:"Papelonny (scales)", size:20, draw:(f)=>`<g stroke="${f}" stroke-width="1.6" fill="none">
+                <path d="M-10,10 a10,10 0 0 0 20,0 a10,10 0 0 0 20,0"/><path d="M0,20 a10,10 0 0 0 20,0"/>
+                <path d="M-10,0 a10,10 0 0 0 20,0 a10,10 0 0 0 20,0"/></g>`},
+  vair:      {name:"Vair", size:24, draw:(f)=>{
+                const dn="M0,0 H12 C12,5.2 10.6,7.6 9.2,9.3 C8.2,10.6 7,11.1 6,12.2 C5,11.1 3.8,10.6 2.8,9.3 C1.4,7.6 0,5.2 0,0 Z";
+                const up="M0,24 H12 C12,18.8 10.6,16.4 9.2,14.7 C8.2,13.4 7,12.9 6,11.8 C5,12.9 3.8,13.4 2.8,14.7 C1.4,16.4 0,18.8 0,24 Z";
+                const t=(x,d)=>`<g transform="translate(${x},0)"><path d="${d}"/></g>`;
+                return `<g fill="${f}">${t(0,dn)}${t(12,dn)}${t(-6,up)}${t(6,up)}${t(18,up)}</g>`;}},
+  potent:    {name:"Potent", size:24, draw:(f)=>`<g fill="${f}">
+                <path d="M0,0 h12 v4 h-4 v8 h-4 v-8 h-4 Z"/><path d="M12,12 h12 v4 h-4 v8 h-4 v-8 h-4 Z"/>
+                <path d="M-12,12 h12 v4 h-4 v8 h-4 v-8 h-4 Z"/></g>`},
+  hatchOr:   {name:"Hatching: dots", size:10, draw:(f)=>`<circle cx="3" cy="3" r="1.1" fill="${f}"/><circle cx="8" cy="8" r="1.1" fill="${f}"/>`}
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  shape:"heater", division:"perPale", ordinary:"none",
+  ordSplit:"plain",         // the ordinary can itself be divided by any DIVS key
+  ordEdge:"plain", ordEdgeK:18, ordWidth:17, ordDepth:80,
+  fills:{},                 // key -> {color, pat, patColor, patScale}
+  ordFills:{},              // key -> same
+  activeRegion:"f0",        // "f"+index (field) or "o"+index (ordinary part)
+  layers:[], sel:null, nextId:1,
+  shading:true, outline:true, outlineColor:"#111111", outlineW:5,
+  bgOn:false, bgColor:"#ffffff"
+};
+const DEFAULT_COLORS = ["#ffcc00","#d9302f","#2e71c4","#f7f7f5","#1e8b3f","#1b1b1b","#9a4a96","#f0a22e"];
+
+const $ = id=>document.getElementById(id);
+const svg=$("stage"), defs=$("defs"), fieldLayer=$("fieldLayer"), ordLayer=$("ordLayer"),
+      layersLayer=$("layersLayer"), shadeLayer=$("shadeLayer"), outlineLayer=$("outlineLayer"),
+      uiLayer=$("ui"), clipShape=$("clipShape"), bgRect=$("bgRect");
+
+function regionCount(){ return DIVS[state.division].paths().length; }
+function getFill(i){
+  const k=state.division+":"+i;
+  if(!state.fills[k]) state.fills[k]={color:DEFAULT_COLORS[i%DEFAULT_COLORS.length],pat:"none",patColor:"#1b1b1b",patScale:100};
+  return state.fills[k];
+}
+const ORD_COLORS=["#ffcc00","#d9302f","#2e71c4","#f7f7f5"];
+function getOrdFill(i){
+  const k=state.ordinary+"/"+state.ordSplit+":"+i;
+  if(!state.ordFills[k]) state.ordFills[k]={color:ORD_COLORS[i%ORD_COLORS.length],pat:"none",patColor:"#f7f7f5",patScale:150};
+  return state.ordFills[k];
+}
+function ordPartCount(){ return DIVS[state.ordSplit].paths().length; }
+function activeFill(){
+  const k=String(state.activeRegion), t=k[0], i=+k.slice(1)||0;
+  return t==="o" ? getOrdFill(i) : getFill(i);
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+let patSeq=0;
+function paintOf(f){
+  if(!f.pat || f.pat==="none" || !TREATMENTS[f.pat] || !TREATMENTS[f.pat].draw) return f.color;
+  const t=TREATMENTS[f.pat], id="pat"+(patSeq++);
+  const s=(f.patScale||100)/100, sz=t.size;
+  const p=document.createElementNS(SVGNS,"pattern");
+  p.setAttribute("id",id); p.setAttribute("width",sz); p.setAttribute("height",sz);
+  p.setAttribute("patternUnits","userSpaceOnUse");
+  p.setAttribute("patternTransform","rotate("+(t.rot||0)+") skewX("+(t.skew||0)+") scale("+ (0.42*s).toFixed(3) +")");
+  p.innerHTML = `<rect width="${sz}" height="${sz}" fill="${f.color}"/>` + t.draw(f.patColor);
+  defs.appendChild(p);
+  return "url(#"+id+")";
+}
+function clearPatterns(){ [...defs.querySelectorAll("pattern")].forEach(n=>n.remove()); patSeq=0; }
+
+function render(){
+  clearPatterns();
+  const shape=SHAPES[state.shape];
+  clipShape.setAttribute("d",shape.d);
+
+  // background
+  bgRect.setAttribute("fill", state.bgOn ? state.bgColor : "none");
+
+  // field
+  fieldLayer.innerHTML="";
+  DIVS[state.division].paths().forEach((d,i)=>{
+    const p=document.createElementNS(SVGNS,"path");
+    p.setAttribute("d",d); p.setAttribute("fill",paintOf(getFill(i)));
+    p.setAttribute("shape-rendering","geometricPrecision");
+    fieldLayer.appendChild(p);
+  });
+
+  // ordinary — drawn through a mask so even stroke-shaped ordinaries
+  // (bordure, orle, pall) can be sub-divided and separately tinctured
+  ordLayer.innerHTML="";
+  [...defs.querySelectorAll("mask")].forEach(n=>n.remove());
+  const o=ORDS[state.ordinary];
+  if(o && state.ordinary!=="none"){
+    const mask=document.createElementNS(SVGNS,"mask");
+    mask.setAttribute("id","ordMask"); mask.setAttribute("maskUnits","userSpaceOnUse");
+    mask.setAttribute("x",-120); mask.setAttribute("y",-120);
+    mask.setAttribute("width",440); mask.setAttribute("height",480);
+    const mp=document.createElementNS(SVGNS,"path");
+    if(o.edgeBand){
+      // band between two offset outlines; the inner one carries the line of division
+      const outer=o.edgeBand.outer*state.ordWidth/17;
+      const w=o.edgeBand.width*state.ordWidth/17;
+      const amp=state.ordEdge==="plain"?0:w*state.ordDepth/100;
+      const outerD = outer<=0.01 ? shape.d : edgePoly(state.shape,outer,0,"plain",1,false);
+      // inner ring is wound the other way, so nonzero punches it out — and where the
+      // offset folds over itself (the point of a heater) the band simply closes up
+      mp.setAttribute("d", outerD+" "+edgePoly(state.shape,outer+w,amp,state.ordEdge,state.ordEdgeK,true));
+      mp.setAttribute("fill","#fff"); mp.setAttribute("fill-rule","nonzero");
+    } else if(o.stroke){
+      mp.setAttribute("d",o.stroke); mp.setAttribute("fill","none");
+      mp.setAttribute("stroke","#fff"); mp.setAttribute("stroke-width",o.sw);
+      mp.setAttribute("stroke-linecap","butt");
+    } else {
+      mp.setAttribute("d",o.d); mp.setAttribute("fill","#fff"); mp.setAttribute("fill-rule","nonzero");
+    }
+    mask.appendChild(mp); defs.appendChild(mask);
+
+    const g=document.createElementNS(SVGNS,"g");
+    g.setAttribute("mask","url(#ordMask)");
+    DIVS[state.ordSplit].paths().forEach((d,i)=>{
+      const p=document.createElementNS(SVGNS,"path");
+      p.setAttribute("d",d); p.setAttribute("fill",paintOf(getOrdFill(i)));
+      g.appendChild(p);
+    });
+    ordLayer.appendChild(g);
+  }
+
+  // shading
+  shadeLayer.innerHTML="";
+  if(state.shading){
+    const g=document.createElementNS(SVGNS,"path");
+    g.setAttribute("d",shape.d); g.setAttribute("fill","url(#gloss)");
+    g.setAttribute("pointer-events","none");
+    shadeLayer.appendChild(g);
+  }
+
+  // outline
+  outlineLayer.innerHTML="";
+  if(state.outline && state.outlineW>0){
+    const p=document.createElementNS(SVGNS,"path");
+    p.setAttribute("d",shape.d); p.setAttribute("fill","none");
+    p.setAttribute("stroke",state.outlineColor); p.setAttribute("stroke-width",state.outlineW);
+    p.setAttribute("stroke-linejoin","round"); p.setAttribute("pointer-events","none");
+    outlineLayer.appendChild(p);
+  }
+
+  renderLayers();
+  drawHandles();
+  updateBlazon();
+}
+
+/* ---------- charge layers ---------- */
+function renderLayers(){
+  layersLayer.innerHTML="";
+  state.layers.forEach(l=>{
+    const g=document.createElementNS(SVGNS,"g");
+    g.setAttribute("transform",`rotate(${l.rot} ${l.x+l.w/2} ${l.y+l.h/2})`);
+    g.setAttribute("opacity",l.opacity);
+    if(l.clip) g.setAttribute("clip-path","url(#shieldClip)");
+    let el;
+    if(l.type==="shape"){
+      el=document.createElementNS(SVGNS,"path");
+      el.setAttribute("d",l.pathD);
+      el.setAttribute("transform",
+        `translate(${l.x+(l.flipH?l.w:0)},${l.y+(l.flipV?l.h:0)}) `+
+        `scale(${(l.flipH?-1:1)*l.w/24},${(l.flipV?-1:1)*l.h/24})`);
+      el.setAttribute("fill",l.color);
+      if(l.even) el.setAttribute("fill-rule","evenodd");
+      if(l.strokeW>0){ el.setAttribute("stroke",l.strokeColor);
+        el.setAttribute("stroke-width",l.strokeW*24/Math.max(l.w,1)); el.setAttribute("stroke-linejoin","round"); }
+    } else if(l.type==="text"){
+      el=document.createElementNS(SVGNS,"text");
+      el.textContent=l.text||"Motto";
+      el.setAttribute("x",l.x+l.w/2); el.setAttribute("y",l.y+l.h/2);
+      el.setAttribute("text-anchor","middle"); el.setAttribute("dominant-baseline","central");
+      el.setAttribute("font-size",l.fontSize); el.setAttribute("fill",l.color);
+      el.setAttribute("font-family",l.font);
+      el.setAttribute("font-weight",l.bold?"700":"400");
+      if(l.strokeW>0){ el.setAttribute("stroke",l.strokeColor); el.setAttribute("stroke-width",l.strokeW);
+                       el.setAttribute("paint-order","stroke"); el.setAttribute("stroke-linejoin","round"); }
+    } else {
+      el=document.createElementNS(SVGNS,"image");
+      el.setAttributeNS("http://www.w3.org/1999/xlink","href",l.href);
+      el.setAttribute("href",l.href);
+      el.setAttribute("x",l.x); el.setAttribute("y",l.y);
+      el.setAttribute("width",l.w); el.setAttribute("height",l.h);
+      el.setAttribute("preserveAspectRatio","none");
+      if(l.flipH||l.flipV){
+        const cx=l.x+l.w/2, cy=l.y+l.h/2;
+        el.setAttribute("transform",`translate(${cx},${cy}) scale(${l.flipH?-1:1},${l.flipV?-1:1}) translate(${-cx},${-cy})`);
+      }
+    }
+    el.setAttribute("data-id",l.id);
+    g.appendChild(el);
+    layersLayer.appendChild(g);
+    if(l.type==="text"){                     // measure text → keep box in sync, center-locked
+      try{
+        const bb=el.getBBox(), sx=l.sx||1;
+        const ocx=l.x+l.w/2, ocy=l.y+l.h/2;
+        l.w=Math.max(4,bb.width*sx+2); l.h=Math.max(4,bb.height+1);
+        l.x=ocx-l.w/2; l.y=ocy-l.h/2;
+        el.setAttribute("x",ocx); el.setAttribute("y",ocy);
+        if(sx!==1) el.setAttribute("transform",`translate(${ocx},${ocy}) scale(${sx},1) translate(${-ocx},${-ocy})`);
+        g.setAttribute("transform",`rotate(${l.rot} ${ocx} ${ocy})`);
+      }catch(e){}
+    }
+  });
+}
+
+/* ---------- selection handles ---------- */
+const HS=7;
+function rotPt(px,py,cx,cy,deg){
+  const a=deg*Math.PI/180, c=Math.cos(a), s=Math.sin(a), dx=px-cx, dy=py-cy;
+  return [cx+dx*c-dy*s, cy+dx*s+dy*c];
+}
+function drawHandles(){
+  uiLayer.innerHTML="";
+  const l=state.layers.find(x=>x.id===state.sel);
+  if(!l) return;
+  const cx=l.x+l.w/2, cy=l.y+l.h/2;
+  const corners=[[l.x,l.y],[l.x+l.w,l.y],[l.x+l.w,l.y+l.h],[l.x,l.y+l.h]].map(p=>rotPt(p[0],p[1],cx,cy,l.rot));
+  const box=document.createElementNS(SVGNS,"polygon");
+  box.setAttribute("points",corners.map(p=>p.join(",")).join(" "));
+  box.setAttribute("fill","none"); box.setAttribute("stroke","#7aa2ff");
+  box.setAttribute("stroke-width","1.4"); box.setAttribute("stroke-dasharray","5 3");
+  box.setAttribute("pointer-events","none"); box.setAttribute("vector-effect","non-scaling-stroke");
+  uiLayer.appendChild(box);
+
+  const rp=rotPt(cx,l.y-26,cx,cy,l.rot);
+  const line=document.createElementNS(SVGNS,"line");
+  const topMid=rotPt(cx,l.y,cx,cy,l.rot);
+  line.setAttribute("x1",topMid[0]); line.setAttribute("y1",topMid[1]);
+  line.setAttribute("x2",rp[0]); line.setAttribute("y2",rp[1]);
+  line.setAttribute("stroke","#7aa2ff"); line.setAttribute("stroke-width","1.2");
+  line.setAttribute("pointer-events","none");
+  uiLayer.appendChild(line);
+
+  corners.forEach((p,i)=>{
+    const c=document.createElementNS(SVGNS,"rect");
+    c.setAttribute("x",p[0]-HS/2); c.setAttribute("y",p[1]-HS/2);
+    c.setAttribute("width",HS); c.setAttribute("height",HS); c.setAttribute("rx",1.5);
+    c.setAttribute("fill","#fff"); c.setAttribute("stroke","#3a6ad4"); c.setAttribute("stroke-width","1.4");
+    c.style.cursor="nwse-resize"; c.dataset.handle="rs"+i;
+    uiLayer.appendChild(c);
+  });
+  const rh=document.createElementNS(SVGNS,"circle");
+  rh.setAttribute("cx",rp[0]); rh.setAttribute("cy",rp[1]); rh.setAttribute("r",HS/1.6);
+  rh.setAttribute("fill","#7aa2ff"); rh.setAttribute("stroke","#fff"); rh.setAttribute("stroke-width","1.4");
+  rh.style.cursor="grab"; rh.dataset.handle="rot";
+  uiLayer.appendChild(rh);
+}
+
+/* ============================================================
+   POINTER INTERACTION
+   ============================================================ */
+function toSvg(e){
+  const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+let drag=null;
+svg.addEventListener("pointerdown",e=>{
+  const p=toSvg(e);
+  const h=e.target.dataset && e.target.dataset.handle;
+  const l=state.layers.find(x=>x.id===state.sel);
+  if(h && l){
+    svg.setPointerCapture(e.pointerId);
+    if(h==="rot"){
+      const cx=l.x+l.w/2, cy=l.y+l.h/2;
+      drag={mode:"rot",l,cx,cy,start:Math.atan2(p.y-cy,p.x-cx)*180/Math.PI,rot0:l.rot};
+    } else {
+      const i=+h.slice(2);
+      const cx=l.x+l.w/2, cy=l.y+l.h/2;
+      const opp=[[l.x+l.w,l.y+l.h],[l.x,l.y+l.h],[l.x,l.y],[l.x+l.w,l.y]][i];
+      drag={mode:"rs",l,i,anchorLocal:opp.slice(),anchorScreen:rotPt(opp[0],opp[1],cx,cy,l.rot),
+            aspect:l.w/l.h, fs0:l.fontSize, h0:l.h, w0:l.w};
+    }
+    e.preventDefault(); return;
+  }
+  // hit-test charges topmost-first
+  const id=e.target.dataset && e.target.dataset.id;
+  if(id){
+    select(+id);
+    const lay=state.layers.find(x=>x.id===+id);
+    svg.setPointerCapture(e.pointerId);
+    drag={mode:"move",l:lay,ox:p.x-lay.x,oy:p.y-lay.y};
+    e.preventDefault(); return;
+  }
+  select(null);
+});
+svg.addEventListener("pointermove",e=>{
+  if(!drag) return;
+  const p=toSvg(e), l=drag.l;
+  if(drag.mode==="move"){ l.x=p.x-drag.ox; l.y=p.y-drag.oy; }
+  else if(drag.mode==="rot"){
+    let a=Math.atan2(p.y-drag.cy,p.x-drag.cx)*180/Math.PI;
+    l.rot=drag.rot0+(a-drag.start);
+    if(e.shiftKey) l.rot=Math.round(l.rot/15)*15;
+    l.rot=((l.rot%360)+360)%360;
+  }
+  else if(drag.mode==="rs"){
+    const cx=l.x+l.w/2, cy=l.y+l.h/2;
+    const loc=rotPt(p.x,p.y,cx,cy,-l.rot);
+    const A=drag.anchorLocal;
+    let w=Math.abs(loc[0]-A[0]), h=Math.abs(loc[1]-A[1]);
+    // ratio is kept when the layer's lock is on; Shift inverts that, either way
+    const keepRatio = (l.type==="text") || ((l.lock!==false) !== e.shiftKey);
+    if(keepRatio){ const s=Math.max(w/drag.aspect,h); h=s; w=s*drag.aspect; }
+    w=Math.max(2,w); h=Math.max(2,h);
+    const i=drag.i;
+    let nx = (i===0||i===3) ? A[0]-w : A[0];
+    let ny = (i===0||i===1) ? A[1]-h : A[1];
+    if(l.type==="text"){ l.fontSize=Math.max(3, drag.fs0*(h/(drag.h0||1))); }
+    const ncx=nx+w/2, ncy=ny+h/2;
+    const anew=[(i===0||i===3)?nx+w:nx, (i===0||i===1)?ny+h:ny];
+    const ascr=rotPt(anew[0],anew[1],ncx,ncy,l.rot);
+    l.x=nx+(drag.anchorScreen[0]-ascr[0]); l.y=ny+(drag.anchorScreen[1]-ascr[1]);
+    l.w=w; l.h=h;
+  }
+  renderLayers(); drawHandles();
+  if(syncSelWH) syncSelWH();
+});
+["pointerup","pointercancel"].forEach(ev=>svg.addEventListener(ev,e=>{
+  if(drag){ drag=null; try{svg.releasePointerCapture(e.pointerId);}catch(_){} syncSelPanel(); }
+}));
+
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("catalogPicker").open) return;
+  if(/input|select|textarea/i.test(e.target.tagName)) return;
+  const l=state.layers.find(x=>x.id===state.sel); if(!l) return;
+  const step=e.shiftKey?8:1.5;
+  if(e.key==="ArrowLeft"){l.x-=step;} else if(e.key==="ArrowRight"){l.x+=step;}
+  else if(e.key==="ArrowUp"){l.y-=step;} else if(e.key==="ArrowDown"){l.y+=step;}
+  else if(e.key==="Delete"||e.key==="Backspace"){ removeLayer(l.id); return; }
+  else return;
+  e.preventDefault(); renderLayers(); drawHandles();
+});
+
+/* ============================================================
+   LAYER MANAGEMENT
+   ============================================================ */
+function addImageLayer(href,name,natW,natH){
+  const maxW=110, r=natH/natW;
+  let w=maxW, h=maxW*r;
+  if(h>130){ h=130; w=h/r; }
+  const l={id:state.nextId++,type:"image",href,name:name||"Image",
+    x:CX-w/2,y:110-h/2,w,h,rot:0,opacity:1,clip:true,flipH:false,flipV:false,natW,natH};
+  state.layers.push(l); select(l.id); render(); buildLayerList();
+  return l;
+}
+function addShapeLayer(k){
+  const c=CHARGES[k], s=72;
+  const l={id:state.nextId++,type:"shape",name:c.name,pathD:c.d,even:!!c.even,
+    color:"#1b1b1b",strokeColor:"#f7f7f5",strokeW:0,
+    x:CX-s/2,y:108-s/2,w:s,h:s,rot:0,opacity:1,clip:false};
+  state.layers.push(l); select(l.id); render(); buildLayerList();
+}
+function addTextLayer(){
+  const l={id:state.nextId++,type:"text",name:"Text",text:"MOTTO",font:"Georgia, serif",
+    fontSize:13,color:"#ffcc00",strokeColor:"#1b1b1b",strokeW:0.8,bold:true,
+    x:70,y:176,w:60,h:14,rot:0,opacity:1,clip:false};
+  state.layers.push(l); select(l.id); render(); buildLayerList();
+}
+function removeLayer(id){
+  state.layers=state.layers.filter(l=>l.id!==id);
+  if(state.sel===id) state.sel=null;
+  render(); buildLayerList(); syncSelPanel();
+}
+function select(id){ state.sel=id; buildLayerList(); drawHandles(); syncSelPanel(); }
+function moveLayer(id,dir){
+  const i=state.layers.findIndex(l=>l.id===id), j=i+dir;
+  if(i<0||j<0||j>=state.layers.length) return;
+  [state.layers[i],state.layers[j]]=[state.layers[j],state.layers[i]];
+  render(); buildLayerList();
+}
+function buildLayerList(){
+  const box=$("layerList"); box.innerHTML="";
+  if(!state.layers.length){ box.innerHTML='<div class="empty">No charges yet.<br>Add an image to begin.</div>'; return; }
+  [...state.layers].reverse().forEach(l=>{
+    const d=document.createElement("div");
+    d.className="layer"+(l.id===state.sel?" sel":"");
+    const thumb = l.type==="image"
+      ? `<img class="th" src="${l.href}">`
+      : l.type==="shape"
+      ? `<svg class="th" viewBox="0 0 24 24"><path d="${l.pathD}" fill="${l.color}" ${l.even?'fill-rule="evenodd"':''}/></svg>`
+      : `<div class="th" style="display:flex;align-items:center;justify-content:center;color:${l.color};font:700 15px Georgia,serif">T</div>`;
+    d.innerHTML = thumb + `<div class="nm">${escapeHtml(l.type==="text"?(l.text||"Text"):l.name)}</div>
+      <div class="acts">
+        <button class="iconbtn" data-a="up" title="Bring forward">▲</button>
+        <button class="iconbtn" data-a="down" title="Send back">▼</button>
+        <button class="iconbtn" data-a="del" title="Delete">✕</button>
+      </div>`;
+    d.onclick=e=>{
+      const a=e.target.dataset.a;
+      if(a==="up") moveLayer(l.id,1);
+      else if(a==="down") moveLayer(l.id,-1);
+      else if(a==="del") removeLayer(l.id);
+      else select(l.id);
+    };
+    box.appendChild(d);
+  });
+}
+const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- selected layer panel ---------- */
+let syncSelWH=null;
+function syncSelPanel(){
+  const box=$("selBody"), l=state.layers.find(x=>x.id===state.sel);
+  syncSelWH=null;
+  if(!l){ box.innerHTML='<div class="empty">No layer selected</div>'; return; }
+  if(l.type==="shape"){
+    box.innerHTML=`
+      <label class="fld">Charge color</label><input type="color" id="sColor" value="${l.color}">
+      <label class="fld">Outline width <span class="val" id="sStrokeV">${l.strokeW}</span></label>
+      <input type="range" id="sStroke" min="0" max="4" step="0.2" value="${l.strokeW}">
+      <label class="fld">Outline color</label><input type="color" id="sStrokeC" value="${l.strokeColor}">
+      <div class="row" style="margin-top:8px">
+        <button class="btn sm" id="sFlipH">⇆ Flip H</button>
+        <button class="btn sm" id="sFlipV">⇅ Flip V</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="sClip" ${l.clip?"checked":""}> Clip inside shield</label>`;
+  } else if(l.type==="text"){
+    box.innerHTML=`
+      <label class="fld">Text</label><input type="text" id="sText" value="${escapeHtml(l.text)}">
+      <label class="fld">Font</label>
+      <select id="sFont">
+        ${["Georgia, serif","'Times New Roman', serif","'Palatino Linotype', serif","Garamond, serif","'Trebuchet MS', sans-serif","Impact, sans-serif","'Courier New', monospace"]
+          .map(f=>`<option value="${f}" ${l.font===f?"selected":""}>${f.split(",")[0].replace(/'/g,"")}</option>`).join("")}
+      </select>
+      <label class="fld">Text color</label><input type="color" id="sColor" value="${l.color}">
+      <label class="fld">Outline width <span class="val" id="sStrokeV">${l.strokeW}</span></label>
+      <input type="range" id="sStroke" min="0" max="4" step="0.2" value="${l.strokeW}">
+      <label class="fld">Outline color</label><input type="color" id="sStrokeC" value="${l.strokeColor}">
+      <label class="toggle"><input type="checkbox" id="sBold" ${l.bold?"checked":""}> Bold</label>`;
+  } else {
+    box.innerHTML=`
+      <div class="row">
+        <button class="btn sm" id="sFlipH">⇆ Flip H</button>
+        <button class="btn sm" id="sFlipV">⇅ Flip V</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="sClip" ${l.clip?"checked":""}> Clip inside shield</label>`;
+  }
+  const sizeUI = l.type==="text" ? `
+    <label class="fld">Font size <span class="val" id="sFsV">${Math.round(l.fontSize)}</span></label>
+    <input type="range" id="sFs" min="4" max="90" step="0.5" value="${l.fontSize}">
+    <label class="fld">Stretch width <span class="val" id="sSxV">${Math.round((l.sx||1)*100)}%</span></label>
+    <input type="range" id="sSx" min="30" max="260" step="1" value="${(l.sx||1)*100}">`
+  : `
+    <label class="toggle"><input type="checkbox" id="sLock" ${l.lock!==false?"checked":""}> Lock width : height ratio</label>
+    <label class="fld">Width <span class="val" id="sWV">${Math.round(l.w)}</span></label>
+    <div class="row"><input type="range" id="sW" min="4" max="320" step="1" value="${Math.min(320,Math.round(l.w))}">
+      <input type="number" id="sWN" min="1" max="600" value="${Math.round(l.w)}" style="flex:none;width:60px"></div>
+    <label class="fld">Height <span class="val" id="sHV">${Math.round(l.h)}</span></label>
+    <div class="row"><input type="range" id="sH" min="4" max="320" step="1" value="${Math.min(320,Math.round(l.h))}">
+      <input type="number" id="sHN" min="1" max="600" value="${Math.round(l.h)}" style="flex:none;width:60px"></div>
+    <button class="btn sm" id="sReset" style="width:100%;margin-top:7px">↺ Natural proportions</button>`;
+
+  box.innerHTML += `
+    ${sizeUI}
+    <label class="fld">Rotation <span class="val" id="sRotV">${Math.round(l.rot)}°</span></label>
+    <input type="range" id="sRot" min="0" max="360" step="1" value="${l.rot}">
+    <label class="fld">Opacity <span class="val" id="sOpV">${Math.round(l.opacity*100)}%</span></label>
+    <input type="range" id="sOp" min="5" max="100" step="1" value="${l.opacity*100}">`;
+  if(l.type==="text") box.innerHTML += `<label class="toggle"><input type="checkbox" id="sClip" ${l.clip?"checked":""}> Clip inside shield</label>`;
+
+  const on=(id,ev,fn)=>{const el=$(id); if(el) el.addEventListener(ev,fn);};
+  on("sText","input",e=>{l.text=e.target.value; render(); buildLayerList();});
+  on("sFont","change",e=>{l.font=e.target.value; render();});
+  on("sColor","input",e=>{l.color=e.target.value; render(); buildLayerList();});
+  on("sStroke","input",e=>{l.strokeW=+e.target.value; $("sStrokeV").textContent=l.strokeW; render();});
+  on("sStrokeC","input",e=>{l.strokeColor=e.target.value; render();});
+  on("sBold","change",e=>{l.bold=e.target.checked; render();});
+  on("sFlipH","click",()=>{l.flipH=!l.flipH; render();});
+  on("sFlipV","click",()=>{l.flipV=!l.flipV; render();});
+  on("sClip","change",e=>{l.clip=e.target.checked; render();});
+  on("sRot","input",e=>{l.rot=+e.target.value; $("sRotV").textContent=Math.round(l.rot)+"°"; renderLayers(); drawHandles();});
+  on("sOp","input",e=>{l.opacity=+e.target.value/100; $("sOpV").textContent=e.target.value+"%"; renderLayers();});
+  on("sFs","input",e=>{l.fontSize=+e.target.value; $("sFsV").textContent=Math.round(l.fontSize); renderLayers(); drawHandles();});
+  on("sSx","input",e=>{l.sx=+e.target.value/100; $("sSxV").textContent=e.target.value+"%"; renderLayers(); drawHandles();});
+  on("sLock","change",e=>{l.lock=e.target.checked;});
+
+  // width / height, independently adjustable (ratio lock optional)
+  function setWH(w,h,src){
+    const cx=l.x+l.w/2, cy=l.y+l.h/2;
+    if(l.lock!==false && l.w>0 && l.h>0){
+      const r=l.h/l.w;
+      if(src==="w") h=w*r; else w=h/r;
+    }
+    l.w=Math.max(2,w); l.h=Math.max(2,h);
+    l.x=cx-l.w/2; l.y=cy-l.h/2;
+    syncWH(); renderLayers(); drawHandles();
+  }
+  function syncWH(){
+    const w=Math.round(l.w), h=Math.round(l.h);
+    const set=(id,v)=>{const el=$(id); if(el && document.activeElement!==el) el.value=v;};
+    set("sW",Math.min(320,w)); set("sWN",w); set("sH",Math.min(320,h)); set("sHN",h);
+    if($("sWV")) $("sWV").textContent=w;
+    if($("sHV")) $("sHV").textContent=h;
+  }
+  on("sW","input",e=>setWH(+e.target.value,l.h,"w"));
+  on("sH","input",e=>setWH(l.w,+e.target.value,"h"));
+  on("sWN","input",e=>{const v=+e.target.value; if(v>0) setWH(v,l.h,"w");});
+  on("sHN","input",e=>{const v=+e.target.value; if(v>0) setWH(l.w,v,"h");});
+  on("sReset","click",()=>{
+    const r = l.type==="image" && l.natW ? l.natH/l.natW : 1;   // vector charges live in a square box
+    const cx=l.x+l.w/2, cy=l.y+l.h/2;
+    l.h=l.w*r; l.x=cx-l.w/2; l.y=cy-l.h/2;
+    syncWH(); renderLayers(); drawHandles();
+  });
+  syncSelWH=syncWH;   // so a corner drag updates the number boxes
+}
+
+/* ============================================================
+   UI BUILD
+   ============================================================ */
+function miniShield(d,inner){
+  return `<svg width="40" height="46" viewBox="-6 -6 212 252">
+    <path d="${d}" fill="#4b5569" stroke="#0b0d12" stroke-width="9"/>${inner||""}</svg>`;
+}
+function buildShapes(){
+  const g=$("shapeGrid"); g.innerHTML="";
+  for(const k in SHAPES){
+    const b=document.createElement("button");
+    b.className="opt"+(state.shape===k?" sel":""); b.dataset.k=k;
+    b.innerHTML=miniShield(SHAPES[k].d)+"<span>"+SHAPES[k].name+"</span>";
+    b.onclick=()=>{state.shape=k; buildShapes(); render();};
+    g.appendChild(b);
+  }
+}
+function buildDivs(){
+  const g=$("divGrid"); g.innerHTML="";
+  const base=SHAPES.heater.d;
+  for(const k in DIVS){
+    const paths=DIVS[k].paths();
+    const cid="mc_"+k;
+    const inner=`<g clip-path="url(#${cid})">`+paths.map((d,i)=>
+      `<path d="${d}" fill="${["#e9edf5","#9aa5bb","#6d788f","#c3cbdb","#8390a8","#b3bccd","#7b869c","#d5dbe6"][i%8]}"/>`).join("")+`</g>`;
+    const b=document.createElement("button");
+    b.className="opt"+(state.division===k?" sel":""); b.dataset.k=k;
+    b.innerHTML=`<svg width="36" height="42" viewBox="-6 -6 212 252">
+      <defs><clipPath id="${cid}"><path d="${base}"/></clipPath></defs>
+      ${inner}<path d="${base}" fill="none" stroke="#0b0d12" stroke-width="9"/></svg><span>${DIVS[k].name}</span>`;
+    b.onclick=()=>{state.division=k; state.activeRegion=0; buildDivs(); buildRegions(); render();};
+    g.appendChild(b);
+  }
+}
+function buildOrds(){
+  const g=$("ordGrid"); g.innerHTML="";
+  const base=SHAPES.heater.d;
+  for(const k in ORDS){
+    const o=ORDS[k];
+    let inner="";
+    if(k!=="none"){
+      if(o.previewSw) inner=`<path d="${base}" fill="none" stroke="#e6c35a" stroke-width="${o.previewSw}" ${o.inset?`transform="translate(${CX*(1-o.inset)},${120*(1-o.inset)}) scale(${o.inset})"`:""}/>`;
+      else if(o.stroke) inner=`<path d="${o.stroke}" fill="none" stroke="#e6c35a" stroke-width="${o.sw}"/>`;
+      else inner=`<path d="${o.d}" fill="#e6c35a"/>`;
+    }
+    const b=document.createElement("button");
+    b.className="opt"+(state.ordinary===k?" sel":""); b.dataset.k=k;
+    b.innerHTML=`<svg width="36" height="42" viewBox="-6 -6 212 252">
+      <defs><clipPath id="oc${k}"><path d="${base}"/></clipPath></defs>
+      <path d="${base}" fill="#4b5569"/><g clip-path="url(#oc${k})">${inner}</g>
+      <path d="${base}" fill="none" stroke="#0b0d12" stroke-width="9"/></svg><span>${o.name}</span>`;
+    b.onclick=()=>{state.ordinary=k; if(k!=="none") state.activeRegion="o0"; buildOrds(); buildRegions(); render();};
+    g.appendChild(b);
+  }
+  const sel=$("ordSplitSel");
+  sel.innerHTML=Object.entries(DIVS).map(([k,v])=>
+    `<option value="${k}">${k==="plain"?"Not split (one piece)":v.name}</option>`).join("");
+  sel.value=state.ordSplit;
+  const es=$("ordEdgeSel");
+  es.innerHTML=Object.entries(EDGES).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join("");
+  es.value=state.ordEdge;
+  $("edgeWrap").style.display = (ORDS[state.ordinary]||{}).edgeBand ? "block" : "none";
+  $("ordWidth").value=state.ordWidth; $("ordWidthV").textContent=state.ordWidth;
+  $("ordEdgeK").value=state.ordEdgeK; $("ordEdgeKV").textContent=state.ordEdgeK;
+  $("ordDepth").value=state.ordDepth; $("ordDepthV").textContent=state.ordDepth+"%";
+}
+function buildRegions(){
+  const box=$("regionList"); box.innerHTML="";
+  const chip=(key,color,label)=>{
+    const c=document.createElement("div");
+    c.className="rchip"+(state.activeRegion===key?" sel":"");
+    c.innerHTML=`<i style="background:${color}"></i><span>${label}</span>`;
+    c.onclick=()=>{state.activeRegion=key; buildRegions(); syncColorPanel();};
+    box.appendChild(c);
+  };
+  DIVS[state.division].labels.forEach((lb,i)=>chip("f"+i,getFill(i).color,lb));
+  if(state.ordinary!=="none"){
+    const on=ORDS[state.ordinary].name, n=ordPartCount(), lbs=DIVS[state.ordSplit].labels;
+    for(let i=0;i<n;i++) chip("o"+i,getOrdFill(i).color, n===1?on:on+" · "+lbs[i]);
+  }
+  // keep the active chip valid
+  const k=String(state.activeRegion), t=k[0], i=+k.slice(1)||0;
+  const max = t==="o" ? (state.ordinary==="none"?0:ordPartCount()) : DIVS[state.division].labels.length;
+  if(i>=max) state.activeRegion="f0";
+  syncColorPanel();
+}
+/* ---------- presets ---------- */
+const AR="#f7f7f5", GU="#d9302f", AZ="#2e71c4", OR="#ffcc00", SA="#1b1b1b", VE="#1e8b3f";
+const PRESETS = {
+  bendyBordure:{name:"Bordure per pale, bendy", shape:"heater", division:"plain", ordinary:"bordure", ordSplit:"perPale",
+    fills:[{color:AR}],
+    ordFills:[{color:GU,pat:"bendy",   patColor:AR,patScale:340},
+              {color:AZ,pat:"bendySin",patColor:AR,patScale:340}]},
+  bendyQuarters:{name:"Bordure quarterly, bendy", shape:"heater", division:"plain", ordinary:"bordure", ordSplit:"quarterly",
+    fills:[{color:AR}],
+    ordFills:[{color:GU,pat:"bendy",patColor:AR,patScale:200},{color:AZ,pat:"bendySin",patColor:AR,patScale:200},
+              {color:AZ,pat:"bendySin",patColor:AR,patScale:200},{color:GU,pat:"bendy",patColor:AR,patScale:200}]},
+  barryBendyCross:{name:"Barry bendy sin. + cross nowy", shape:"heater", division:"plain",
+    ordinary:"crossNowy", ordSplit:"plain",
+    fills:[{color:AR,pat:"barryBendyS",patColor:SA,patScale:260}],
+    ordFills:[{color:OR}]},
+  castleBordure:{name:"Bordure embattled (castle)", shape:"heater", division:"plain",
+    ordinary:"bordure", ordSplit:"plain", edge:"embattled", edgeK:18, ordW:17, ordD:80,
+    fills:[{color:SA}], ordFills:[{color:AR}]},
+  chiefErmine:{name:"Chief ermine", shape:"heater", division:"perFess", ordinary:"chief", ordSplit:"plain",
+    fills:[{color:AZ},{color:GU}], ordFills:[{color:AR,pat:"ermine",patColor:SA,patScale:120}]},
+  crossSplit:{name:"Cross per saltire", shape:"french", division:"quarterly", ordinary:"cross", ordSplit:"perSaltire",
+    fills:[{color:AZ},{color:AR},{color:AR},{color:AZ}],
+    ordFills:[{color:OR},{color:GU},{color:GU},{color:OR}]},
+  vairPale:{name:"Per pale vair & gules", shape:"heater", division:"perPale", ordinary:"none", ordSplit:"plain",
+    fills:[{color:AR,pat:"vair",patColor:AZ,patScale:150},{color:GU}], ordFills:[]},
+  gyronny:{name:"Gyronny with orle", shape:"spanish", division:"gyronny", ordinary:"orle", ordSplit:"plain",
+    fills:[{color:SA},{color:OR},{color:SA},{color:OR},{color:SA},{color:OR},{color:SA},{color:OR}],
+    ordFills:[{color:VE}]}
+};
+function applyPreset(k){
+  const p=PRESETS[k];
+  state.shape=p.shape; state.division=p.division; state.ordinary=p.ordinary; state.ordSplit=p.ordSplit;
+  state.ordEdge=p.edge||"plain"; state.ordEdgeK=p.edgeK||18;
+  state.ordWidth=p.ordW||17; state.ordDepth=p.ordD||80;
+  (p.fills||[]).forEach((f,i)=>Object.assign(getFill(i),{pat:"none",patColor:"#1b1b1b",patScale:100},f));
+  (p.ordFills||[]).forEach((f,i)=>Object.assign(getOrdFill(i),{pat:"none",patColor:AR,patScale:150},f));
+  state.activeRegion="f0";
+  buildShapes(); buildDivs(); buildOrds(); buildRegions(); render();
+}
+function buildCharges(){
+  const g=$("chargeGrid"); g.innerHTML="";
+  for(const k in CHARGES){
+    const c=CHARGES[k];
+    const b=document.createElement("button");
+    b.className="opt"; b.title="Add "+c.name;
+    b.innerHTML=`<svg width="24" height="24" viewBox="0 0 24 24">
+      <path d="${c.d}" fill="#d8dde8" ${c.even?'fill-rule="evenodd"':''}/></svg><span>${c.name}</span>`;
+    b.onclick=()=>addShapeLayer(k);
+    g.appendChild(b);
+  }
+}
+function buildPresets(){
+  const g=$("presetGrid"); g.innerHTML="";
+  for(const k in PRESETS){
+    const b=document.createElement("button");
+    b.className="opt"; b.style.padding="8px 6px";
+    b.innerHTML="<span>"+PRESETS[k].name+"</span>";
+    b.onclick=()=>applyPreset(k);
+    g.appendChild(b);
+  }
+}
+
+function buildTinctures(){
+  const g=$("tinctureGrid"); g.innerHTML="";
+  TINCTURES.forEach(([n,hex])=>{
+    const b=document.createElement("button");
+    b.style.background=hex; b.title=n; b.dataset.hex=hex;
+    b.onclick=()=>{ activeFill().color=hex; $("customColor").value=hex; buildRegions(); render(); };
+    g.appendChild(b);
+  });
+  const sel=$("patSel");
+  sel.innerHTML=Object.entries(TREATMENTS).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join("");
+}
+function syncColorPanel(){
+  const f=activeFill();
+  $("customColor").value=f.color;
+  $("patSel").value=f.pat;
+  $("patColor").value=f.patColor;
+  $("patScale").value=f.patScale;
+  $("patScaleV").textContent=f.patScale+"%";
+  $("patColorWrap").style.display = f.pat==="none" ? "none" : "block";
+  [...$("tinctureGrid").children].forEach(b=>b.classList.toggle("sel",b.dataset.hex.toLowerCase()===f.color.toLowerCase()));
+}
+
+/* ---------- blazon ---------- */
+function tName(hex){
+  const t=TINCTURES.find(t=>t[1].toLowerCase()===hex.toLowerCase());
+  return t?t[0].toLowerCase():hex;
+}
+function updateBlazon(){
+  const d=DIVS[state.division];
+  const n=d.paths().length;
+  let s;
+  if(state.division==="plain") s=cap(tName(getFill(0).color));
+  else {
+    const names=[]; const seen=new Set();
+    for(let i=0;i<Math.min(n,4);i++){ const t=tName(getFill(i).color); if(!seen.has(t)){seen.add(t); names.push(t);} }
+    s=cap(d.name.toLowerCase())+" "+names.join(" and ");
+  }
+  const f=getFill(0);
+  const clean=n=>n.toLowerCase().replace(/\s*\(.*?\)/g,"").replace(/[╲╱]/g,"").trim();
+  if(f.pat!=="none") s+=" ("+clean(TREATMENTS[f.pat].name)+")";
+  if(state.ordinary!=="none"){
+    s+=", a "+ORDS[state.ordinary].name.toLowerCase();
+    if(ORDS[state.ordinary].edgeBand && state.ordEdge!=="plain") s+=" "+EDGES[state.ordEdge].name.toLowerCase();
+    if(state.ordSplit!=="plain") s+=" "+DIVS[state.ordSplit].name.toLowerCase();
+    const parts=[]; for(let i=0;i<ordPartCount();i++){
+      const of=getOrdFill(i);
+      parts.push((of.pat!=="none"?clean(TREATMENTS[of.pat].name)+" ":"")+tName(of.color));
+    }
+    s+=" "+[...new Set(parts)].join(" and ");
+  }
+  const charges=state.layers.filter(l=>l.type!=="text").length;
+  if(charges) s+=", charged with "+charges+" device"+(charges>1?"s":"");
+  const txt=state.layers.filter(l=>l.type==="text").map(l=>l.text).filter(Boolean);
+  if(txt.length) s+=' — motto "'+txt.join(" / ")+'"';
+  $("blazon").textContent=s+".";
+}
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+/* ============================================================
+   FILE INPUT
+   ============================================================ */
+function handleFiles(files){
+  [...files].filter(f=>f.type.startsWith("image/")).forEach(file=>{
+    const fr=new FileReader();
+    fr.onload=()=>{
+      const img=new Image();
+      img.onload=()=>addImageLayer(fr.result,file.name.replace(/\.[^.]+$/,""),img.naturalWidth,img.naturalHeight);
+      img.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+$("fileInput").addEventListener("change",e=>{handleFiles(e.target.files); e.target.value="";});
+$("dropZone").onclick=()=>$("fileInput").click();
+$("addImgBtn").onclick=()=>$("fileInput").click();
+$("addTextBtn").onclick=addTextLayer;
+["dragenter","dragover"].forEach(ev=>$("dropZone").addEventListener(ev,e=>{e.preventDefault();$("dropZone").classList.add("over");}));
+["dragleave","drop"].forEach(ev=>$("dropZone").addEventListener(ev,e=>{e.preventDefault();$("dropZone").classList.remove("over");}));
+$("dropZone").addEventListener("drop",e=>handleFiles(e.dataTransfer.files));
+document.addEventListener("dragover",e=>e.preventDefault());
+document.addEventListener("drop",e=>{e.preventDefault(); if(e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);});
+
+/* toolbar actions */
+$("centerBtn").onclick=()=>{const l=state.layers.find(x=>x.id===state.sel); if(!l)return;
+  l.x=CX-l.w/2; l.y=110-l.h/2; renderLayers(); drawHandles();};
+$("fitBtn").onclick=()=>{const l=state.layers.find(x=>x.id===state.sel); if(!l)return;
+  const r=l.h/l.w; let w=118,h=118*r; if(h>150){h=150;w=h/r;}
+  l.w=w;l.h=h;l.rot=0;l.x=CX-w/2;l.y=108-h/2;
+  if(l.type==="text") l.fontSize=Math.max(6,l.fontSize);
+  renderLayers(); drawHandles(); syncSelPanel();};
+$("dupBtn").onclick=()=>{const l=state.layers.find(x=>x.id===state.sel); if(!l)return;
+  const c=Object.assign({},l,{id:state.nextId++,x:l.x+12,y:l.y+12});
+  state.layers.push(c); select(c.id); render(); buildLayerList();};
+$("delBtn").onclick=()=>{ if(state.sel!=null) removeLayer(state.sel); };
+$("checker").onchange=e=>svg.classList.toggle("nochecker",!e.target.checked);
+
+/* style controls */
+$("shading").onchange=e=>{state.shading=e.target.checked; render();};
+$("outline").onchange=e=>{state.outline=e.target.checked; render();};
+$("outlineColor").oninput=e=>{state.outlineColor=e.target.value; render();};
+$("outlineW").oninput=e=>{state.outlineW=+e.target.value; $("outlineWV").textContent=state.outlineW; render();};
+$("bgOn").onchange=e=>{state.bgOn=e.target.checked; render();};
+$("bgColor").oninput=e=>{state.bgColor=e.target.value; if(state.bgOn) render();};
+
+/* color controls */
+$("customColor").oninput=e=>{activeFill().color=e.target.value; buildRegions(); render();};
+$("patSel").onchange=e=>{activeFill().pat=e.target.value; syncColorPanel(); render();};
+$("patColor").oninput=e=>{activeFill().patColor=e.target.value; render();};
+$("patScale").oninput=e=>{activeFill().patScale=+e.target.value; $("patScaleV").textContent=e.target.value+"%"; render();};
+
+/* collapsible panels */
+document.querySelectorAll("section.pnl>h2").forEach(h=>h.onclick=()=>h.parentElement.classList.toggle("collapsed"));
+
+/* ============================================================
+   EXPORT
+   ============================================================ */
+function exportSVGString(){
+  const clone=svg.cloneNode(true);
+  clone.querySelector("#ui").remove();
+  clone.removeAttribute("style"); clone.removeAttribute("class");
+  clone.setAttribute("xmlns",SVGNS);
+  clone.setAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");
+  const sourceCredits=state.layers.filter(l=>l.catalogCredit).map(l=>l.catalogCredit);
+  if(sourceCredits.length){
+    const metadata=document.createElementNS(SVGNS,"desc");
+    metadata.textContent="Artwork sources and licenses:\n"+[...new Set(sourceCredits.map(c=>c.text))].join("\n\n");
+    clone.insertBefore(metadata,clone.firstChild);
+  }
+  const w=+$("expSize").value, h=Math.round(w*240/200);
+  clone.setAttribute("width",w); clone.setAttribute("height",h);
+  const bg=clone.querySelector("#bgRect");
+  if($("expTrim").checked && !state.bgOn) bg.setAttribute("fill","none");
+  return {str:new XMLSerializer().serializeToString(clone),w,h};
+}
+function download(blob,name){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+$("saveBtn").onclick=()=>{
+  select(state.sel); drawHandles();
+  const {str,w,h}=exportSVGString();
+  const img=new Image();
+  const blobUrl=URL.createObjectURL(new Blob([str],{type:"image/svg+xml;charset=utf-8"}));
+  img.onload=()=>{
+    const cv=document.createElement("canvas"); cv.width=w; cv.height=h;
+    const ctx=cv.getContext("2d");
+    if(!$("expTrim").checked && !state.bgOn){ ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,w,h); }
+    ctx.drawImage(img,0,0,w,h);
+    URL.revokeObjectURL(blobUrl);
+    cv.toBlob(b=>download(b,"coat-of-arms.png"),"image/png");
+  };
+  img.onerror=()=>{ URL.revokeObjectURL(blobUrl); alert("Export failed. Try a smaller size."); };
+  img.src=blobUrl;
+};
+$("saveSvgBtn").onclick=()=>{
+  const {str}=exportSVGString();
+  download(new Blob([str],{type:"image/svg+xml;charset=utf-8"}),"coat-of-arms.svg");
+};
+
+/* ============================================================
+   INIT
+   ============================================================ */
+$("ordSplitSel").onchange=e=>{state.ordSplit=e.target.value; state.activeRegion="o0"; buildRegions(); render();};
+$("ordEdgeSel").onchange=e=>{
+  state.ordEdge=e.target.value;
+  if(EDGES[state.ordEdge].k>1){ state.ordEdgeK=EDGES[state.ordEdge].k;
+    $("ordEdgeK").value=state.ordEdgeK; $("ordEdgeKV").textContent=state.ordEdgeK; }
+  render();
+};
+$("ordWidth").oninput=e=>{state.ordWidth=+e.target.value; $("ordWidthV").textContent=state.ordWidth; render();};
+$("ordEdgeK").oninput=e=>{state.ordEdgeK=+e.target.value; $("ordEdgeKV").textContent=state.ordEdgeK; render();};
+$("ordDepth").oninput=e=>{state.ordDepth=+e.target.value; $("ordDepthV").textContent=state.ordDepth+"%"; render();};
+
+buildShapes(); buildDivs(); buildOrds(); buildTinctures(); buildCharges(); buildPresets(); buildRegions();
+buildLayerList(); render(); syncSelPanel();
+</script>
+<script src="designer-catalog.js"></script>
+</body>
+</html>

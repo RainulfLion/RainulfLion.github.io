@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="58.5 99 297 166.5" width="297" height="166.5">
+  <desc>Crown. Source: Book of Traceable Heraldic Art. Illustration: Mathghamhain Ua Ruadháin. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin. Source: https://heraldicart.org/crown/#crown-2 License: CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/. Attribution added; PNG is a transparent raster export.</desc><defs>
+    <clipPath id="artboard_clip_path">
+      <path d="M 58.5 99 L 355.5 99 L 355.5 265.5 L 58.5 265.5 Z" />
+    </clipPath>
+  </defs>
+  <g id="Crown_(2)" fill-opacity="1" stroke="none" stroke-dasharray="none" stroke-opacity="1" fill="none">
+    <title>Crown (2)</title>
+    <g id="Crown_(2)_Layer_2" clip-path="url(#artboard_clip_path)">
+      <title>Layer 2</title>
+      <g id="Graphic_477">
+        <path d="M 207 103.37652 L 135 177.62652 L 63 103.37652 L 72 251.87652 L 342 251.87652 L 351 103.37652 L 279 177.62652 Z" fill="#f3f3f3" />
+        <path d="M 207 103.37652 L 135 177.62652 L 63 103.37652 L 72 251.87652 L 342 251.87652 L 351 103.37652 L 279 177.62652 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+      </g>
+      <g id="Graphic_478">
+        <ellipse cx="207" cy="252" rx="135.000215716756" ry="9.0000143811171" fill="#f3f3f3" />
+        <ellipse cx="207" cy="252" rx="135.000215716756" ry="9.0000143811171" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+      </g>
+    </g>
+  </g>
+</svg>

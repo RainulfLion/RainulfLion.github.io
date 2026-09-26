@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse and download transparent heraldic charges. Lions, mythical beasts, flowers, symbols, and more, ready for your coat of arms.">
+  <meta name="theme-color" content="#181b18">
+  <title>Heraldry Catalog · Gallows Humor Gaming</title>
+  <link rel="icon" href="assets/simple-fleur.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="catalog.css">
+  <script src="catalog.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#collection">Skip to collection</a>
+  <header class="topbar">
+    <a class="brand" href="../"><span class="brand-mark" aria-hidden="true">✧</span> GALLOWS HUMOR <span class="brand-light">GAMING</span></a>
+    <nav aria-label="Main navigation"><a href="./" aria-current="page">The catalog</a><a href="designer.html">Coat-of-arms designer <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="title">
+      <div class="hero-copy"><p class="eyebrow">THE ARMORIAL COLLECTION <span>EST. 2026</span></p>
+        <h1 id="title">Small symbols.<br><em>Storied identities.</em></h1>
+        <p class="intro">A catalog of heraldic art for your next coat of arms.<br> Find a charge, make it yours, and let your banner fly.</p>
+        <a class="hero-link" href="#collection">Explore the collection <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-art" aria-hidden="true"><div class="halo"></div><img src="assets/lion-rampant-argent.png" width="1024" height="1024" alt=""><span class="art-label">LION RAMPANT &nbsp; / &nbsp; ARGENT</span></div>
+    </section>
+    <div class="collection-note"><span><i class="status-dot"></i> Transparent backgrounds, always</span><span>PNG downloads · Editable SVGs · Ready for the designer</span></div>
+    <section class="collection" id="collection" aria-labelledby="collectionTitle">
+      <div class="collection-heading"><div><p class="eyebrow">CHOOSE YOUR CHARGE</p><h2 id="collectionTitle">The heraldry catalog</h2></div><a class="button quiet" href="heraldry-catalog.zip" download>Download collection <span aria-hidden="true">↓</span></a></div>
+      <div class="workspace">
+        <aside class="filters" aria-label="Catalog filters"><h3>Browse by category</h3><div id="categories" class="categories"></div>
+          <button id="favoritesOnly" class="favorite-filter" type="button" aria-pressed="false"><span aria-hidden="true">♡</span> Saved charges <span id="favoriteCount">0</span></button>
+          <div class="filter-note"><span class="mini-checker" aria-hidden="true"></span><strong>Just the artwork.</strong><p>The checkerboard is a preview. It won’t appear in your downloads.</p></div>
+          <a class="source-link" href="credits.html">Artists &amp; source credits ↗</a>
+        </aside>
+        <div class="results">
+          <div class="search-row"><label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only">Search charges</span><input id="search" type="search" placeholder="Search lions, flowers, stars…" autocomplete="off"></label>
+            <label class="sort"><span class="sr-only">Sort charges</span><select id="sort"><option value="featured">Featured first</option><option value="az">Name: A–Z</option><option value="za">Name: Z–A</option></select></label></div>
+          <div class="result-tools"><p id="resultCount" role="status">Loading collection…</p><div class="preview-controls" role="group" aria-label="Preview background"><span>Preview on</span><button type="button" class="swatch checker selected" data-background="checker" aria-label="Checkerboard background" aria-pressed="true"></button><button type="button" class="swatch light" data-background="light" aria-label="Light background" aria-pressed="false"></button><button type="button" class="swatch dark" data-background="dark" aria-label="Dark background" aria-pressed="false"></button><button type="button" class="swatch red" data-background="red" aria-label="Red background" aria-pressed="false"></button><button type="button" class="swatch blue" data-background="blue" aria-label="Blue background" aria-pressed="false"></button></div></div>
+          <div id="grid" class="card-grid"></div>
+          <div id="empty" class="empty-state" hidden><span aria-hidden="true">✧</span><h3>No charges found</h3><p>Try a different name or browse all categories.</p><button class="button" id="reset" type="button">Reset filters</button></div>
+          <noscript><p>Enable JavaScript to search and preview the catalog, or <a href="heraldry-catalog.zip">download the complete image collection</a>.</p></noscript>
+        </div>
+      </div>
+    </section>
+    <section class="designer-banner"><div><p class="eyebrow">FROM CHARGE TO COAT OF ARMS</p><h2>Give your story a shield.</h2><p>Arrange charges, choose your tinctures, and create something distinctly yours.</p></div><a class="button" href="designer.html">Open the designer <span aria-hidden="true">↗</span></a></section>
+  </main>
+  <footer><a href="../">Gallows Humor Gaming</a><p>A collection for heralds, worldbuilders, and storytellers.</p><a href="credits.html">Credits &amp; image licenses</a></footer>
+  <dialog id="detail" aria-labelledby="detailTitle"><button class="close" id="closeDetail" type="button" aria-label="Close preview">×</button><div class="detail-layout"><div class="detail-art" id="detailArt"><img id="detailImage" alt=""></div><div class="detail-copy"><p class="eyebrow" id="detailCategory"></p><h2 id="detailTitle"></h2><p id="detailDescription"></p><p class="asset-spec" id="detailSpec"></p><div class="detail-actions"><a id="downloadPng" class="button" download>Download PNG ↓</a><a id="downloadSvg" class="button quiet" download>Download SVG ↓</a><a id="useDesigner" class="button outline" target="_blank" rel="noopener">Add to designer ↗</a><button id="saveDetail" class="text-button" type="button"></button></div><div class="attribution"><strong>Artist &amp; source</strong><p id="detailCredit"></p><p id="detailLicense"></p><p id="detailChanges"></p><a id="detailSource" target="_blank" rel="noopener noreferrer">View original source ↗</a></div></div></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

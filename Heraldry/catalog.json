@@ -1,0 +1,828 @@
+[
+  {
+    "id": "lion-rampant-argent",
+    "name": "Lion rampant · Argent",
+    "category": "Beasts",
+    "description": "The supplied white lion, preserved with its original transparent background.",
+    "tags": [
+      "supplied",
+      "lion"
+    ],
+    "png": "assets/lion-rampant-argent.png",
+    "source": "",
+    "credit": "Supplied project artwork: Rampant.png.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Original file; transparency preserved. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "lion-rampant",
+    "name": "Lion rampant",
+    "category": "Beasts",
+    "description": "An upright lion with its forepaws raised.",
+    "tags": [
+      "Lion",
+      "Rampant"
+    ],
+    "svg": "assets/lion-rampant.svg",
+    "png": "assets/lion-rampant.png",
+    "source": "https://heraldicart.org/lion/#lion",
+    "sourceFile": "https://heraldicart.org/lion/lion-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Miss Helard. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 871,
+    "height": 1024
+  },
+  {
+    "id": "dragon",
+    "name": "Dragon",
+    "category": "Mythical",
+    "description": "A winged dragon for shields, badges, and banners.",
+    "tags": [
+      "Dragon"
+    ],
+    "svg": "assets/dragon.svg",
+    "png": "assets/dragon.png",
+    "source": "https://heraldicart.org/dragon/#dragon-5",
+    "sourceFile": "https://heraldicart.org/dragon/dragon-5.svg",
+    "credit": "Artist: Elspeth Farre. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 647
+  },
+  {
+    "id": "heraldic-rose",
+    "name": "Heraldic rose",
+    "category": "Plants",
+    "description": "A rose viewed face-on with five outer petals.",
+    "tags": [
+      "Rose"
+    ],
+    "svg": "assets/heraldic-rose.svg",
+    "png": "assets/heraldic-rose.png",
+    "source": "https://heraldicart.org/rose/#rose",
+    "sourceFile": "https://heraldicart.org/rose/rose-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 1011
+  },
+  {
+    "id": "unicorn-rampant",
+    "name": "Unicorn rampant",
+    "category": "Mythical",
+    "description": "A single-horned mythical beast in an upright pose.",
+    "tags": [
+      "Unicorn",
+      "Rampant"
+    ],
+    "svg": "assets/unicorn-rampant.svg",
+    "png": "assets/unicorn-rampant.png",
+    "source": "https://heraldicart.org/unicorn/#unicorn-8",
+    "sourceFile": "https://heraldicart.org/unicorn/unicorn-8.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Miss Helard. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 865,
+    "height": 1024
+  },
+  {
+    "id": "fleur-de-lys-ornate",
+    "name": "Fleur-de-lys ornate",
+    "category": "Plants",
+    "description": "A traditional fleur-de-lys with detailed linework.",
+    "tags": [
+      "Fleur de Lys"
+    ],
+    "svg": "assets/fleur-de-lys-ornate.svg",
+    "png": "assets/fleur-de-lys-ornate.png",
+    "source": "https://heraldicart.org/fleur-de-lys/#fleur-de-lys-3",
+    "sourceFile": "https://heraldicart.org/fleur-de-lys/fleur-de-lys-3.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 811,
+    "height": 1024
+  },
+  {
+    "id": "raven",
+    "name": "Raven",
+    "category": "Birds",
+    "description": "A raven in profile with folded wings.",
+    "tags": [
+      "Raven",
+      "Close"
+    ],
+    "svg": "assets/raven.svg",
+    "png": "assets/raven.png",
+    "source": "https://heraldicart.org/raven/#raven-6",
+    "sourceFile": "https://heraldicart.org/raven/raven-6.svg",
+    "credit": "Artist: Jessimond of Emerickeskepe. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 994
+  },
+  {
+    "id": "faceted-mullet",
+    "name": "Faceted mullet",
+    "category": "Symbols",
+    "description": "The supplied five-pointed star with faceted linework.",
+    "tags": [
+      "supplied",
+      "star"
+    ],
+    "png": "assets/faceted-mullet.png",
+    "source": "",
+    "credit": "Supplied project artwork: star.png.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Original file; transparency preserved. No additional reuse license supplied.",
+    "width": 612,
+    "height": 612
+  },
+  {
+    "id": "lion-passant",
+    "name": "Lion passant",
+    "category": "Beasts",
+    "description": "A walking lion with one forepaw raised.",
+    "tags": [
+      "Lion",
+      "Passant"
+    ],
+    "svg": "assets/lion-passant.svg",
+    "png": "assets/lion-passant.png",
+    "source": "https://heraldicart.org/lion/#lion-passant",
+    "sourceFile": "https://heraldicart.org/lion/lion-passant-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 866
+  },
+  {
+    "id": "lion-couchant",
+    "name": "Lion couchant",
+    "category": "Beasts",
+    "description": "A reclining lion with its head raised.",
+    "tags": [
+      "Lion",
+      "Couchant"
+    ],
+    "svg": "assets/lion-couchant.svg",
+    "png": "assets/lion-couchant.png",
+    "source": "https://heraldicart.org/lion/#lion-couchant",
+    "sourceFile": "https://heraldicart.org/lion/lion-couchant-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 649
+  },
+  {
+    "id": "lion-salient",
+    "name": "Lion salient",
+    "category": "Beasts",
+    "description": "A lion leaping with its hind paws together.",
+    "tags": [
+      "Lion",
+      "Salient"
+    ],
+    "svg": "assets/lion-salient.svg",
+    "png": "assets/lion-salient.png",
+    "source": "https://heraldicart.org/lion/#lion-salient-2",
+    "sourceFile": "https://heraldicart.org/lion/lion-salient-2.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 839,
+    "height": 1024
+  },
+  {
+    "id": "lion-sejant",
+    "name": "Lion sejant",
+    "category": "Beasts",
+    "description": "A seated lion with its forepaws on the ground.",
+    "tags": [
+      "Lion",
+      "Sejant"
+    ],
+    "svg": "assets/lion-sejant.svg",
+    "png": "assets/lion-sejant.png",
+    "source": "https://heraldicart.org/lion/#lion-sejant",
+    "sourceFile": "https://heraldicart.org/lion/lion-sejant-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 815,
+    "height": 1024
+  },
+  {
+    "id": "lion-statant",
+    "name": "Lion statant",
+    "category": "Beasts",
+    "description": "A lion standing on all four paws.",
+    "tags": [
+      "Lion",
+      "Statant"
+    ],
+    "svg": "assets/lion-statant.svg",
+    "png": "assets/lion-statant.png",
+    "source": "https://heraldicart.org/lion/#lion-statant",
+    "sourceFile": "https://heraldicart.org/lion/lion-statant-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 1010
+  },
+  {
+    "id": "wyvern",
+    "name": "Wyvern",
+    "category": "Mythical",
+    "description": "A two-legged, winged dragon with a curling tail.",
+    "tags": [
+      "Wyvern"
+    ],
+    "svg": "assets/wyvern.svg",
+    "png": "assets/wyvern.png",
+    "source": "https://heraldicart.org/wyvern/#wyvern-3",
+    "sourceFile": "https://heraldicart.org/wyvern/wyvern-3.svg",
+    "credit": "Artist: Elspeth Farre. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 879
+  },
+  {
+    "id": "owl",
+    "name": "Owl",
+    "category": "Birds",
+    "description": "An owl with folded wings, facing the viewer.",
+    "tags": [
+      "Owl"
+    ],
+    "svg": "assets/owl.svg",
+    "png": "assets/owl.png",
+    "source": "https://heraldicart.org/owl/#owl-8",
+    "sourceFile": "https://heraldicart.org/owl/owl-8.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 701,
+    "height": 1024
+  },
+  {
+    "id": "acorn",
+    "name": "Acorn",
+    "category": "Plants",
+    "description": "An oak acorn with a textured cup.",
+    "tags": [
+      "Acorn",
+      "Oak"
+    ],
+    "svg": "assets/acorn.svg",
+    "png": "assets/acorn.png",
+    "source": "https://heraldicart.org/acorn/#acorn-2",
+    "sourceFile": "https://heraldicart.org/acorn/acorn-2.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export. Removed unavailable editor reference images; vector artwork retained.",
+    "width": 725,
+    "height": 1024
+  },
+  {
+    "id": "cinquefoil",
+    "name": "Cinquefoil",
+    "category": "Plants",
+    "description": "A stylized flower with five lobes.",
+    "tags": [
+      "Cinquefoil",
+      "Foil"
+    ],
+    "svg": "assets/cinquefoil.svg",
+    "png": "assets/cinquefoil.png",
+    "source": "https://heraldicart.org/cinquefoil/#cinquefoil",
+    "sourceFile": "https://heraldicart.org/cinquefoil/cinquefoil-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 991
+  },
+  {
+    "id": "trefoil",
+    "name": "Trefoil",
+    "category": "Plants",
+    "description": "Three rounded leaves on a short stem.",
+    "tags": [
+      "Trefoil",
+      "Foil"
+    ],
+    "svg": "assets/trefoil.svg",
+    "png": "assets/trefoil.png",
+    "source": "https://heraldicart.org/trefoil/#trefoil",
+    "sourceFile": "https://heraldicart.org/trefoil/trefoil-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 909,
+    "height": 1024
+  },
+  {
+    "id": "oak-leaf",
+    "name": "Oak leaf",
+    "category": "Plants",
+    "description": "A lobed white-oak leaf with a short stem.",
+    "tags": [
+      "Oak",
+      "Leaf"
+    ],
+    "svg": "assets/oak-leaf.svg",
+    "png": "assets/oak-leaf.png",
+    "source": "https://heraldicart.org/oak/#oak-leaf-7",
+    "sourceFile": "https://heraldicart.org/oak/oak-leaf-7.svg",
+    "credit": "Artist: Valentine Ambrose. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 816,
+    "height": 1024
+  },
+  {
+    "id": "crown",
+    "name": "Crown",
+    "category": "Objects",
+    "description": "An open crown with raised points.",
+    "tags": [
+      "Crown"
+    ],
+    "svg": "assets/crown.svg",
+    "png": "assets/crown.png",
+    "source": "https://heraldicart.org/crown/#crown-2",
+    "sourceFile": "https://heraldicart.org/crown/crown-2.svg",
+    "credit": "Source: Book of Traceable Heraldic Art. Illustration: Mathghamhain Ua Ruadháin. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 604
+  },
+  {
+    "id": "castle",
+    "name": "Castle",
+    "category": "Objects",
+    "description": "A fortified castle with towers and an entrance.",
+    "tags": [
+      "Castle"
+    ],
+    "svg": "assets/castle.svg",
+    "png": "assets/castle.png",
+    "source": "https://heraldicart.org/castle/#castle-14",
+    "sourceFile": "https://heraldicart.org/castle/castle-14.svg",
+    "credit": "Source: Book of Traceable Heraldic Art. Illustration: Mathghamhain Ua Ruadháin. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 1024,
+    "height": 788
+  },
+  {
+    "id": "tower-ornate",
+    "name": "Tower ornate",
+    "category": "Objects",
+    "description": "A masonry tower with battlements.",
+    "tags": [
+      "Tower"
+    ],
+    "svg": "assets/tower-ornate.svg",
+    "png": "assets/tower-ornate.png",
+    "source": "https://heraldicart.org/tower/#tower",
+    "sourceFile": "https://heraldicart.org/tower/tower-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 648,
+    "height": 1024
+  },
+  {
+    "id": "anchor",
+    "name": "Anchor",
+    "category": "Objects",
+    "description": "A traditional anchor with curved flukes.",
+    "tags": [
+      "Anchor"
+    ],
+    "svg": "assets/anchor.svg",
+    "png": "assets/anchor.png",
+    "source": "https://heraldicart.org/anchor/#anchor",
+    "sourceFile": "https://heraldicart.org/anchor/anchor-1.svg",
+    "credit": "Source: A Complete Guide to Heraldry. Artist: Graham Johnston. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 799,
+    "height": 1024
+  },
+  {
+    "id": "sword",
+    "name": "Sword",
+    "category": "Objects",
+    "description": "A straight sword with the point upward.",
+    "tags": [
+      "Sword"
+    ],
+    "svg": "assets/sword.svg",
+    "png": "assets/sword.png",
+    "source": "https://heraldicart.org/sword/#sword-18",
+    "sourceFile": "https://heraldicart.org/sword/sword-18.svg",
+    "credit": "Source: Book of Traceable Heraldic Art. Illustration: Mathghamhain Ua Ruadháin. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 286,
+    "height": 1024
+  },
+  {
+    "id": "dagger",
+    "name": "Dagger",
+    "category": "Objects",
+    "description": "A dagger adapted from a sixteenth-century Swiss example.",
+    "tags": [
+      "Dagger"
+    ],
+    "svg": "assets/dagger.svg",
+    "png": "assets/dagger.png",
+    "source": "https://heraldicart.org/dagger/#dagger-3",
+    "sourceFile": "https://heraldicart.org/dagger/dagger-3.svg",
+    "credit": "Adapted from photos of a sixteenth-century Swiss “Holbein” dagger. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 331,
+    "height": 1024
+  },
+  {
+    "id": "key-ornate",
+    "name": "Key ornate",
+    "category": "Objects",
+    "description": "A key with an ornamental bow.",
+    "tags": [
+      "Key"
+    ],
+    "svg": "assets/key-ornate.svg",
+    "png": "assets/key-ornate.png",
+    "source": "https://heraldicart.org/key/#key-11",
+    "sourceFile": "https://heraldicart.org/key/key-11.svg",
+    "credit": "Source: Book of Traceable Heraldic Art. Illustration: Mathghamhain Ua Ruadháin. From the Book of Traceable Heraldic Art, compiled by Mathghamhain Ua Ruadháin.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Attribution added; PNG is a transparent raster export.",
+    "width": 359,
+    "height": 1024
+  },
+  {
+    "id": "simple-roundel",
+    "name": "Roundel",
+    "category": "Symbols",
+    "description": "A solid circular charge.",
+    "tags": [
+      "simple",
+      "vector",
+      "roundel"
+    ],
+    "svg": "assets/simple-roundel.svg",
+    "png": "assets/simple-roundel.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-annulet",
+    "name": "Annulet",
+    "category": "Symbols",
+    "description": "A circular ring with an open center.",
+    "tags": [
+      "simple",
+      "vector",
+      "annulet"
+    ],
+    "svg": "assets/simple-annulet.svg",
+    "png": "assets/simple-annulet.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-mullet",
+    "name": "Mullet",
+    "category": "Symbols",
+    "description": "A five-pointed star with straight rays.",
+    "tags": [
+      "simple",
+      "vector",
+      "mullet",
+      "star"
+    ],
+    "svg": "assets/simple-mullet.svg",
+    "png": "assets/simple-mullet.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-estoile",
+    "name": "Six-pointed mullet",
+    "category": "Symbols",
+    "description": "A six-pointed star with straight rays.",
+    "tags": [
+      "simple",
+      "vector",
+      "estoile",
+      "star"
+    ],
+    "svg": "assets/simple-estoile.svg",
+    "png": "assets/simple-estoile.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-lozenge",
+    "name": "Lozenge",
+    "category": "Symbols",
+    "description": "A diamond-shaped charge.",
+    "tags": [
+      "simple",
+      "vector",
+      "lozenge"
+    ],
+    "svg": "assets/simple-lozenge.svg",
+    "png": "assets/simple-lozenge.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-fusil",
+    "name": "Fusil",
+    "category": "Symbols",
+    "description": "A narrow, elongated lozenge.",
+    "tags": [
+      "simple",
+      "vector",
+      "fusil"
+    ],
+    "svg": "assets/simple-fusil.svg",
+    "png": "assets/simple-fusil.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-mascle",
+    "name": "Mascle",
+    "category": "Symbols",
+    "description": "A lozenge with a diamond-shaped opening.",
+    "tags": [
+      "simple",
+      "vector",
+      "mascle"
+    ],
+    "svg": "assets/simple-mascle.svg",
+    "png": "assets/simple-mascle.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-billet",
+    "name": "Billet",
+    "category": "Symbols",
+    "description": "An upright rectangular charge.",
+    "tags": [
+      "simple",
+      "vector",
+      "billet"
+    ],
+    "svg": "assets/simple-billet.svg",
+    "png": "assets/simple-billet.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-crescent",
+    "name": "Crescent",
+    "category": "Symbols",
+    "description": "A curved crescent with an open interior.",
+    "tags": [
+      "simple",
+      "vector",
+      "crescent"
+    ],
+    "svg": "assets/simple-crescent.svg",
+    "png": "assets/simple-crescent.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-fleur",
+    "name": "Fleur-de-lys",
+    "category": "Plants",
+    "description": "A simple three-part fleur-de-lys.",
+    "tags": [
+      "simple",
+      "vector",
+      "fleur"
+    ],
+    "svg": "assets/simple-fleur.svg",
+    "png": "assets/simple-fleur.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-crosslet",
+    "name": "Cross",
+    "category": "Symbols",
+    "description": "A cross with straight arms of equal width.",
+    "tags": [
+      "simple",
+      "vector",
+      "crosslet"
+    ],
+    "svg": "assets/simple-crosslet.svg",
+    "png": "assets/simple-crosslet.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-crosspat",
+    "name": "Cross pattée",
+    "category": "Symbols",
+    "description": "A cross with arms that widen toward the ends.",
+    "tags": [
+      "simple",
+      "vector",
+      "crossPat"
+    ],
+    "svg": "assets/simple-crosspat.svg",
+    "png": "assets/simple-crosspat.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-heart",
+    "name": "Heart",
+    "category": "Symbols",
+    "description": "A conventional heart-shaped charge.",
+    "tags": [
+      "simple",
+      "vector",
+      "heart"
+    ],
+    "svg": "assets/simple-heart.svg",
+    "png": "assets/simple-heart.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-escallop",
+    "name": "Escallop",
+    "category": "Symbols",
+    "description": "A stylized shell-shaped charge.",
+    "tags": [
+      "simple",
+      "vector",
+      "escallop"
+    ],
+    "svg": "assets/simple-escallop.svg",
+    "png": "assets/simple-escallop.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-tower",
+    "name": "Tower",
+    "category": "Objects",
+    "description": "A simple tower with battlements and an open doorway.",
+    "tags": [
+      "simple",
+      "vector",
+      "tower"
+    ],
+    "svg": "assets/simple-tower.svg",
+    "png": "assets/simple-tower.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "id": "simple-keyc",
+    "name": "Key",
+    "category": "Objects",
+    "description": "A simple key with a round bow.",
+    "tags": [
+      "simple",
+      "vector",
+      "keyC"
+    ],
+    "svg": "assets/simple-keyc.svg",
+    "png": "assets/simple-keyc.png",
+    "source": "",
+    "credit": "Built-in vector from the supplied Heraldry Designer.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "width": 1024,
+    "height": 1024
+  }
+]
