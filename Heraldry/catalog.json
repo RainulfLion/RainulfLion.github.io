@@ -809,7 +809,7 @@
     "id": "simple-keyc",
     "name": "Key",
     "category": "Objects",
-    "description": "A simple key with a round bow.",
+    "description": "A key with an open round bow, a continuous shaft, and two square teeth.",
     "tags": [
       "simple",
       "vector",
@@ -821,7 +821,7 @@
     "credit": "Built-in vector from the supplied Heraldry Designer.",
     "license": "Project artwork",
     "licenseUrl": "",
-    "changes": "Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.",
+    "changes": "Redrawn as one connected outline to repair the ring-to-shaft cutout; exported with a light fill and dark outline. No additional reuse license supplied.",
     "width": 1024,
     "height": 1024
   }

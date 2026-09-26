@@ -515,5 +515,5 @@ Built-in vector from the supplied Heraldry Designer.
 
 License: Project artwork 
 
-Changes: Exported as a standalone SVG with a light fill and dark outline. No additional reuse license supplied.
+Changes: Redrawn as one connected outline to repair the ring-to-shaft cutout; exported with a light fill and dark outline. No additional reuse license supplied.
 
