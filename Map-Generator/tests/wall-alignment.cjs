@@ -23,11 +23,11 @@ fs.mkdirSync(out,{recursive:true});
     const sourceY=510+best,face=alignForFile(fileFor(key,0)).face;
     return {key,side,sourceY,mapY:(sourceY-face.top)/face.h*352};
    };
-   const joins=[crest('westerosWallEW','west'),crest('westerosWallEW','east'),crest('westerosCastleBlack','west'),crest('westerosCastleBlack','east'),crest('westerosEastwatch','west')];
+   const joins=[crest('westerosShadowTower','east'),crest('westerosWallEW','west'),crest('westerosWallEW','east'),crest('westerosCastleBlack','west'),crest('westerosCastleBlack','east'),crest('westerosEastwatch','west')];
    const cols=8,rows=3,N=cols*rows,idx=(c,r)=>r*cols+c,inB=(c,r)=>c>=0&&r>=0&&c<cols&&r<rows;
    Object.assign(W,{cols,rows,N,idx,inB,hasElev:false,land:new Uint8Array(N).fill(1),river:new Uint8Array(N),lake:new Uint8Array(N),down:new Int32Array(N).fill(-1),tile:Array(N).fill('snowField'),places:[],labels:[],decor:[],roads:[],bridges:[]});
    W.C={...cfg(),render:'art',tpx:300,sx:1,sy:1,bleed:0,ynudge:0,orient:'pointy',bitRot:0,bitRev:false,coast:false,rivers:false,roads:false,grid:false,labels:false,vignette:false,voidRing:false};TOPO='hex';ORIENT='pointy';
-   for(let c=0;c<7;c++)W.tile[idx(c,1)]=c===2?'westerosCastleBlack':c===6?'westerosEastwatch':'westerosWallEW';
+   for(let c=0;c<7;c++)W.tile[idx(c,1)]=c===0?'westerosShadowTower':c===2?'westerosCastleBlack':c===6?'westerosEastwatch':'westerosWallEW';
    for(let r=0;r<rows;r++){W.tile[idx(7,r)]='oceanCalm';W.land[idx(7,r)]=0;}
    invalidateIndexes();renderMap();
    return {joins,spread:Math.max(...joins.map(j=>j.mapY))-Math.min(...joins.map(j=>j.mapY)),image:mapCanvas.toDataURL('image/png')};

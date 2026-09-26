@@ -12,7 +12,7 @@
     5
   ],
   "coastInvert": false,
-  "tileCount": 25,
+  "tileCount": 26,
   "tiles": {
     "hexWesterosWinterfell00.png": {
       "imgW": 1024,
@@ -440,6 +440,24 @@
         "dy": 0,
         "sc": 1
       }
+    },
+    "hexWesterosShadowTower00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 0.0,
+        "top": 49.756,
+        "w": 1024.0,
+        "h": 1371.418
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      },
+      "alignmentFrame": "hexWesterosIceWallEastWest00.png"
     }
   }
 }

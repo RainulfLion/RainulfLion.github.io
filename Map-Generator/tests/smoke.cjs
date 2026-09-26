@@ -20,11 +20,11 @@ const server=http.createServer((req,res)=>{
       const page=await context.newPage(),errors=[],failed=[];
       page.setDefaultTimeout(10000);
       page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)failed.push({url:r.url(),status:r.status()});});
-      await page.goto(url);await page.waitForFunction(()=>artLoaded&&Object.values(ART).filter(a=>a.ok).length===334,{},{timeout:30000});
+      await page.goto(url);await page.waitForFunction(()=>artLoaded&&Object.values(ART).filter(a=>a.ok).length===335,{},{timeout:30000});
       const boot=await page.evaluate(()=>({assets:Object.keys(ART).length,webp:USE_WEB_TILES,coasts:MASKS.get('hexCoast')?.size,missing:Object.keys(BASE).filter(k=>!fileFor(k,0)),scroll:document.documentElement.scrollWidth,width:innerWidth,stage:document.getElementById('stage').getBoundingClientRect().width}));
-      assert.equal(boot.webp,true);assert.equal(boot.assets,334);assert.equal(boot.coasts,63);assert.deepEqual(boot.missing,[]);assert.ok(boot.scroll<=boot.width);
-      assert.equal(await page.locator('.sw[data-key^="westeros"]').count(),25);
-      assert.equal(await page.locator('#stampKind option[value^="westeros"]').count(),24);
+      assert.equal(boot.webp,true);assert.equal(boot.assets,335);assert.equal(boot.coasts,63);assert.deepEqual(boot.missing,[]);assert.ok(boot.scroll<=boot.width);
+      assert.equal(await page.locator('.sw[data-key^="westeros"]').count(),26);
+      assert.equal(await page.locator('#stampKind option[value^="westeros"]').count(),25);
       if(size.mobile){
         assert.equal(boot.stage,size.width);assert.equal(await page.evaluate(()=>PAINT.tool),'pan');
         await page.locator('#openControls').tap();await page.waitForFunction(()=>document.body.classList.contains('controls-open'));
@@ -90,7 +90,7 @@ const server=http.createServer((req,res)=>{
       results.push({viewport:`${size.width}x${size.height}`,mobile:size.mobile,assets:boot.assets,exportBytes:fs.statSync(file).size,...generated,passed:true});
       if(size.width===320){
         await page.goto(new URL('tiles.html',url).href);
-        assert.equal(await page.locator('#gallery article').count(),334);
+        assert.equal(await page.locator('#gallery article').count(),335);
         assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
         await page.locator('#group').selectOption('coast');
         assert.equal(await page.locator('#gallery article').count(),63);
@@ -103,14 +103,14 @@ const server=http.createServer((req,res)=>{
         await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:path.join(out,'gallery-phone.png'),animations:'disabled'});
         assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
         await page.goto(new URL('newTiles/westeros/preview.html',url).href);
-        assert.equal(await page.locator('#grid article').count(),25);
+        assert.equal(await page.locator('#grid article').count(),26);
         await page.locator('#grid img').evaluateAll(imgs=>Promise.all(imgs.map(im=>{im.loading='eager';return im.decode()})));
         assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
-        await page.locator('#search').fill('Winterfell');assert.equal(await page.locator('#grid article:visible').count(),1);
-        await page.getByRole('button',{name:'Enlarge Winterfell',exact:true}).click();
+        await page.locator('#search').fill('Shadow Tower');assert.equal(await page.locator('#grid article:visible').count(),1);
+        await page.getByRole('button',{name:'Enlarge Shadow Tower',exact:true}).click();
         assert.ok(await page.locator('#viewer').isVisible());await page.locator('#close').click();
         const castleDownload=page.waitForEvent('download');await page.locator('#grid article:visible a').click();
-        const castleFile=path.join(out,'winterfell.png');await (await castleDownload).saveAs(castleFile);
+        const castleFile=path.join(out,'shadow-tower.png');await (await castleDownload).saveAs(castleFile);
         const pngBytes=fs.readFileSync(castleFile);assert.equal(pngBytes.subarray(1,4).toString(),'PNG');
         assert.equal(pngBytes.readUInt32BE(16),1024);assert.equal(pngBytes.readUInt32BE(20),1536);
         await page.locator('#search').fill('');await page.screenshot({path:path.join(out,'westeros-phone.png')});
