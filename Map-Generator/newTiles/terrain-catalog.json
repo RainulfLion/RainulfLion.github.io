@@ -1,0 +1,442 @@
+[
+  [
+    "hexOcean00",
+    "Deep Ocean",
+    "deep cobalt and ultramarine open ocean, a completely level water surface filled with fine sharp wavelets and bright upper-left reflections; no land, boats, horizon or sky"
+  ],
+  [
+    "hexOceanCalm00",
+    "Shallow Water",
+    "clear calm turquoise shallow water, fine ripples and subtle submerged sand texture across a completely level water surface; no shore or objects"
+  ],
+  [
+    "hexLake00",
+    "Lake",
+    "clear deep teal freshwater lake surface, tiny crisp ripples and glints, no shore, no islands, no objects"
+  ],
+  [
+    "hexOceanIceBergs00",
+    "Icebergs",
+    "cold dark sapphire sea with scattered small fractured blue-white floating icebergs and ice floes, sharp crystalline facets and deep blue shadows"
+  ],
+  [
+    "hexBase00",
+    "Grassland",
+    "lush green meadow grass of varied heights with small white, yellow and blue wildflowers and clover patches, flat ground, no paths"
+  ],
+  [
+    "hexPlains00",
+    "Plains",
+    "open green-gold short-grass plains with individual grass clumps and tiny dry seed heads across flat ground, no trees, no paths"
+  ],
+  [
+    "hexWoodlands00",
+    "Woodland",
+    "open woodland of many small leafy green trees separated by visible lush grass and leaf litter, evenly scattered over flat ground, no paths"
+  ],
+  [
+    "hexForestBroadleaf00",
+    "Broadleaf Forest",
+    "Broadleaf forest of roughly 35 to 50 individually readable deciduous trees, comparable in height and crown width to the mature trees in the pine reference. Show rounded leafy crowns and short shaded trunks from the same high oblique isometric camera. Mossy grass and leaf litter between trees. No flat carpet of crowns, no paths."
+  ],
+  [
+    "hexScrublands00",
+    "Scrubland",
+    "dry olive and ochre scrubland, scattered low thorny shrubs and wiry grasses on level stony soil, many small crisp details"
+  ],
+  [
+    "hexDirt00",
+    "Barren Dirt",
+    "barren warm umber earth with fine cracks, small angular pebbles and gritty surface detail, entirely flat ground with no plants"
+  ],
+  [
+    "hexMarsh00",
+    "Marsh",
+    "Marsh at the same landscape distance as the pine tile: broad low wet ground, many tiny reed and sedge clusters, dark peat and scattered irregular shallow blue-green pools. Reeds are fine low surface detail, less than one-quarter of the reference pine height and smaller than its shrubs. No macro plants or giant cattails, no paths or river."
+  ],
+  [
+    "hexSavanna00",
+    "Savanna",
+    "golden savanna grasses with a few small flat-canopy acacia trees evenly scattered on flat dry ground, no wildlife, no paths"
+  ],
+  [
+    "hexBrushland00",
+    "Brushland",
+    "dense low green brush and mixed leafy shrubs with small patches of sunlit grass and dark soil on level ground, no trees or paths"
+  ],
+  [
+    "hexForestOld00",
+    "Old Forest",
+    "Old-growth forest of about 30 to 40 small mature broadleaf trees with thick trunks, varied rounded dark-green crowns, fine moss and ferns. Trees remain comparable in projected height and crown width to the reference pines, no single giant hero tree, no ruins."
+  ],
+  [
+    "hexForestTemperate00",
+    "Temperate Forest",
+    "dense temperate mixed forest with many small green broadleaf trees and darker conifers, crisp layered foliage and deep shadow, level forest ground"
+  ],
+  [
+    "hexForestAutumn00",
+    "Autumn Forest",
+    "dense autumn broadleaf forest, many small trees with orange, red and gold canopies filling the whole tile, fallen leaves on flat ground"
+  ],
+  [
+    "hexForestPonderosa00",
+    "Ponderosa Pine",
+    "open ponderosa pine forest with many small orange-barked pine trees, dark green needle clusters and golden needle litter, flat dry forest floor"
+  ],
+  [
+    "hexGrasslandTall00",
+    "Tall Grass",
+    "An expanse of tall grass viewed at map distance: many finely textured small grass clumps and tiny gold seed-head specks. Grass remains very short compared with the pine reference trees. No close-up giant blades, no paths."
+  ],
+  [
+    "hexGrasslandMixed00",
+    "Mixed Grassland",
+    "flat mixed grassland, intermingled small clumps of emerald meadow grass, tawny grasses, clover and tiny wildflowers, intricate natural patchwork"
+  ],
+  [
+    "hexHills00",
+    "Hills",
+    "Several distinct rounded grassy hills with readable elevated slopes, shallow valleys and a few small rocks, green turf with fine wildflower specks; hills lower than mountains, no giant foreground grass or horizon."
+  ],
+  [
+    "hexHighlands00",
+    "Highlands",
+    "Rolling highland moor with raised low ridges, small rocky knolls, fine purple heather and russet grass, shallow valleys, all seen at map distance. No close-up heather or giant stones."
+  ],
+  [
+    "hexMountain00",
+    "Mountains",
+    "A substantial raised grey granite massif with a dominant sharp peak and subordinate shoulders, steep visible faces, ridges and deep gullies. Summits project WELL ABOVE the upper ground hex edges toward y3% of the canvas. A few small pines of the same projected size as the reference establish scale. Mossy foothills, no snow."
+  ],
+  [
+    "hexDesertMountain00",
+    "Desert Peaks",
+    "A substantial raised rust-red sandstone mountain massif with a dominant jagged peak and subordinate shoulders, steep layered faces and dark gullies. Summits project WELL ABOVE the upper ground hex edges toward y3% of the canvas. Fine dry scrub on golden rocky foothills."
+  ],
+  [
+    "hexSnowField00",
+    "Snowfield",
+    "pristine flat bright snowfield, fine crystalline snow texture, subtle wind-scoured ripples and rich cool-blue shadows, no footprints or objects"
+  ],
+  [
+    "hexMountainSnow00",
+    "Snowy Peaks",
+    "A substantial raised snow-covered granite massif with a dominant sharp peak and subordinate shoulders, steep dark rock faces with white snow ledges and deep blue-shadowed gullies. Summits project WELL ABOVE the upper ground hex edges toward y3% of the canvas. A few small reference-sized pines at the snowy foothills."
+  ],
+  [
+    "hexPlainsCold00",
+    "Cold Plains",
+    "flat cold tundra plain of russet short grasses, olive moss, tiny lichens and exposed stony soil, crisp late-season colours, no snow"
+  ],
+  [
+    "hexPlainsColdSnowTransition00",
+    "Snow-Patched Plains",
+    "flat tundra plain with patchy white snow between russet grasses, olive moss and small dark stones, a natural evenly distributed mosaic"
+  ],
+  [
+    "hexPlainsColdSnowCovered00",
+    "Snowy Plains",
+    "flat snow-covered grass plain with a few small tawny grass tips and dark pebbles breaking through thick white crystalline snow, blue shadows"
+  ],
+  [
+    "hexPlainsColdSnowTransitionPond00",
+    "Cold Plains Pond",
+    "flat cold tundra plain of russet grass and patchy snow with one small clear blue pond recessed into the level ground, natural rocky rim, no paths or structures"
+  ],
+  [
+    "hexHillsCold00",
+    "Cold Hills",
+    "Several rounded cold tundra hills with visible low slopes and valleys, fine russet heather, olive grass and small grey rock outcrops, no snow, all seen at the same map distance."
+  ],
+  [
+    "hexHillsColdSnowTransition00",
+    "Snow-Patched Hills",
+    "Several rounded cold hills with visible relief, patchy snow between fine russet grass and small grey outcrops, shallow valleys, all at landscape scale."
+  ],
+  [
+    "hexHillsColdSnowCovered00",
+    "Snowy Hills",
+    "Several rounded snowy hills with visible relief, low snow-covered slopes and blue-shadowed valleys, scattered small dark rock outcrops, no towering mountains."
+  ],
+  [
+    "hexDirtCold00",
+    "Frozen Dirt",
+    "flat frozen dark brown dirt with fine frost crystals, cracked earth, small dark pebbles and thin icy crusts, no large snow drifts or plants"
+  ],
+  [
+    "hexForestPine00",
+    "Pine Forest",
+    "dense dark-green pine forest, many small conifers of varied heights filling the whole tile, crisp individual needle clusters and level forest floor"
+  ],
+  [
+    "hexForestPineSnowTransition00",
+    "Snow-Patched Pine",
+    "dense small dark-green pine trees with patchy white snow on branches and forest floor, individual needle clusters, flat ground throughout"
+  ],
+  [
+    "hexForestPineSnowCovered00",
+    "Snowy Pine",
+    "dense small conifers heavily laden with brilliant white snow, dark emerald needles visible beneath, rich blue shadows on flat snowy forest ground"
+  ],
+  [
+    "hexDesertDunes00",
+    "Dunes",
+    "Golden sand desert with several recognizable raised dune ridges, sharply lit crests and shaded lee slopes, delicate surface ripples seen from map distance, no close-up sand grains or foreground objects."
+  ],
+  [
+    "hexDesertBrush00",
+    "Brush Desert",
+    "flat sandy desert with scattered low sage-green thorny shrubs, small sunlit ochre pebbles and fine rippled sand, no paths"
+  ],
+  [
+    "hexDesertRedDirt00",
+    "Red Desert",
+    "flat rich rust-red desert earth, tightly cracked clay plates, crimson and orange gritty textures, tiny dark pebbles, no plants"
+  ],
+  [
+    "hexDesertRedGrass00",
+    "Red Steppe",
+    "flat red-soil dry steppe, small clumps of copper and golden grasses, scattered dark pebbles and terracotta earth, no trees or paths"
+  ],
+  [
+    "hexDesertRedMesaLarge00",
+    "Red Mesa",
+    "One broad elevated red sandstone mesa with a flat top, steep visible layered cliff faces and several small neighboring buttes on rust-red desert ground. Clearly raised above the ground, all within the same fixed hex footprint. Sparse tiny dry scrub for scale."
+  ],
+  [
+    "hexDesertYellowCactiForest00",
+    "Cacti Forest",
+    "flat golden sandy desert with many small branching green cacti, round barrel cacti, a few tiny red cactus blossoms and sharp pebbles, no other objects"
+  ],
+  [
+    "hexDesertYellowHillsOasis00",
+    "Oasis Hills",
+    "Low rounded golden desert hills surrounding a small turquoise oasis on a valley floor, a few small palms the same height as the reference trees, fine greenery immediately around the water, landscape scale."
+  ],
+  [
+    "hexDesertYellowMesas00",
+    "Mesas",
+    "Several elevated golden sandstone mesas and buttes with flat tops, sharply defined layered cliff faces and sandy ground between them. Miniature landscape seen from map distance, sparse tiny desert shrubs."
+  ],
+  [
+    "hexDesertDunesOasis00",
+    "Dune Oasis",
+    "Golden dune landscape with clearly raised low sand ridges around a small turquoise oasis, a few small palms the same height as reference trees, fine green plants around the pool, miniature landscape at fixed map scale."
+  ],
+  [
+    "hexJungle00",
+    "Jungle",
+    "Dense tropical jungle of many individually readable small broadleaf trees and palms at the same tree scale as the pine reference, tiny ferns and fine undergrowth. Visible tops and some sides of crowns, no macro leaves or paths."
+  ],
+  [
+    "hexWetlands00",
+    "Wetlands",
+    "Wide expanse of low wetlands at map distance, many tiny sedge clusters and low leafy plants between small irregular shallow water pockets and mud. Plants are fine ground texture much smaller than reference shrubs, no river channels."
+  ],
+  [
+    "hexBog00",
+    "Bog",
+    "Wide flat peat bog at map distance, intricate low patches of russet and chartreuse sphagnum moss, small black peat pools and tiny fine sedges. No macro plants, trees, paths or giant rocks."
+  ],
+  [
+    "hexSandPalms00",
+    "Palm Coast",
+    "flat pale golden sandy coastal ground densely dotted with short tropical palms and low green coastal plants, tiny shells and fine sand, no water outside the hexagon"
+  ],
+  [
+    "hexAshPlains00",
+    "Ash Plains",
+    "flat volcanic ash plain with fine charcoal-grey ash, scattered obsidian chips, sharp cracks and muted ember-red mineral streaks, no flames or smoke"
+  ],
+  [
+    "hexForestBurnedDirt00",
+    "Burned Forest",
+    "flat burned forest ground of black ash and charred soil, many small blackened tree trunks and scorched branches, sharp warm highlights, no flames, smoke or ruins"
+  ],
+  [
+    "hexBlightedLand00",
+    "Blighted Land",
+    "flat blighted dark violet-brown cracked earth, sickly chartreuse moss, withered grasses and small sharp black stones, no bones, creatures or objects"
+  ],
+  [
+    "hexForestHaunted00",
+    "Haunted Wood",
+    "dense forest of many small twisted leafless trees, dark purple-grey bark, sparse deep crimson leaves and mossy flat ground, dramatic crisp shadows; no ghosts, mist, graves or buildings"
+  ],
+  [
+    "hexLavaField00",
+    "Lava Field",
+    "flat fractured black basalt lava field, bright saturated orange molten lava glowing within narrow cracks, sharp cooled rock plates and tiny embers; no volcano, smoke or sky"
+  ],
+  [
+    "hexVolcanoActive00",
+    "Volcano",
+    "A substantial raised black volcanic cone with a visible round summit crater filled with glowing orange lava, steep basalt faces and narrow lava flows descending to rocky volcanic ground. Cone rises WELL ABOVE the upper ground hex edges into the white headroom. No smoke plume or sky."
+  ],
+  [
+    "hexDirtCastle00",
+    "Castle",
+    "a small original medieval grey-stone castle with compact curtain walls, four squat towers, an inner keep and red tile roofs on level compacted earth; entire castle contained inside the hexagon, no roads, banners, people or text"
+  ],
+  [
+    "hexDirtVillage00",
+    "Village",
+    "a small original medieval village of several timber-and-plaster cottages with rich ochre thatched roofs on level grassy dirt, tiny vegetable beds; no roads, people, animals or fences"
+  ],
+  [
+    "hexPlainsFarm00",
+    "Farm",
+    "flat medieval farmland with small neatly planted green and gold crop plots and one tiny timber farmhouse with a red roof; no roads, people, animals or fences"
+  ],
+  [
+    "hexElfVillage00",
+    "Elf Village",
+    "small original elven woodland village, delicate timber dwellings nestled around living small leafy trees, green curved roofs and fine carved wooden details, all on flat ground; no roads, people or animals"
+  ],
+  [
+    "hexCastleStormsEnd00",
+    "Storm's End",
+    "an ORIGINAL compact fantasy storm fortress: round charcoal-stone keep, thick low circular curtain walls and slate roofs on flat grass; invent its architecture, do not reproduce any film or existing game design; no roads or people"
+  ],
+  [
+    "hexCastleRedKeep00",
+    "Red Keep",
+    "an ORIGINAL compact red sandstone fantasy castle, several small square towers, terracotta roofs, low red curtain walls and a central keep on level ground; invent its architecture, no roads, people, text or heraldry"
+  ],
+  [
+    "hexIceWall00",
+    "The Ice Wall",
+    "an original compact blue-white ice wall crossing flat snow-covered ground INSIDE the hexagon, sharp crystalline ice blocks and deep blue cracks; keep wall low enough to fit fully within the tile, no buildings or people"
+  ],
+  [
+    "hexCastleWinterfell00",
+    "Winterfell",
+    "an ORIGINAL compact northern fantasy stone castle on level snowy ground, stout grey towers, steep dark slate roofs, low curtain walls and several warm brown timber structures; invent architecture, no roads, people or heraldry"
+  ],
+  [
+    "hexHillsMine01",
+    "Mine",
+    "a small timber-framed mine entrance recessed into a low rocky outcrop on flat gravel ground, a tiny ore shed and several ore piles; no tracks, carts, roads, people or tall hills"
+  ],
+  [
+    "hexForestBroadleafForester00",
+    "Forester",
+    "a tiny timber forester's cottage with moss-green roof among many small broadleaf trees on flat woodland ground, neatly stacked firewood beside it, no roads, people or fences"
+  ],
+  [
+    "hexPortCentre00",
+    "Port",
+    "a compact original medieval port on level coastal ground, small stone quay, short wooden piers and several tiny red-roofed warehouses beside calm turquoise water, contained entirely inside the hexagon; no ships, people or roads"
+  ],
+  [
+    "hexForestPineLoggingCamp00",
+    "Logging Camp",
+    "a tiny logging camp among small pine trees on flat forest ground, two timber huts and neatly stacked logs in a small clearing, no roads, vehicles, people or fences"
+  ],
+  [
+    "hexForestPineClearing00",
+    "Forest Clearing",
+    "small lush grassy clearing surrounded by many small dark-green pine trees on flat forest ground, wildflowers and detailed needle litter, no paths, buildings or people"
+  ],
+  [
+    "hexHillsColdCave00",
+    "Cave",
+    "A small natural cave opening recessed into the side of a visibly raised low grey rocky hill, fine cold grasses and moss around the entrance, same landscape scale as reference, no buildings or objects."
+  ],
+  [
+    "hexMountainSnowCave00",
+    "Snowy Cave",
+    "A small deep-blue natural cave opening in a visibly raised snowy grey mountain slope, steep rock faces and crisp snow ledges, miniature landscape from the fixed overhead camera, no objects."
+  ],
+  [
+    "hexSnowFieldIcePalace00",
+    "Ice Palace",
+    "a small original crystalline ice palace on flat snow, compact translucent blue towers, clear angular ice walls and sapphire reflections; palace fits entirely inside hexagon, no roads or people"
+  ],
+  [
+    "hexSnowFieldGiantSkeleton00",
+    "Frozen Giant",
+    "the ancient weathered skeleton of a fantasy giant lying horizontally half-buried in a flat snowy field, pale ivory ribs, skull and long bones, no blood, flesh, people or structures"
+  ],
+  [
+    "hexPlainsColdRuin00",
+    "Ruins",
+    "small original ancient grey-stone ruins on flat cold russet grass, low broken walls, toppled columns and mossy rubble, no intact tall towers, roads, people or text"
+  ],
+  [
+    "hexPlainsColdRuinSnow00",
+    "Snowy Ruins",
+    "small original ancient grey-stone ruins on flat snowy ground, low broken walls, toppled columns and snow-covered rubble, crisp blue shadows; no roads or people"
+  ],
+  [
+    "hexIslandRocky00",
+    "Rocky Isle",
+    "small low rocky island fully enclosed by level turquoise water within the hexagon, sharply detailed grey rocks, patches of moss and fine wavelets; no buildings or boats"
+  ],
+  [
+    "hexIslandSandy00",
+    "Sandy Isle",
+    "small flat golden sand island fully enclosed by level turquoise water within the hexagon, a few tiny beach plants, crisp fine surf and sand detail; no buildings or boats"
+  ],
+  [
+    "hexIslandRockyTower00",
+    "Isle Tower",
+    "small low rocky island enclosed by turquoise water with one tiny original medieval grey-stone watchtower with a red conical roof, level island ground; no boats, people or roads"
+  ],
+  [
+    "hexIslandRockyHouse00",
+    "Isle House",
+    "small low rocky island enclosed by turquoise water with one tiny timber cottage with a red tile roof and small patch of grass, no docks, boats, roads or people"
+  ],
+  [
+    "hexIslandSandyTemple00",
+    "Isle Temple",
+    "small flat golden sandy island enclosed by turquoise water with one compact original ancient sandstone temple with four short columns and a low roof, no roads, boats, statues or people"
+  ],
+  [
+    "hexIslandSandyShipWreck00",
+    "Wrecked Isle",
+    "small flat golden sandy island enclosed by turquoise water with the broken weathered wooden hull of an old sailing ship stranded on its shore, no people, text or cargo"
+  ],
+  [
+    "hexOceanShipWreck00",
+    "Shipwreck",
+    "level deep teal ocean surface with one small weathered wooden sailing-ship wreck, a fractured hull and broken mast partly submerged, fine bright ripples; no people, land or text"
+  ],
+  [
+    "hexOceanWhirlpool00",
+    "Whirlpool",
+    "level deep cobalt ocean surface with a small sharply detailed swirling turquoise whirlpool, curved wavelets, fine foam and a dark blue centre; no boats, islands or sky"
+  ],
+  [
+    "hexOceanShellVillage00",
+    "Shell Village",
+    "an original tiny fantasy shell village on level shallow turquoise coastal water, several pearl and coral-coloured spiral-shell dwellings clustered on small flat sand patches; no people, roads or boats"
+  ],
+  [
+    "hexOceanHarborWhaling00",
+    "Whaling Harbour",
+    "an original compact medieval whaling harbour, tiny weathered timber warehouses, short wooden docks, a small wooden crane and one moored wooden boat on level dark teal coastal water; no whales, remains, people or text"
+  ],
+  [
+    "hexVoid00",
+    "Void",
+    "perfectly flat deep black-violet void surface with very subtle sharp mineral-like flecks, no stars, sky, objects or glowing border"
+  ],
+  [
+    "hexUnderDirt00",
+    "Underdark",
+    "flat subterranean ground of deep purple-grey stone slabs, black soil, small blue mineral crystals and tiny luminous teal mushrooms, rich dark shadows; no cave ceiling, structures or creatures"
+  ],
+  [
+    "hexUnderOcean00",
+    "Under Sea",
+    "flat dark subterranean lake surface, midnight blue and rich teal water, fine sharp ripples and subtle blue mineral reflections, no cave ceiling, shore or objects"
+  ],
+  [
+    "hexUnderVoid00",
+    "Under Void",
+    "flat near-black subterranean obsidian surface with subtle violet fissures and tiny crisp dark crystal textures; no stars, sky, ceiling, buildings or objects"
+  ]
+]

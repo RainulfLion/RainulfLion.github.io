@@ -1,0 +1,6 @@
+Use case: stylized-concept.
+Asset type: one transparent decoration sprite for the existing hex-map generator.
+Image 1 and Image 2 are STYLE AND CAMERA REFERENCES ONLY: the user's pine-forest and village tiles. Create new original artwork; do not reproduce the whole tile.
+Subject: {SUBJECT}
+Use the SAME fixed orthographic overhead three-quarter camera as the reference map tiles, about 50 degrees down, showing tops and sides. No perspective convergence. Crisp, detailed digital painting, rich natural saturated colours, dark defined shadows and bright upper-left illumination. Fine texture that reads at small strategy-map scale. No thick cartoon outlines, no haze, no blur.
+Show the COMPLETE isolated subject, centered, occupying about 75 percent of a square canvas with clear padding on every side. Background must be genuinely TRANSPARENT (alpha), not white, black, coloured or a checkerboard drawing. Opaque material inside the subject. No hexagon, no tile border, no soil slab, no 3D platform, no scenery, no text. Tiny soft contact shadow only at the object's feet if appropriate. No other objects beyond those explicitly described.

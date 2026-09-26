@@ -1,0 +1,19 @@
+Edit Image 1 (Plane.jpg). Images 2 and 3 are the user's existing hexForestPine00.png and hexBrushland00.png (fitted copies of Pine Forest.png and Brushland.png): approved CAMERA, REPRESENTED AREA, FEATURE SCALE and PAINTING references only. Repaint the beige hexagon of Image 1 with the TERRAIN below.
+
+Preserve Plane.jpg's canvas, white background, and exact hex ground footprint, position and proportions. Do not copy the different placement or white margins of the reference tiles. Do not stretch the hex or its vertical sides. Paint out the brown outline.
+
+This is one tile in a hex map generator. Every terrain depicts THE SAME-SIZED AREA OF LAND from THE SAME FIXED ORTHOGRAPHIC THREE-QUARTER OVERHEAD CAMERA as the pine and brushland references. No perspective convergence, horizon or sky. Do not change camera angle or zoom between terrain types. It is a miniature landscape viewed from map distance, never a close-up material sample. Show the tops and some sides of upright forms as in the pine reference, not a vertical satellite view or a flat carpet of crowns.
+
+SCALE LOCK: a mature tree has the same visible height and crown size as an average tree in the pine reference relative to the hex width. Broadleaf trees are comparable in height to those pines. Shrubs are smaller than trees. Marsh reeds and grasses are much smaller than shrubs and are fine ground detail; no giant leaves, flowers, individual grass blades or foreground plants. Rocks, pools and structures use that same scale. Features do not grow larger toward the foreground.
+
+The HEX FOOTPRINT is a flat plane, but features have their natural height. Mountains must be recognizable raised peaks with steep visible faces and valleys; hills have rounded relief; mesas have elevated flat tops and cliff faces; volcanoes have cones. Do not flatten these into rock textures. This terrain-specific elevation instruction supersedes the original flat-terrain wording. No tilted slab, dirt layer, thick tile base or extruded hex sides. Mountains, hills, mesas, volcanoes, trees and tall landmarks may rise above the two upper sloping ground edges into the white headroom; mountains must rise prominently above them toward the top of the canvas, but never cross the left/right sides or lower edges.
+
+Only the specified terrain and its own natural features may appear. No buildings, ruins, people, animals, roads, paths, rivers, bridges, fences or other objects unless named by the TERRAIN description.
+
+Crisp, highly detailed painted strategy-game artwork; clearly defined small forms, rich saturated colours, deep shadows, bright upper-left highlights. Match the painterly definition and viewing angle of the references while maintaining the requested strong colour and contrast. No photorealistic macro texture, watercolour, pastel, haze, blur, text, border or outline.
+
+TERRAIN: {TERRAIN}
+
+CRITICAL: clean white background only; no black background, gradient, vignette, halo or shadow outside the hex. Plane.jpg controls the canvas and footprint. The other two images control camera angle, feature scale and painting style only.
+
+LOCKED GROUND GEOMETRY: portrait 2:3 canvas. Ground hex vertices as percentages of width/height: (50%,10.2%), (100%,29.8%), (100%,68.9%), (50%,88.4%), (0%,68.9%), (0%,29.8%). Do not move the ground hex downward to accommodate tall features. Tall summits may reach y3% of canvas height, extending above the upper ground edges, never clipped by them. All silhouettes stay inside the canvas.

@@ -1,0 +1,11 @@
+Edit this image. Keep the canvas, the white background, and the hexagon's exact shape, size and position unchanged. Only repaint the beige hexagon.
+
+The hexagon's proportions must not change: it is almost exactly as tall as it is wide, its straight vertical left and right sides are only about half as long as it is wide, and its top and bottom are shallow points. Do not make it taller, and do not stretch the straight sides.
+
+Fill it with ONE terrain type as a flat, level ground surface, like the painted top of a hexagonal strategy-game tile, seen from above at a fixed isometric angle: no perspective, no horizon, no sky, no hills rising at the back.
+
+Only features of this terrain itself may appear: no buildings, ruins, people, animals, roads, paths, rivers, bridges, fences or other objects unless the TERRAIN line names them. Trees or rocks may rise a little above the two top slanted edges; nothing may extend past the left and right sides or below the bottom edges.
+
+Style: crisp, highly detailed digital painting like a premium strategy-game map tile. Sharp, well-defined shapes; many small individual details; strong contrast with deep, dark shadows and bright highlights from the upper left; rich, deeply saturated colours. NOT watercolour, NOT pastel, NOT soft, hazy or faded, no washed-out tones, no blur. No border or outline, no dirt layer or 3D base under the tile, no text.
+
+TERRAIN: {TERRAIN}

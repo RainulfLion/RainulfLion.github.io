@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14110d">
+<title>Fantasy Hex Map — Artwork</title>
+<style>
+:root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;background:#14110d;color:#e8dcc6}*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:1300px;margin:auto;padding:24px}header{padding-top:40px}h1{font:normal clamp(30px,5vw,48px)/1.15 Georgia,serif;margin:16px 0}p{max-width:760px;color:#b6a78f}a{color:#e1bc74;text-underline-offset:4px;touch-action:manipulation}nav,.filters{display:flex;gap:14px;flex-wrap:wrap;align-items:center}nav a{display:inline-flex;min-height:44px;align-items:center}.filters{margin-bottom:24px}.filters label{display:grid;gap:4px;font-size:13px}input,select{min-height:44px;font:16px system-ui;padding:8px 12px;border:1px solid #66513b;border-radius:6px;background:#241d15;color:inherit}input{width:min(320px,calc(100vw - 48px))}#count{color:#b6a78f}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}article{min-width:0;border:1px solid #44392b;border-radius:8px;overflow:hidden;background:#211b14}article img{width:100%;aspect-ratio:2/3;display:block;object-fit:contain;background:repeating-conic-gradient(#283129 0% 25%,#303930 0% 50%) 0/24px 24px}body.white article img{background:white}.details{padding:12px}.details h2{font-size:15px;margin:0 0 6px;overflow-wrap:anywhere}.details small{font-size:11px;color:#b6a78f;display:block;overflow-wrap:anywhere}.details a{display:inline-flex;align-items:center;min-height:44px;font-size:13px}footer{font-size:13px;color:#b6a78f;border-top:1px solid #44392b}#empty[hidden]{display:none}a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #e1bc74;outline-offset:3px}@media(max-width:520px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}header,main,footer{padding:20px}.details{padding:9px}.details h2{font-size:13px}}
+</style>
+</head>
+<body>
+<header>
+<nav><a href="index.html">← Map generator</a><a href="aligner.html">Tile aligner</a><a href="newTiles/newTiles-alignment.json" download>Alignment profile</a></nav>
+<h1>The hex artwork collection</h1>
+<p>Terrain, settlements, mountains, roads, rivers and lake shores. Every image below is included in the generator. Download a transparent PNG to use with its matching alignment profile.</p>
+</header>
+<main>
+<div class="filters">
+<label>Search images<input id="search" type="search" placeholder="Forest, coast, river…"></label>
+<label>Collection<select id="group"><option value="all">All images</option><option value="terrain">Terrain & landmarks</option><option value="river">Rivers & outlets</option><option value="road">Roads & bridges</option><option value="coast">Coasts</option><option value="sprite">Decorations</option></select></label>
+<label>Preview background<select id="background"><option value="transparent">Transparency grid</option><option value="white">White</option></select></label>
+<span id="count" role="status"></span>
+</div>
+<div class="grid" id="gallery"></div><p id="empty" hidden>No images match your search.</p>
+</main>
+<footer>Original artwork prepared for this project. <a href="ARTWORK.md">Artwork details</a>. No API key is needed.</footer>
+<script src="newTiles/pack-data.js"></script>
+<script>
+const pack=window.NEW_TILE_PACK,search=document.getElementById('search'),group=document.getElementById('group');
+const web=location.protocol!=='file:'&&pack.webDirectory;
+function category(name,tile){if(/River|LakeEnd/.test(name))return 'river';if(/Road|bridge/i.test(name))return 'road';if(/Coast/.test(name))return 'coast';return tile.kind==='sprite'?'sprite':'terrain';}
+function title(name){return name.replace(/\.png$/,'').replace(/^hex/,'').replace(/([a-z])([A-Z])/g,'$1 $2').replace(/[-_]/g,' ').replace(/00$/,'').trim();}
+const tiles=Object.entries(pack.profile.tiles).map(([name,tile])=>({name,title:title(name),group:category(name,tile)}));
+function render(){
+ const term=search.value.trim().toLowerCase(),shown=tiles.filter(t=>(group.value==='all'||t.group===group.value)&&(t.name+' '+t.title).toLowerCase().includes(term));
+ document.getElementById('count').textContent=`${shown.length} of ${tiles.length} images`;
+ document.getElementById('empty').hidden=!!shown.length;
+ document.getElementById('gallery').replaceChildren(...shown.map(t=>{
+  const card=document.createElement('article'),img=document.createElement('img'),details=document.createElement('div'),heading=document.createElement('h2'),name=document.createElement('small'),link=document.createElement('a');
+  img.src=(web?pack.webDirectory:pack.directory)+t.name.replace(/\.png$/,web?'.webp':'.png');img.alt=t.title;img.loading='lazy';img.decoding='async';img.width=300;img.height=450;
+  details.className='details';heading.textContent=t.title;name.textContent=t.name;link.textContent='Download PNG';link.href=pack.directory+t.name;link.download=t.name;
+  details.append(heading,name,link);card.append(img,details);return card;
+ }));
+}
+search.addEventListener('input',render);group.addEventListener('change',render);
+document.getElementById('background').addEventListener('change',e=>document.body.classList.toggle('white',e.target.value==='white'));
+render();
+</script>
+</body>
+</html>

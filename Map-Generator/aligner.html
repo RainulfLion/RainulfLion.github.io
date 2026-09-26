@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hex Tile Aligner</title>
+<style>
+  :root{
+    --bg:#14110d; --panel:#1e1913; --panel2:#272018; --line:#3d3327;
+    --ink:#e8dcc6; --dim:#a3927a; --accent:#c8a35a; --good:#7fa87a; --bad:#c86a5a;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{background:var(--bg);color:var(--ink);
+    font:13px/1.45 "Segoe UI",Roboto,system-ui,sans-serif;display:flex;overflow:hidden}
+
+  #side{width:300px;flex:0 0 300px;height:100vh;overflow-y:auto;
+    background:var(--panel);border-right:1px solid var(--line);padding:14px 14px 40px}
+  #side::-webkit-scrollbar{width:9px}
+  #side::-webkit-scrollbar-thumb{background:#3d3327;border-radius:5px}
+  h1{font:600 16px/1.2 Georgia,serif;margin:0 0 2px;color:var(--accent);letter-spacing:.03em}
+  .sub{color:var(--dim);font-size:11px;margin:0 0 14px}
+  fieldset{border:1px solid var(--line);border-radius:6px;margin:0 0 12px;
+    padding:9px 10px 11px;background:var(--panel2)}
+  legend{font:600 10px/1 system-ui;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);padding:0 5px}
+  label.row{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:12px}
+  label.row>span:first-child{flex:0 0 84px;color:var(--dim)}
+  input[type=range]{flex:1;min-width:0;accent-color:var(--accent);height:16px}
+  select,input[type=number]{background:#120f0b;color:var(--ink);border:1px solid var(--line);
+    border-radius:4px;padding:4px 6px;font:12px system-ui;min-width:0}
+  .val{flex:0 0 46px;text-align:right;color:var(--accent);font:11px ui-monospace,monospace}
+  label.chk{display:flex;align-items:center;gap:7px;margin:6px 0;font-size:12px;cursor:pointer}
+  input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px}
+  button{background:#3a2f20;color:var(--ink);border:1px solid var(--line);border-radius:5px;
+    padding:8px 10px;font:600 12px system-ui;cursor:pointer;width:100%}
+  button:hover{background:#4a3b28;border-color:var(--accent)}
+  button:disabled{opacity:.4;cursor:default}
+  button:disabled:hover{background:#3a2f20;border-color:var(--line)}
+  button.primary{background:linear-gradient(#8a6b2e,#6d5223);border-color:#a5813a;color:#fff6e0}
+  button.primary:hover{background:linear-gradient(#9d7b36,#7d5f28)}
+  .btnrow{display:flex;gap:7px;margin:8px 0}
+  .btnrow button{width:auto;flex:1}
+  .note{font-size:11px;color:var(--dim);margin:6px 0 0}
+  .stat{font:11px/1.5 ui-monospace,monospace;color:var(--dim);
+    background:#120f0b;border:1px solid var(--line);border-radius:4px;padding:6px;margin-top:7px}
+  .stat b{color:var(--accent)}
+  .ok{color:var(--good)} .bad{color:var(--bad)}
+
+  #main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#0c0a07}
+  #tabs{display:flex;gap:0;border-bottom:1px solid var(--line);background:var(--panel)}
+  #tabs button{width:auto;border:0;border-right:1px solid var(--line);border-radius:0;
+    padding:10px 18px;background:transparent;color:var(--dim)}
+  #tabs button.on{background:#2b231a;color:var(--accent)}
+  #stage{flex:1;position:relative;overflow:hidden}
+  #inspect,#sheet{position:absolute;inset:0}
+  #sheet{overflow-y:auto;padding:14px;display:none;align-content:start}
+  #sheet.show{display:block} #inspect.show{display:block}
+  #inspect.hide,#sheet.hide{display:none}
+  #icv{display:block;width:100%;height:100%}
+
+  #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:12px}
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:6px;
+    padding:7px;cursor:pointer;position:relative}
+  .card:hover{border-color:var(--accent)}
+  .card.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+  .card canvas{display:block;width:100%;background:#0e0c09;border-radius:4px}
+  .card .nm{font:10px/1.3 ui-monospace,monospace;color:var(--dim);margin-top:5px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .card .flag{position:absolute;top:5px;right:5px;font-size:10px;padding:1px 5px;
+    border-radius:3px;background:#7a3a2a;color:#ffdfd4}
+  .card .flag.kind{background:#2f4657;color:#cfe2ee}
+  .card .edited{position:absolute;top:5px;left:5px;font-size:10px;padding:1px 5px;
+    border-radius:3px;background:#5c4a1e;color:#ffeec4}
+  .sheetHead{font:600 11px system-ui;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);margin:16px 0 8px}
+  .sheetHead:first-child{margin-top:0}
+
+  #hud{position:absolute;left:12px;bottom:12px;background:rgba(20,17,13,.88);
+    border:1px solid var(--line);border-radius:6px;padding:6px 10px;
+    font:11px ui-monospace,monospace;color:var(--dim);pointer-events:none}
+  #drop{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:rgba(12,10,7,.92);color:var(--ink);font:14px Georgia,serif;text-align:center;
+    padding:40px;z-index:9}
+  #drop.hide{display:none}
+  kbd{background:#2b231a;border:1px solid var(--line);border-radius:3px;padding:1px 5px;
+    font:11px ui-monospace,monospace;color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div id="side">
+  <h1>Hex Tile Aligner</h1>
+  <p class="sub">Calibrate a hex tile pack once. Export the profile, load it in the map generator.</p>
+
+  <fieldset>
+    <legend>Tile pack</legend>
+    <button class="primary" id="pick">Load tile folder…</button>
+    <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+    <p class="note">Choose <b>newTiles</b> or <b>map-ready</b>. Prepared transparent tiles and their alignment load automatically.</p>
+    <div class="stat" id="packStat">No tiles loaded.</div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Grid</legend>
+    <label class="row"><span>Orientation</span>
+      <select id="orient" style="flex:1">
+        <option value="auto">Auto (measured)</option>
+        <option value="pointy">Pointy-top</option>
+        <option value="flat">Flat-top</option>
+      </select>
+    </label>
+    <label class="row"><span>Face ratio</span><input type="range" id="ratio" min="0.50" max="1.60" step="0.001" value="1.000"><span class="val" id="ratioV">1.000</span></label>
+    <label class="row"><span>Zoom</span><input type="range" id="zoom" min="40" max="260" value="120"><span class="val" id="zoomV">120</span></label>
+    <div class="btnrow"><button id="autoRatio">Re-measure ratio</button></div>
+    <p class="note">Face ratio is hex height ÷ hex width, measured from the flattest tiles. Everything else keys off it.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Selected tile</legend>
+    <div class="stat" id="selStat">—</div>
+    <label class="row"><span>Y offset</span><input type="range" id="dy" min="-80" max="80" step="0.5" value="0"><span class="val" id="dyV">0</span></label>
+    <label class="row"><span>X offset</span><input type="range" id="dx" min="-80" max="80" step="0.5" value="0"><span class="val" id="dxV">0</span></label>
+    <label class="row"><span>Scale</span><input type="range" id="sc" min="25" max="300" step="0.5" value="100"><span class="val" id="scV">100</span></label>
+    <div class="btnrow">
+      <button id="resetOne">Reset tile</button>
+      <button id="copyPrev">Copy to all</button>
+    </div>
+    <p class="note">Offsets are % of hex width. Arrow keys nudge, <kbd>Shift</kbd> for 5× steps. <kbd>,</kbd> <kbd>.</kbd> step through tiles.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>View</legend>
+    <label class="chk"><input type="checkbox" id="showHex" checked> Hex outline overlay</label>
+    <label class="chk"><input type="checkbox" id="showFace" checked> Measured face box</label>
+    <label class="chk"><input type="checkbox" id="showRule"> Row baselines</label>
+    <label class="chk"><input type="checkbox" id="soloTile"> Fill grid with this tile</label>
+    <label class="row"><span>Show</span>
+      <select id="kindFilter" style="flex:1">
+        <option value="all">All files</option>
+        <option value="hex">Hex tiles only</option>
+        <option value="overlay">Overlays only</option>
+        <option value="sprite">Sprites only</option>
+      </select>
+    </label>
+    <label class="row"><span>Neighbour</span>
+      <select id="refKey" style="flex:1"></select>
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Profile</legend>
+    <div class="btnrow">
+      <button id="exportBtn">Export .json</button>
+      <button id="importBtn">Import .json</button>
+    </div>
+    <input type="file" id="profFile" accept=".json,application/json" hidden>
+    <div class="btnrow"><button id="resetAll">Reset all offsets</button></div>
+    <div class="stat" id="profStat">No adjustments yet.</div>
+  </fieldset>
+</div>
+
+<div id="main">
+  <div id="tabs">
+    <button id="tabInspect" class="on">Inspect</button>
+    <button id="tabSheet">Contact sheet</button>
+  </div>
+  <div id="stage">
+    <div id="inspect" class="show"><canvas id="icv"></canvas></div>
+    <div id="sheet" class="hide"><div id="grid"></div></div>
+    <div id="hud">—</div>
+    <div id="drop">
+      Drop your <b>tile folder</b> here<br>
+      <span style="color:#a3927a;font-size:12px">or press “Load tile folder…”</span>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ==========================================================================
+   STATE
+   ========================================================================== */
+const TILES = [];      // {name, path, img, w, h, geo, adj:{dx,dy,sc}}
+let byName = new Map();
+let SEL = -1;
+let RATIO = 1.0;       // hex face height / width
+let ORIENT = 'pointy';
+let AUTO_RATIO = 1.0, AUTO_ORIENT = 'pointy';
+
+const $ = id => document.getElementById(id);
+
+/* ==========================================================================
+   MEASUREMENT
+   Identical maths to the map generator, so what you align here is what the
+   generator draws. Reading pixels requires same-origin images, which is why
+   this tool insists on the folder picker / drag-drop rather than paths.
+   ========================================================================== */
+function measure(img, w, h){
+  try{
+    const cv=document.createElement('canvas');
+    cv.width=w; cv.height=h;
+    const cx=cv.getContext('2d',{willReadFrequently:true});
+    cx.drawImage(img,0,0);
+    const d=cx.getImageData(0,0,w,h).data;
+    const wid=new Int32Array(h), lft=new Int32Array(h).fill(-1);
+    let maxW=0;
+    for(let y=0;y<h;y++){
+      let mn=-1,mx=-1; const row=y*w;
+      for(let x=0;x<w;x++) if(d[((row+x)<<2)+3]>16){ if(mn<0)mn=x; mx=x; }
+      if(mn>=0){ wid[y]=mx-mn+1; lft[y]=mn; if(wid[y]>maxW) maxW=wid[y]; }
+    }
+    if(maxW<4) return null;
+    let artTop=0; while(artTop<h && wid[artTop]===0) artTop++;
+    if(artTop>=h) return null;
+    let artBot=h-1; while(artBot>0 && wid[artBot]===0) artBot--;
+
+    const orient = (wid[artTop] < maxW*0.34) ? 'pointy' : 'flat';
+
+    // sub-pixel row where the silhouette first reaches frac of full width
+    const cross = frac => {
+      const t=maxW*frac;
+      for(let y=artTop+1;y<h;y++) if(wid[y]>=t){
+        const a=wid[y-1], bq=wid[y];
+        return bq===a ? y : (y-1)+(t-a)/(bq-a);
+      }
+      return NaN;
+    };
+    let faceH, rampTop;
+    if(orient==='pointy'){
+      const a=cross(0.30), bq=cross(0.70);
+      if(isFinite(a)&&isFinite(bq)&&bq>a){ faceH=10*(bq-a); rampTop=a-0.3*(bq-a)/0.4; }
+      else { faceH=maxW*1.1547; rampTop=artTop; }
+    } else {
+      const a=cross(0.60), bq=cross(0.90);
+      if(isFinite(a)&&isFinite(bq)&&bq>a){ faceH=(bq-a)/0.3; rampTop=a-0.1*faceH; }
+      else { faceH=maxW*0.866; rampTop=artTop; }
+    }
+    faceH*=0.997;
+
+    // yq: first row at full width = face top + faceH/4 on a pointy hex.
+    // Survives peaks (narrower) and skirts (below), unlike the art's top edge.
+    let yq=artTop; while(yq<h && wid[yq] < maxW*0.985) yq++;
+    if(yq>=h) yq=artTop;
+    let yw=artTop; while(yw<h && wid[yw] < maxW) yw++;
+    if(yw>=h) yw=artTop;
+    const left = lft[yw] < 0 ? 0 : lft[yw];
+
+    return {left, w:maxW, h:faceH, yq, rampTop, artTop, artBot, orient,
+            imgW:w, imgH:h};
+  }catch(e){ return null; }
+}
+
+/* ---- edge convention, measured -----------------------------------------
+   Single-edge river tiles (hexRiver100000, 010000, …) are transparent except
+   for one river stub, so the edge carrying alpha is that bit's edge. Coast
+   polarity comes from brightness: beach sand is far lighter than open water.
+   Both travel to the generator in the exported profile.                    */
+let EDGEMAP=[0,1,2,3,4,5], COAST_INVERT=false, EDGE_DETECTED=false;
+const EDGE_DIR=[[1,0],[0.5,0.75],[-0.5,0.75],[-1,0],[-0.5,-0.75],[0.5,-0.75]];
+const MASKED=new Map();          // "hexRiver" -> mask -> [tile]
+
+function indexMasks(){
+  MASKED.clear();
+  for(const t of TILES){
+    const m=t.name.match(/^(hexCoast|hexRiverMouth|hexRiverLakeEnd|hexRiver)([01]{6})-\d+\.png$/i);
+    if(!m) continue;
+    if(!MASKED.has(m[1])) MASKED.set(m[1], new Map());
+    const mm=MASKED.get(m[1]);
+    if(!mm.has(m[2])) mm.set(m[2], []);
+    mm.get(m[2]).push(t);
+  }
+}
+function edgeProbe(t){
+  const g=effGeo(t); if(!g) return null;
+  try{
+    const cv=document.createElement('canvas'); cv.width=t.w; cv.height=t.h;
+    const cx=cv.getContext('2d',{willReadFrequently:true});
+    cx.drawImage(t.img,0,0);
+    const d=cx.getImageData(0,0,t.w,t.h).data;
+    const fw=g.w, fh=g.w*RATIO;
+    const cxp=g.left+fw/2, cyp=faceTopOf(t)+fh/2;
+    const out=[];
+    for(let e=0;e<6;e++){
+      const [ux,uy]=EDGE_DIR[e];
+      let A=0,L=0,n=0;
+      for(let k=0;k<28;k++){
+        const rr=0.58+0.36*(k/27);
+        const px=Math.round(cxp+ux*rr*fw/2), py=Math.round(cyp+uy*rr*fh/2);
+        if(px<0||py<0||px>=t.w||py>=t.h) continue;
+        const i=(py*t.w+px)<<2;
+        const al=d[i+3]/255;
+        A+=al; L+=al*(0.299*d[i]+0.587*d[i+1]+0.114*d[i+2])/255; n++;
+      }
+      out.push(n?{a:A/n,l:L/n}:{a:0,l:0});
+    }
+    return out;
+  }catch(e){ return null; }
+}
+function detectEdges(){
+  EDGE_DETECTED=false;
+  indexMasks();
+  const rm=MASKED.get('hexRiver');
+  if(!rm) return;
+  const map=new Array(6).fill(-1); let solved=0;
+  for(let pos=0;pos<6;pos++){
+    const mask='0'.repeat(pos)+'1'+'0'.repeat(5-pos);
+    const list=rm.get(mask); if(!list||!list.length) continue;
+    const pr=edgeProbe(list[0]); if(!pr) continue;
+    let best=-1,bv=-1,sec=0;
+    pr.forEach((v,e)=>{ if(v.a>bv){ sec=bv; bv=v.a; best=e; } else if(v.a>sec) sec=v.a; });
+    if(best>=0 && bv>Math.max(0.02, sec*1.6)){ map[pos]=best; solved++; }
+  }
+  if(solved===6 && new Set(map).size===6){ EDGEMAP=map; EDGE_DETECTED=true; }
+
+  const cm=MASKED.get('hexCoast');
+  if(cm && cm.size){
+    let sL=0,cL=0,sn=0,cn=0,tried=0;
+    for(const [mask,list] of cm){
+      if(tried++>24) break;
+      const pr=edgeProbe(list[0]); if(!pr) continue;
+      for(let pos=0;pos<6;pos++){
+        const e=EDGEMAP[pos];
+        if(pr[e].a<0.25) continue;
+        if(mask[pos]==='1'){ sL+=pr[e].l; sn++; } else { cL+=pr[e].l; cn++; }
+      }
+    }
+    if(sn>4&&cn>4) COAST_INVERT=(sL/sn)<(cL/cn);
+  }
+}
+
+/* ---- tile classification ----------------------------------------------
+   A pack contains three kinds of PNG and they must not be treated alike:
+
+     hex tile     a full hex face                  measure it
+     hex overlay  river/coast art on a transparent hex canvas — its silhouette
+                  is a thin line, so measuring it yields a tiny "face" and the
+                  placement then scales that up to hex width, which is what
+                  made these render enormous. Align by the image frame instead.
+     sprite       a small decoration (house, tree, iceberg) on its own small
+                  canvas. Not a hex at all; draw at its natural relative size.
+
+   The pack's hex canvas is whatever image size is most common.            */
+let HEX_W=0, HEX_H=0, REF_FACE=null;
+
+function properHex(t){
+  return !!(t.geo && t.w===HEX_W && t.h===HEX_H && t.geo.w >= t.w*0.80);
+}
+function classify(){
+  const counts=new Map();
+  for(const t of TILES){ const k=t.w+'x'+t.h; counts.set(k,(counts.get(k)||0)+1); }
+  let best=null,bc=-1;
+  for(const [k,c] of counts) if(c>bc){ bc=c; best=k; }
+  if(best){ const [w,h]=best.split('x').map(Number); HEX_W=w; HEX_H=h; }
+
+  // reference face box, from the tiles that really are hexes
+  const solid=TILES.filter(properHex);
+  if(solid.length){
+    const med=(arr)=>{ const a=arr.slice().sort((x,y)=>x-y); return a[a.length>>1]; };
+    REF_FACE={ left: med(solid.map(t=>t.geo.left)),
+               w:    med(solid.map(t=>t.geo.w)),
+               yq:   med(solid.map(t=>t.geo.yq)) };
+  } else REF_FACE=null;
+
+  for(const t of TILES){
+    t.kind = (t.w===HEX_W && t.h===HEX_H)
+      ? (properHex(t) ? 'hex' : 'overlay')
+      : 'sprite';
+  }
+}
+/* The geometry to place a tile by: its own for a real hex, the pack reference
+   for an overlay, null for a sprite. */
+/* Every tile on the pack's hex canvas shares ONE face box — same hex, same
+   canvas. Measuring each tile separately only invites art that spills outside
+   the hex (a port's piers, a castle's banner, a mountain's peak) to be read as
+   a wider or taller face, which then scales that tile wrong. Measure per tile
+   to DERIVE the reference and to spot outliers; place by the reference. */
+function effGeo(t){
+  if(t.kind==='sprite') return null;
+  if(t.profileFace){
+    const f=t.profileFace;
+    return {left:f.left, w:f.w, yq:f.top+f.w*RATIO/4};
+  }
+  if(REF_FACE) return {left:REF_FACE.left, w:REF_FACE.w, yq:REF_FACE.yq};
+  return t.geo;
+}
+/* how far this tile's own measurement strays from the pack reference */
+function outlierPct(t){
+  if(!REF_FACE || !t.geo || t.kind==='sprite') return 0;
+  return Math.round(Math.max(
+    Math.abs(t.geo.w  - REF_FACE.w ) / REF_FACE.w,
+    Math.abs(t.geo.yq - REF_FACE.yq) / (REF_FACE.w*RATIO)
+  )*100);
+}
+
+/* face top implied by the hex band, in image pixels */
+function faceTopOf(t){
+  const g=effGeo(t);
+  if(!g) return 0;
+  const faceHpx = g.w * RATIO;
+  return g.yq - faceHpx/4;
+}
+/* how far the art rises above / hangs below the hex face, as % of face height */
+function overhang(t){
+  // only meaningful for a real hex tile — a sprite has no hex face to overhang
+  if(t.kind!=='hex' || !t.geo) return null;
+  const g=effGeo(t);
+  const fh = g.w*RATIO, top = faceTopOf(t);
+  return { above:+(((top-t.geo.artTop)/fh)*100).toFixed(0),
+           below:+(((t.geo.artBot-(top+fh))/fh)*100).toFixed(0) };
+}
+
+/* ==========================================================================
+   LOADING
+   ========================================================================== */
+function loadImage(file){
+  return new Promise(res=>{
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+    img.onload = ()=>res({img,w:img.naturalWidth,h:img.naturalHeight,url});
+    img.onerror= ()=>res(null);
+    img.src=url;
+  });
+}
+
+async function readTileFolder(files){
+  const all=Array.from(files);
+  const pathOf=f=>(f.webkitRelativePath||f.name).replace(/\\/g,'/');
+  const dirOf=f=>pathOf(f).replace(/[^/]*$/,'');
+  const images=all.filter(f=>/\.png$/i.test(f.name));
+  // A parent folder also contains white copies, originals and review images.
+  // Only the prepared transparent pack belongs on a tiled canvas.
+  const readyCandidates=images.filter(f=>/(^|\/)map-ready\/[^/]+\.png$/i.test(pathOf(f)));
+  const readyDir=readyCandidates.map(dirOf).sort((a,b)=>a.split('/').length-b.split('/').length || a.localeCompare(b))[0];
+  const ready=readyCandidates.filter(f=>dirOf(f)===readyDir);
+  const pngs=ready.length?ready:images;
+  const dir=pngs.length?dirOf(pngs[0]):'';
+  const parent=dir.replace(/[^/]+\/$/,'');
+  const profiles=all.filter(f=>/^(newTiles-alignment|hex-tile-alignment)\.json$/i.test(f.name))
+    .filter(f=>dirOf(f)===dir || dirOf(f)===parent)
+    .sort((a,b)=>(dirOf(a)===dir?0:1)-(dirOf(b)===dir?0:1));
+  let profile=null;
+  for(const file of profiles){
+    try{
+      const data=JSON.parse(await file.text());
+      if(data.format==='hex-tile-alignment' && data.tiles && Number.isFinite(data.faceRatio) && data.faceRatio>0){
+        const names=new Set(Object.keys(data.tiles).map(n=>n.toLowerCase()));
+        if(pngs.some(f=>names.has(f.name.toLowerCase()))){profile=data;break;}
+      }
+    }catch(e){ /* A bad optional profile must not hide otherwise readable art. */ }
+  }
+  return {pngs,profile,prepared:ready.length>0};
+}
+let PACK_NOTE='';
+async function ingest(files){
+  const pack=await readTileFolder(files), pngs=pack.pngs;
+  if(!pngs.length){ setHud('No PNG files found in that folder.'); return; }
+  setHud(`Loading ${pngs.length} tiles…`);
+  TILES.length=0; byName=new Map(); SEL=-1; PACK_NOTE='';
+  for(const f of pngs){
+    const r=await loadImage(f);
+    if(!r) continue;
+    const t={ name:f.name,
+              path:(f.webkitRelativePath||f.name),
+              img:r.img, w:r.w, h:r.h,
+              geo:measure(r.img,r.w,r.h),
+              adj:{dx:0,dy:0,sc:1} };
+    TILES.push(t); byName.set(t.name.toLowerCase(), t);
+  }
+  TILES.sort((a,b)=> a.path.localeCompare(b.path));
+  classify();
+  computeAutoRatio();
+  classify();          // reference face depends on the ratio; settle it
+  RATIO=AUTO_RATIO;
+  detectEdges();
+  RATIO=AUTO_RATIO; ORIENT=AUTO_ORIENT;
+  const imported=pack.profile?applyProfile(pack.profile):0;
+  PACK_NOTE=(pack.prepared?'Using transparent map-ready tiles. ':'')+(imported?'Alignment loaded automatically.':'');
+  $('ratio').value=RATIO.toFixed(3); $('ratioV').textContent=RATIO.toFixed(3);
+  buildRefOptions();
+  // open on the tallest tile — the one most likely to need attention — and
+  // make sure it is not the same tile used as the neighbour reference
+  const refNm = $('refKey').value;
+  let best=-1, bestAbove=-1;
+  TILES.forEach((t,i)=>{
+    if(t.kind!=='hex' || t.name.toLowerCase()===refNm) return;
+    const oh=overhang(t);
+    if(oh && oh.above>bestAbove){ bestAbove=oh.above; best=i; }
+  });
+  SEL = best>=0 ? best : TILES.findIndex(t=>t.kind==='hex');
+  if(SEL<0) SEL=0;
+  $('drop').classList.add('hide');
+  refreshPack(); buildSheet(); draw(); refreshSel(); refreshProf();
+}
+
+/* Face ratio from the flattest tiles. Art that rises above the face inflates
+   the ramp fit, so overestimates are common and underestimates are not —
+   take a low percentile, never the mean. */
+function computeAutoRatio(){
+  const rs=[]; let pointy=0, flat=0;
+  for(const t of TILES){
+    if(!t.geo || !properHex(t)) continue;     // overlays and sprites would skew it
+    rs.push(t.geo.h/t.geo.w);
+    t.geo.orient==='pointy' ? pointy++ : flat++;
+  }
+  if(!rs.length) return;
+  rs.sort((a,b)=>a-b);
+  AUTO_RATIO = rs[Math.floor(rs.length*0.20)];
+  AUTO_ORIENT = pointy>=flat ? 'pointy':'flat';
+}
+
+/* ==========================================================================
+   HEX LAYOUT  (mirrors the generator exactly)
+   ========================================================================== */
+function geom(faceW){
+  const faceH = faceW*RATIO;
+  return ORIENT==='pointy'
+    ? {faceW, faceH, stepX:faceW,        stepY:faceH*0.75}
+    : {faceW, faceH, stepX:faceW*0.75,   stepY:faceH};
+}
+function cellXY(c,r,G){
+  return ORIENT==='pointy'
+    ? [c*G.stepX + ((r&1)?G.stepX/2:0), r*G.stepY]
+    : [c*G.stepX, r*G.stepY + ((c&1)?G.stepY/2:0)];
+}
+/* Explicit vertices, because the hex is squashed: its height is the MEASURED
+   ratio times its width, not the 1.1547 of a regular hexagon. Deriving the
+   points from a circle radius silently assumes regularity and draws an
+   outline that does not match the art. */
+function hexPath(ctx,cx,cy,faceW){
+  const W=faceW, H=faceW*RATIO;
+  const pts = ORIENT==='pointy'
+    ? [[0,-H/2],[W/2,-H/4],[W/2,H/4],[0,H/2],[-W/2,H/4],[-W/2,-H/4]]
+    : [[-W/2,0],[-W/4,-H/2],[W/4,-H/2],[W/2,0],[W/4,H/2],[-W/4,H/2]];
+  ctx.beginPath();
+  pts.forEach(([px,py],k)=> k? ctx.lineTo(cx+px,cy+py) : ctx.moveTo(cx+px,cy+py));
+  ctx.closePath();
+}
+
+/* Place one tile. This is the exact transform the generator applies. */
+function place(t, G){
+  const a=t.adj;
+  const g=effGeo(t);
+  if(!g){
+    // sprite: keep its true size relative to the hex canvas, centred
+    const s=(G.faceW/(HEX_W||t.w))*a.sc;
+    return {dw:t.w*s, dh:t.h*s, sprite:true,
+            ox:(G.faceW-t.w*s)/2 + a.dx/100*G.faceW,
+            oy:(G.faceH-t.h*s)/2 + a.dy/100*G.faceW};
+  }
+  const s=(G.faceW/g.w)*a.sc;
+  return {
+    dw: t.w*s, dh: t.h*s,
+    ox: -g.left*s + a.dx/100*G.faceW,
+    oy: -faceTopOf(t)*s + a.dy/100*G.faceW,
+  };
+}
+function drawTileAt(ctx, t, x, y, G){
+  const p=place(t,G);
+  ctx.drawImage(t.img, x+p.ox, y+p.oy, p.dw, p.dh);
+}
+
+/* ==========================================================================
+   INSPECT VIEW
+   ========================================================================== */
+const icv=$('icv'), ictx=icv.getContext('2d');
+function resizeInspect(){
+  const dpr=window.devicePixelRatio||1;
+  const r=icv.getBoundingClientRect();
+  icv.width=Math.round(r.width*dpr); icv.height=Math.round(r.height*dpr);
+  ictx.setTransform(dpr,0,0,dpr,0,0);
+  draw();
+}
+window.addEventListener('resize', resizeInspect);
+
+function refTile(){
+  const nm=$('refKey').value;
+  return byName.get(nm) || TILES.find(t=>t.geo) || TILES[0];
+}
+
+function draw(){
+  const r=icv.getBoundingClientRect();
+  ictx.setTransform(window.devicePixelRatio||1,0,0,window.devicePixelRatio||1,0,0);
+  ictx.fillStyle='#0c0a07'; ictx.fillRect(0,0,r.width,r.height);
+  if(!TILES.length || SEL<0) return;
+
+  const sel=TILES[SEL], ref=refTile();
+  const faceW=+$('zoom').value;
+  const G=geom(faceW);
+  const solo=$('soloTile').checked;
+
+  const cols=Math.ceil(r.width/G.stepX)+2, rows=Math.ceil(r.height/G.stepY)+3;
+  const ox=(r.width - (cols-2)*G.stepX)/2, oy=(r.height-(rows-3)*G.stepY)/2;
+  const midC=Math.floor(cols/2)-1, midR=Math.floor(rows/2)-1;
+
+  ictx.save();
+  ictx.translate(ox,oy);
+
+  // back-to-front, so a tile's overhang lands on the row below correctly
+  for(let rr=-1; rr<rows; rr++){
+    for(let cc=-1; cc<cols; cc++){
+      const [x,y]=cellXY(cc,rr,G);
+      const isSel = solo || (rr===midR && (cc===midC || cc===midC-1 || cc===midC+1))
+                         || (rr===midR-1 && cc===midC) || (rr===midR+1 && cc===midC);
+      const t = isSel ? sel : ref;
+      if(t) drawTileAt(ictx, t, x, y, G);
+    }
+  }
+
+  // overlays
+  if($('showRule').checked){
+    ictx.strokeStyle='rgba(200,163,90,.30)'; ictx.lineWidth=1;
+    for(let rr=-1; rr<rows; rr++){
+      const y=rr*G.stepY;
+      ictx.beginPath(); ictx.moveTo(-ox,y); ictx.lineTo(r.width,y); ictx.stroke();
+    }
+  }
+  if($('showHex').checked){
+    ictx.strokeStyle='rgba(255,90,60,.85)'; ictx.lineWidth=1.6;
+    for(let rr=-1; rr<rows; rr++)for(let cc=-1; cc<cols; cc++){
+      const [x,y]=cellXY(cc,rr,G);
+      hexPath(ictx, x+G.faceW/2, y+G.faceH/2, G.faceW);
+      ictx.stroke();
+    }
+  }
+  const selectedFace=effGeo(sel);
+  if($('showFace').checked && selectedFace){
+    // Show the same imported or measured face used to place the artwork.
+    const p=place(sel,G);
+    const s=(G.faceW/selectedFace.w)*sel.adj.sc;
+    for(const [cc,rr] of [[midC,midR]]){
+      const [x,y]=cellXY(cc,rr,G);
+      ictx.strokeStyle='rgba(90,220,255,.95)'; ictx.lineWidth=1.4;
+      ictx.setLineDash([5,4]);
+      ictx.strokeRect(x+p.ox+selectedFace.left*s, y+p.oy+faceTopOf(sel)*s,
+                      selectedFace.w*s, selectedFace.w*RATIO*s);
+      ictx.setLineDash([]);
+      // full image bounds
+      ictx.strokeStyle='rgba(255,255,255,.22)';
+      ictx.strokeRect(x+p.ox, y+p.oy, p.dw, p.dh);
+    }
+  }
+  ictx.restore();
+
+  const oh = overhang(sel);
+  setHud(`${sel.name} · face ${sel.geo? sel.geo.w+'×'+Math.round(sel.geo.w*RATIO) : '—'}px` +
+    (oh? ` · rises ${oh.above}% above face, ${oh.below}% below` : '') +
+    ` · dx ${sel.adj.dx} dy ${sel.adj.dy} scale ${(sel.adj.sc*100).toFixed(0)}%`);
+}
+function setHud(s){ $('hud').textContent=s; }
+
+/* ==========================================================================
+   CONTACT SHEET
+   ========================================================================== */
+function buildSheet(){
+  const g=$('grid'); g.innerHTML='';
+  let lastFolder=null;
+  const filt = $('kindFilter') ? $('kindFilter').value : 'all';
+  TILES.forEach((t,i)=>{
+    if(filt!=='all' && t.kind!==filt) return;
+    const folder = t.path.includes('/') ? t.path.split('/').slice(-2,-1)[0] : 'tiles';
+    if(folder!==lastFolder){
+      lastFolder=folder;
+      const h=document.createElement('div');
+      h.className='sheetHead'; h.textContent=folder;
+      h.style.gridColumn='1 / -1';
+      g.appendChild(h);
+    }
+    const card=document.createElement('div');
+    card.className='card'+(i===SEL?' sel':'');
+    card.dataset.i=i;
+    const cv=document.createElement('canvas');
+    cv.width=132; cv.height=Math.round(132*1.05);
+    card.appendChild(cv);
+    const nm=document.createElement('div');
+    nm.className='nm'; nm.textContent=t.name; nm.title=t.path;
+    card.appendChild(nm);
+    const oh=overhang(t);
+    let flagTxt=null, flagCls='flag';
+    if(t.kind==='sprite'){ flagTxt='sprite'; flagCls='flag kind'; }
+    else if(t.kind==='overlay'){ flagTxt='overlay'; flagCls='flag kind'; }
+    else if(!t.geo) flagTxt='no face';
+    else if(oh && oh.above>60) flagTxt='tall';
+    else if(oh && oh.below>90) flagTxt='deep';
+    if(flagTxt){
+      const f=document.createElement('div'); f.className=flagCls; f.textContent=flagTxt;
+      card.appendChild(f);
+    }
+    const op=outlierPct(t);
+    if(!flagTxt && op>4){
+      const f=document.createElement('div'); f.className='flag';
+      f.textContent='spills '+op+'%'; f.title='own measurement differs from the pack reference';
+      card.appendChild(f);
+    }
+    if(t.adj.dx||t.adj.dy||t.adj.sc!==1){
+      const e=document.createElement('div'); e.className='edited'; e.textContent='adj';
+      card.appendChild(e);
+    }
+    card.onclick=()=>{ SEL=i; showTab('inspect'); refreshSel(); draw(); markSel(); };
+    g.appendChild(card);
+    thumb(cv,t);
+  });
+}
+function thumb(cv,t){
+  const cx=cv.getContext('2d');
+  cx.fillStyle='#0e0c09'; cx.fillRect(0,0,cv.width,cv.height);
+  const faceW=cv.width*0.52;
+  const G=geom(faceW);
+  const x=(cv.width-faceW)/2, y=(cv.height-G.faceH)/2;
+  const p=place(t,G);
+  cx.drawImage(t.img, x+p.ox, y+p.oy, p.dw, p.dh);
+  if(t.kind!=='sprite'){
+    cx.strokeStyle='rgba(255,90,60,.75)'; cx.lineWidth=1;
+    hexPath(cx, x+faceW/2, y+G.faceH/2, faceW);
+    cx.stroke();
+  }
+}
+function markSel(){
+  document.querySelectorAll('.card').forEach(c=>
+    c.classList.toggle('sel', +c.dataset.i===SEL));
+}
+
+/* ==========================================================================
+   UI
+   ========================================================================== */
+function refreshPack(){
+  const n=k=>TILES.filter(t=>t.kind===k).length;
+  $('packStat').innerHTML =
+    `<b>${TILES.length}</b> files · <b>${n('hex')}</b> hex tiles · ` +
+    `${n('overlay')} overlays · ${n('sprite')} sprites<br>` +
+    `hex canvas: ${HEX_W}×${HEX_H}px<br>` +
+    `face ratio <b>${RATIO.toFixed(3)}</b> · ${ORIENT}-top<br>` +
+    (MASKED.size
+      ? (EDGE_DETECTED
+          ? `<span class="ok">edge order ${EDGEMAP.join('')}${COAST_INVERT?' · coast inverted':''}</span>`
+          : `<span class="bad">edge order not measurable</span>`)
+      : '') + (PACK_NOTE?`<br><span class="ok">${PACK_NOTE}</span>`:'');
+}
+function refreshSel(){
+  if(SEL<0||!TILES.length){ $('selStat').textContent='—'; return; }
+  const t=TILES[SEL], oh=overhang(t), g=effGeo(t);
+  const kindTxt = t.kind==='sprite' ? `<span class="ok">sprite</span> — drawn at natural size, not a hex`
+                : t.kind==='overlay' ? `<span class="ok">hex overlay</span> — aligned by the pack's frame`
+                : `hex tile`;
+  $('selStat').innerHTML = `<b>${t.name}</b><br>` +
+    `image ${t.w}×${t.h}px · ${kindTxt}<br>` +
+    (g ? `face ${g.w}×${Math.round(g.w*RATIO)}px at (${g.left}, ${faceTopOf(t).toFixed(0)})` +
+         (outlierPct(t)>4 ? `<br><span class="bad">own silhouette differs ${outlierPct(t)}% — art spills outside the hex</span>` : '') +
+         (oh ? `<br>rises <b>${oh.above}%</b> above face · <b>${oh.below}%</b> below` : '')
+       : `no hex face — position with the offsets below`);
+  $('dx').value=t.adj.dx; $('dxV').textContent=t.adj.dx;
+  $('dy').value=t.adj.dy; $('dyV').textContent=t.adj.dy;
+  $('sc').value=(t.adj.sc*100).toFixed(1); $('scV').textContent=(t.adj.sc*100).toFixed(0);
+}
+function refreshProf(){
+  const n=TILES.filter(t=>t.adj.dx||t.adj.dy||t.adj.sc!==1).length;
+  $('profStat').innerHTML = n
+    ? `<b>${n}</b> tile${n===1?'':'s'} adjusted by hand.<br>Export to use in the generator.`
+    : `No adjustments yet.<br>Auto-measurement may already be correct — check the contact sheet.`;
+}
+function buildRefOptions(){
+  const sel=$('refKey'); sel.innerHTML='';
+  const prefer=['hexplains00.png','hexbase00.png','hexdirt00.png','hexsnowfield00.png','hexocean00.png'];
+  for(const t of TILES){
+    const o=document.createElement('option');
+    o.value=t.name.toLowerCase(); o.textContent=t.name;
+    sel.appendChild(o);
+  }
+  let chosen=null;
+  for(const want of prefer) if(byName.has(want)){ chosen=want; break; }
+  sel.value = chosen || (TILES[0]&&TILES[0].name.toLowerCase());
+}
+function showTab(which){
+  $('inspect').className = which==='inspect'?'show':'hide';
+  $('sheet').className   = which==='sheet'?'show':'hide';
+  $('tabInspect').classList.toggle('on', which==='inspect');
+  $('tabSheet').classList.toggle('on', which==='sheet');
+  if(which==='inspect') resizeInspect(); else buildSheet();
+}
+$('tabInspect').onclick=()=>showTab('inspect');
+$('tabSheet').onclick=()=>showTab('sheet');
+
+$('pick').onclick=()=>$('folderInput').click();
+$('folderInput').addEventListener('change', e=>{ if(e.target.files.length) ingest(e.target.files); });
+
+for(const [id,fmt] of [['ratio',v=>(+v).toFixed(3)],['zoom',v=>v]]){
+  $(id).addEventListener('input', e=>{
+    $(id+'V').textContent=fmt(e.target.value);
+    if(id==='ratio') RATIO=+e.target.value;
+    draw();
+  });
+  $(id).addEventListener('change', ()=>{ if($('sheet').className==='show') buildSheet(); });
+}
+$('orient').addEventListener('change', e=>{
+  ORIENT = e.target.value==='auto' ? AUTO_ORIENT : e.target.value;
+  draw(); refreshSel();
+});
+$('autoRatio').onclick=()=>{
+  computeAutoRatio(); RATIO=AUTO_RATIO;
+  $('ratio').value=RATIO.toFixed(3); $('ratioV').textContent=RATIO.toFixed(3);
+  refreshPack(); refreshSel(); draw();
+};
+for(const [id,key,scale] of [['dx','dx',1],['dy','dy',1],['sc','sc',0.01]]){
+  $(id).addEventListener('input', e=>{
+    if(SEL<0) return;
+    const v=+e.target.value;
+    TILES[SEL].adj[key] = scale===1 ? v : v*scale;
+    $(id+'V').textContent = scale===1 ? v : Math.round(v);
+    draw();
+  });
+  $(id).addEventListener('change', ()=>{ refreshProf(); if($('sheet').className==='show') buildSheet(); });
+}
+for(const id of ['showHex','showFace','showRule','soloTile'])
+  $(id).addEventListener('change', draw);
+$('refKey').addEventListener('change', draw);
+$('kindFilter').addEventListener('change', ()=>{ if($('sheet').className==='show') buildSheet(); });
+
+$('resetOne').onclick=()=>{
+  if(SEL<0) return;
+  TILES[SEL].adj={dx:0,dy:0,sc:1};
+  refreshSel(); refreshProf(); draw();
+};
+$('copyPrev').onclick=()=>{
+  if(SEL<0) return;
+  const a=TILES[SEL].adj;
+  for(const t of TILES) t.adj={...a};
+  refreshProf(); draw();
+  setHud(`Applied dx ${a.dx} / dy ${a.dy} / scale ${(a.sc*100).toFixed(0)}% to all ${TILES.length} tiles.`);
+};
+$('resetAll').onclick=()=>{
+  for(const t of TILES) t.adj={dx:0,dy:0,sc:1};
+  refreshSel(); refreshProf(); draw();
+  if($('sheet').className==='show') buildSheet();
+};
+
+/* ---- keyboard ---- */
+window.addEventListener('keydown', e=>{
+  if(e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+  if(SEL<0) return;
+  const step = e.shiftKey ? 5 : 1;
+  const t=TILES[SEL];
+  let hit=true;
+  switch(e.key){
+    case 'ArrowUp':    t.adj.dy-=step; break;
+    case 'ArrowDown':  t.adj.dy+=step; break;
+    case 'ArrowLeft':  t.adj.dx-=step; break;
+    case 'ArrowRight': t.adj.dx+=step; break;
+    case ',': SEL=(SEL-1+TILES.length)%TILES.length; break;
+    case '.': SEL=(SEL+1)%TILES.length; break;
+    default: hit=false;
+  }
+  if(hit){ e.preventDefault(); refreshSel(); refreshProf(); draw(); markSel(); }
+});
+
+/* ---- drag & drop, including folders ---- */
+const readEntry=(entry,out,depth=0)=>new Promise(res=>{
+  if(!entry||depth>6) return res();
+  if(entry.isFile){ entry.file(f=>{ if(/\.png$/i.test(f.name)) out.push(f); res(); }, ()=>res()); return; }
+  if(entry.isDirectory){
+    const rd=entry.createReader();
+    const batch=()=>rd.readEntries(async ents=>{
+      if(!ents.length) return res();
+      for(const en of ents) await readEntry(en,out,depth+1);
+      batch();
+    }, ()=>res());
+    batch(); return;
+  }
+  res();
+});
+['dragenter','dragover','dragleave','drop'].forEach(ev=>
+  document.addEventListener(ev, e=>{ e.preventDefault(); e.stopPropagation(); }));
+document.addEventListener('dragover', ()=>$('drop').classList.remove('hide'));
+document.addEventListener('drop', async e=>{
+  const files=[], entries=[];
+  const dt=e.dataTransfer;
+  if(dt.items){
+    for(const it of dt.items){
+      const en=it.webkitGetAsEntry && it.webkitGetAsEntry();
+      if(en) entries.push(en);
+      else { const f=it.getAsFile&&it.getAsFile(); if(f) files.push(f); }
+    }
+  } else if(dt.files){ for(const f of dt.files) files.push(f); }
+  for(const en of entries) await readEntry(en, files);
+  if(files.length) ingest(files);
+  else if(TILES.length) $('drop').classList.add('hide');
+});
+
+/* ==========================================================================
+   PROFILE EXPORT / IMPORT
+   The generator reads this file. Keyed by PNG filename so it stays valid
+   even if folders are renamed.
+   ========================================================================== */
+$('exportBtn').onclick=()=>{
+  if(!TILES.length){ setHud('Load a tile folder first.'); return; }
+  const tiles={};
+  for(const t of TILES){
+    const g=effGeo(t);
+    tiles[t.name]={
+      imgW:t.w, imgH:t.h, kind:t.kind,
+      face: g ? {left:g.left, top:+faceTopOf(t).toFixed(2),
+                 w:g.w, h:+(g.w*RATIO).toFixed(2)} : null,
+      adj: {dx:t.adj.dx, dy:t.adj.dy, sc:+t.adj.sc.toFixed(4)},
+    };
+  }
+  const data={format:'hex-tile-alignment', version:1,
+              orientation:ORIENT, faceRatio:RATIO,
+              edgeOrder:EDGEMAP.slice(), coastInvert:COAST_INVERT,
+              tileCount:TILES.length, tiles};
+  const blob=new Blob([JSON.stringify(data,null,1)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='hex-tile-alignment.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  setHud(`Exported alignment for ${TILES.length} tiles.`);
+};
+function applyProfile(d){
+    if(!d || d.format!=='hex-tile-alignment' || !d.tiles) return 0;
+    RATIO=d.faceRatio||RATIO; ORIENT=d.orientation||ORIENT;
+    if(Array.isArray(d.edgeOrder) && d.edgeOrder.length===6 &&
+       new Set(d.edgeOrder).size===6 && d.edgeOrder.every(e=>Number.isInteger(e)&&e>=0&&e<6)){
+      EDGEMAP=d.edgeOrder.slice(); EDGE_DETECTED=true;
+    }
+    if(typeof d.coastInvert==='boolean') COAST_INVERT=d.coastInvert;
+    $('ratio').value=RATIO.toFixed(3); $('ratioV').textContent=RATIO.toFixed(3);
+    $('orient').value=ORIENT;
+    let n=0;
+    for(const [name,e2] of Object.entries(d.tiles||{})){
+      const t=byName.get(name.toLowerCase());
+      if(!t) continue;
+      if(['hex','overlay','sprite'].includes(e2.kind)) t.kind=e2.kind;
+      const f=e2.face;
+      if(f && ['left','top','w','h'].every(k=>Number.isFinite(f[k])) && f.w>0 && f.h>0){
+        t.profileFace={left:f.left,top:f.top,w:f.w,h:f.h};
+      } else delete t.profileFace;
+      if(e2.adj) t.adj={dx:e2.adj.dx||0, dy:e2.adj.dy||0, sc:e2.adj.sc||1};
+      n++;
+    }
+    return n;
+}
+$('importBtn').onclick=()=>$('profFile').click();
+$('profFile').addEventListener('change', e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const fr=new FileReader();
+  fr.onload=()=>{
+    let d; try{ d=JSON.parse(fr.result); }catch(err){ setHud('Not valid JSON.'); return; }
+    if(!TILES.length){setHud('Load a tile folder before importing its alignment.');return;}
+    const n=applyProfile(d);
+    if(!n){setHud('No loaded tiles match that alignment profile.');return;}
+    refreshPack(); refreshSel(); refreshProf(); draw();
+    if($('sheet').className==='show') buildSheet();
+    setHud(`Imported alignment for ${n} tiles.`);
+  };
+  fr.readAsText(f);
+  e.target.value='';
+});
+
+resizeInspect();
+setHud('Load newTiles or map-ready to begin.');
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+[
+  [
+    "house00",
+    "House",
+    "One modest medieval timber-and-stone cottage with a golden thatched roof, a small chimney, a wooden door and tiny windows. Roof and two walls visible, like a single cottage in the village reference. No people, furniture, fences, road, garden or surrounding terrain.",
+    58,
+    62
+  ],
+  [
+    "treesA_cluster00",
+    "Tree cluster",
+    "A small natural cluster of three broadleaf trees of unequal height, with separated detailed green crowns and a little visible brown trunk. The tallest tree is comparable to the reference pines. No large ground patch, no flower bed, no surrounding scenery.",
+    76,
+    78
+  ],
+  [
+    "lavaCone00",
+    "Lava cone",
+    "One small rugged charcoal-black volcanic cinder cone, a shallow summit crater with vivid orange molten lava inside and two very short cooling lava streaks on the rocky slopes. A small terrain decoration, not a huge mountain. No smoke, flames, sky, vegetation or surrounding landscape.",
+    72,
+    62
+  ],
+  [
+    "burnedTree00",
+    "Burned tree",
+    "One upright dead burned tree with a charcoal-black split trunk and several irregular bare branches. Fine scorched bark texture, a few broken branch tips and tiny roots. No foliage, fire, smoke or ground patch.",
+    32,
+    72
+  ],
+  [
+    "lakeSmall00",
+    "Small lake",
+    "One small irregular natural pond seen from the same overhead camera. Deep teal water with fine small ripples, shallow turquoise margins, a thin ragged bank of moss, grass, a few tiny stones and short reeds. All water is opaque; outside the bank is transparent. Flat ground surface, no pedestal, no cutaway soil, no waterfalls or stream connections.",
+    106,
+    82
+  ],
+  [
+    "field00",
+    "Field",
+    "One small patch of cultivated farmland, an irregular quadrilateral lying flat on the ground seen from the same overhead camera. Several narrow parallel rows of golden wheat alternating with dark brown furrows and a very thin rough grassy perimeter. Fine crop detail at map distance. No building, fence, path, people, machinery or trees.",
+    94,
+    74
+  ],
+  [
+    "treePine00",
+    "Pine tree",
+    "One mature evergreen pine tree with a slender visible brown trunk, naturally irregular layered branches, individual dark emerald needle clusters and upper-left golden-green highlights. Match a single pine in the forest reference. No surrounding trees, no ground patch or pedestal.",
+    38,
+    78
+  ],
+  [
+    "iceBerg00",
+    "Iceberg",
+    "One small irregular jagged iceberg: opaque white and pale cyan ice, sharp angular ridges, deep saturated blue crevices and bright upper-left highlights. Viewed at the same overhead map angle, visible top and sides. No surrounding ocean, water ellipse, snow ground, reflections, sky or rectangular base.",
+    76,
+    82
+  ]
+]
