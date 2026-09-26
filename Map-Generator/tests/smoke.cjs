@@ -20,9 +20,11 @@ const server=http.createServer((req,res)=>{
       const page=await context.newPage(),errors=[],failed=[];
       page.setDefaultTimeout(10000);
       page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)failed.push({url:r.url(),status:r.status()});});
-      await page.goto(url);await page.waitForFunction(()=>artLoaded&&Object.values(ART).filter(a=>a.ok).length===309,{},{timeout:30000});
+      await page.goto(url);await page.waitForFunction(()=>artLoaded&&Object.values(ART).filter(a=>a.ok).length===334,{},{timeout:30000});
       const boot=await page.evaluate(()=>({assets:Object.keys(ART).length,webp:USE_WEB_TILES,coasts:MASKS.get('hexCoast')?.size,missing:Object.keys(BASE).filter(k=>!fileFor(k,0)),scroll:document.documentElement.scrollWidth,width:innerWidth,stage:document.getElementById('stage').getBoundingClientRect().width}));
-      assert.equal(boot.webp,true);assert.equal(boot.assets,309);assert.equal(boot.coasts,63);assert.deepEqual(boot.missing,[]);assert.ok(boot.scroll<=boot.width);
+      assert.equal(boot.webp,true);assert.equal(boot.assets,334);assert.equal(boot.coasts,63);assert.deepEqual(boot.missing,[]);assert.ok(boot.scroll<=boot.width);
+      assert.equal(await page.locator('.sw[data-key^="westeros"]').count(),25);
+      assert.equal(await page.locator('#stampKind option[value^="westeros"]').count(),24);
       if(size.mobile){
         assert.equal(boot.stage,size.width);assert.equal(await page.evaluate(()=>PAINT.tool),'pan');
         await page.locator('#openControls').tap();await page.waitForFunction(()=>document.body.classList.contains('controls-open'));
@@ -37,6 +39,14 @@ const server=http.createServer((req,res)=>{
         return {cols:W.cols,rows:W.rows,pixels:mapCanvas.width*mapCanvas.height,heads};
       });
       assert.ok(generated.heads.length>0&&generated.heads.every(t=>['mountain','mountainSnow','desertMountain'].includes(t)));
+      if(!size.mobile){
+        const castleNames=await page.evaluate(()=>{
+          WESTEROS_TILES.forEach((t,j)=>{const i=W.idx(3+(j%8)*2,3+Math.floor(j/8)*2);W.tile[i]=t.key;W.land[i]=1;});
+          invalidateIndexes();renderMap();
+          return WESTEROS_TILES.filter(t=>t.isPlace).every(t=>placeName(()=>.1,t.key)===t.name);
+        });
+        assert.equal(castleNames,true);
+      }
       if(size.mobile){
         assert.equal(generated.cols,40);assert.equal(generated.rows,30);assert.ok(generated.pixels<8e6);
         const cdp=await context.newCDPSession(page),box=await page.locator('#view').boundingBox();
@@ -80,7 +90,7 @@ const server=http.createServer((req,res)=>{
       results.push({viewport:`${size.width}x${size.height}`,mobile:size.mobile,assets:boot.assets,exportBytes:fs.statSync(file).size,...generated,passed:true});
       if(size.width===320){
         await page.goto(new URL('tiles.html',url).href);
-        assert.equal(await page.locator('#gallery article').count(),309);
+        assert.equal(await page.locator('#gallery article').count(),334);
         assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
         await page.locator('#group').selectOption('coast');
         assert.equal(await page.locator('#gallery article').count(),63);
@@ -91,6 +101,19 @@ const server=http.createServer((req,res)=>{
         const tile=await png;await tile.saveAs(path.join(out,'gallery-tile.png'));
         assert.equal(fs.readFileSync(path.join(out,'gallery-tile.png')).subarray(1,4).toString(),'PNG');
         await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:path.join(out,'gallery-phone.png'),animations:'disabled'});
+        assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
+        await page.goto(new URL('newTiles/westeros/preview.html',url).href);
+        assert.equal(await page.locator('#grid article').count(),25);
+        await page.locator('#grid img').evaluateAll(imgs=>Promise.all(imgs.map(im=>{im.loading='eager';return im.decode()})));
+        assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+        await page.locator('#search').fill('Winterfell');assert.equal(await page.locator('#grid article:visible').count(),1);
+        await page.getByRole('button',{name:'Enlarge Winterfell',exact:true}).click();
+        assert.ok(await page.locator('#viewer').isVisible());await page.locator('#close').click();
+        const castleDownload=page.waitForEvent('download');await page.locator('#grid article:visible a').click();
+        const castleFile=path.join(out,'winterfell.png');await (await castleDownload).saveAs(castleFile);
+        const pngBytes=fs.readFileSync(castleFile);assert.equal(pngBytes.subarray(1,4).toString(),'PNG');
+        assert.equal(pngBytes.readUInt32BE(16),1024);assert.equal(pngBytes.readUInt32BE(20),1536);
+        await page.locator('#search').fill('');await page.screenshot({path:path.join(out,'westeros-phone.png')});
         assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
       }
       await context.close();

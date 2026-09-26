@@ -490,6 +490,7 @@
 </div>
 
 <script src="newTiles/pack-data.js"></script>
+<script src="newTiles/westeros/pack.js"></script>
 <script>
 "use strict";
 
@@ -592,6 +593,10 @@ const BASE = {
   burnedTree:'burnedTree', lakeSmall:'lakeSmall', field:'field',
   treePine:'treePine', iceBerg:'iceBerg',
 };
+
+const WESTEROS_TILES = window.WESTEROS_TILES || [];
+const WESTEROS_GROUND = Object.fromEntries(WESTEROS_TILES.map(t=>[t.key,t.ground]));
+for(const tile of WESTEROS_TILES) BASE[tile.key] = tile.base;
 
 /* Stable per-cell variant choice: the same cell always gets the same tile,
    so redrawing or painting never reshuffles the map. */
@@ -724,6 +729,20 @@ const TERRAIN_GROUPS = [
                 "stormsEnd","redKeep","winterfell"]],
   ["Void",     ["void","underDirt","underOcean","underVoid"]],
 ];
+// Append new keys so legacy terrain indices keep their existing meaning.
+if(WESTEROS_TILES.length){
+  TERRAIN_GROUPS.push(['Westeros', WESTEROS_TILES.map(t=>t.key)]);
+  const stamps=document.createElement('optgroup');stamps.label='Westeros';
+  for(const tile of WESTEROS_TILES){
+    TERRAIN_NAME[tile.key]=tile.name;
+    FALLBACK[tile.key]=tile.isPlace?'#b8ac96':'#d3e1f0';
+    if(tile.isPlace){
+      const option=document.createElement('option');option.value=tile.key;option.textContent=tile.name;
+      stamps.appendChild(option);
+    }
+  }
+  document.getElementById('stampKind').appendChild(stamps);
+}
 const TERRAIN_ALL = TERRAIN_GROUPS.flatMap(g=>g[1]);
 const TERRAIN_IX  = new Map(TERRAIN_ALL.map((k,i)=>[k,i]));
 const WATER_KEYS  = new Set(["ocean","oceanCalm","underOcean","lake","oceanIce",
@@ -731,6 +750,7 @@ const WATER_KEYS  = new Set(["ocean","oceanCalm","underOcean","lake","oceanIce",
 const PLACE_KEYS  = new Set(["castle","village","farm","mine","forester","port","elfVillage",
   "stormsEnd","redKeep","winterfell"]);
 function swatch(k){ return FALLBACK[k] || "#666"; }
+for(const tile of WESTEROS_TILES) if(tile.isPlace) PLACE_KEYS.add(tile.key);
 
 /* ==========================================================================
    2. IMAGE STORE
@@ -921,7 +941,7 @@ function applyAlignProfile(d){
     n++;
     if(a && a.ok && e.face){
       a.geo = {left:e.face.left, top:e.face.top, w:e.face.w, h:e.face.h,
-               yq: e.face.top + e.face.h/4, orient:d.orientation||'pointy'};
+               yq: e.face.top + e.face.h/4, orient:d.orientation||'pointy', fitHeight:e.fitHeight===true};
       delete a.spriteReferenceWidth;
     }else if(a && a.ok && e.kind==='sprite'){
       a.geo=null;a.spriteReferenceWidth=spriteReferenceWidth;
@@ -2120,6 +2140,7 @@ function nameCore(rnd){
   return s.charAt(0).toUpperCase()+s.slice(1);
 }
 function placeName(rnd, kind){
+  if(kind.startsWith('westeros') && TERRAIN_NAME[kind]) return TERRAIN_NAME[kind];
   const core = nameCore(rnd);
   if(kind==='port')   return core + (rnd()<0.5?" Harbour":"port");
   if(kind==='mine')   return core + (rnd()<0.5?" Delve":" Mine");
@@ -2195,6 +2216,10 @@ function tilePlacement(a, G){
     return {s,dw,dh,offX:(G.drawW-dw)/2,offY:(G.faceH-dh)/2};
   }
   if(g){
+    if(g.fitHeight){
+      const sx=G.drawW/g.w, sy=G.faceH/g.h;
+      return {s:sx,dw:a.w*sx,dh:a.h*sy,offX:-g.left*sx,offY:-g.top*sy};
+    }
     const s = G.drawW / g.w;               // scale: face width -> requested px
     // Position by the hex band (yq = face top + faceH/4), not by the top of
     // the artwork, so tiles with peaks above the face still sit correctly.
@@ -2269,6 +2294,9 @@ function drawTile(ctx, key, x, y, G, C, i){
   const file = fileFor(key, i);
   const a = file ? ART[file] : null;
   if(a && a.ok){
+    // Generated tower silhouettes can reveal the back of their hex. A matching
+    // terrain underlay fills those corners while retaining transparent sky.
+    if(WESTEROS_GROUND[key]) drawTile(ctx, WESTEROS_GROUND[key], x, y, G, C, i);
     const p = tilePlacement(a, G);
     const b = G.bleed;                       // hairline seam cover
     const pa = alignForFile(file);

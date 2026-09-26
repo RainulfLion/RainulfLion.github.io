@@ -12,7 +12,7 @@
     5
   ],
   "coastInvert": false,
-  "tileCount": 309,
+  "tileCount": 334,
   "tiles": {
     "hexOcean00.png": {
       "imgW": 300,
@@ -4891,6 +4891,431 @@
         "top": 46,
         "w": 300,
         "h": 352
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosWinterfell00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 6.0,
+        "top": 178.276,
+        "w": 1013.0,
+        "h": 1216.631
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosDragonstone00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 5.0,
+        "top": 201.806,
+        "w": 1009.0,
+        "h": 1257.861
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosStormsEnd00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 1.0,
+        "top": 185.218,
+        "w": 1021.0,
+        "h": 1192.159
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosCasterlyRock00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 8.0,
+        "top": 32.254,
+        "w": 1007.0,
+        "h": 1331.109
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosHighgarden00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 10.0,
+        "top": 68.502,
+        "w": 1004.0,
+        "h": 1309.191
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosRiverrun00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 12.0,
+        "top": 148.884,
+        "w": 1001.0,
+        "h": 1236.841
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosEyrie00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 27.0,
+        "top": 177.919,
+        "w": 970.0,
+        "h": 1264.668
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosPyke00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 7.0,
+        "top": 185.038,
+        "w": 1010.0,
+        "h": 1200.993
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosSunspear00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 5.0,
+        "top": 125.438,
+        "w": 1014.0,
+        "h": 1289.583
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosHarrenhal00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 8.0,
+        "top": 168.501,
+        "w": 1008.0,
+        "h": 1215.745
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosRedKeep00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 12.0,
+        "top": 120.564,
+        "w": 999.0,
+        "h": 1274.078
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosCastleBlack00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 11.0,
+        "top": 188.86,
+        "w": 1002.0,
+        "h": 1165.622
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosEastwatch00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 9.0,
+        "top": 149.967,
+        "w": 1005.0,
+        "h": 1218.047
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosTwins00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 0.0,
+        "top": 175.197,
+        "w": 1024.0,
+        "h": 1184.265
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosMoatCailin00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 13.0,
+        "top": 30.933,
+        "w": 999.0,
+        "h": 1345.027
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosGreywaterWatch00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 14.0,
+        "top": 112.004,
+        "w": 997.0,
+        "h": 1257.399
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosLastHearth00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 10.0,
+        "top": 81.314,
+        "w": 1007.0,
+        "h": 1304.136
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosDreadfort00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 11.0,
+        "top": 128.025,
+        "w": 1003.0,
+        "h": 1256.742
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosKarhold00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 6.0,
+        "top": 158.099,
+        "w": 1015.0,
+        "h": 1235.449
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosCastleCerwyn00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 6.0,
+        "top": 120.035,
+        "w": 1013.0,
+        "h": 1254.224
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosDeepwoodMotte00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 8.0,
+        "top": 149.198,
+        "w": 1008.0,
+        "h": 1252.218
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosHornHill00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 12.0,
+        "top": 54.883,
+        "w": 1000.0,
+        "h": 1324.993
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosBrightwaterKeep00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 8.0,
+        "top": 59.333,
+        "w": 1008.0,
+        "h": 1353.788
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosOldtownHightower00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 16.0,
+        "top": 365.756,
+        "w": 993.0,
+        "h": 1122.597
+      },
+      "adj": {
+        "dx": 0,
+        "dy": 0,
+        "sc": 1
+      }
+    },
+    "hexWesterosIceWallEastWest00.png": {
+      "imgW": 1024,
+      "imgH": 1536,
+      "kind": "hex",
+      "fitHeight": true,
+      "face": {
+        "left": 0.0,
+        "top": 49.756,
+        "w": 1024.0,
+        "h": 1371.418
       },
       "adj": {
         "dx": 0,
