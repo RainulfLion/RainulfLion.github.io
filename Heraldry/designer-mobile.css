@@ -1,0 +1,84 @@
+.mobile-shell { display: none; }
+[hidden] { display: none !important; }
+#phoneExport { width: min(520px, calc(100% - 24px)); max-height: calc(100dvh - 24px); overflow: auto; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--text); }
+#phoneExport::backdrop { background: #000b; }
+.phone-export-heading { display: flex; gap: 12px; justify-content: space-between; align-items: center; }
+.phone-export-heading h2 { margin: 0; font-size: 19px; }
+#phoneExportImage { display: block; width: 100%; height: min(42dvh, 420px); object-fit: contain; margin: 16px 0; background: #303542; border-radius: 6px; }
+#phoneExport p { font-size: 14px; line-height: 1.6; color: var(--muted); }
+#phoneExport .btn { min-height: 46px; font-size: 15px; }
+#phoneExport a.btn { display: flex; align-items: center; justify-content: center; text-decoration: none; margin-top: 10px; }
+@media (max-width: 1000px) {
+  body.phone-layout { height: var(--editor-height, 100dvh); overflow: hidden; }
+  .phone-layout #app { height: var(--editor-height, 100dvh); display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(150px, 36%) 52px minmax(0, 1fr); overflow: hidden; }
+  .phone-layout #app > aside { display: none; }
+  .phone-layout .mobile-shell { display: block; }
+  .phone-layout #mobileHeader { grid-row: 1; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: env(safe-area-inset-top, 0px) max(10px, env(safe-area-inset-right, 0px)) 0 max(10px, env(safe-area-inset-left, 0px)); min-height: 52px; background: #181b23; border-bottom: 1px solid var(--line); }
+  #mobileHeader a, #mobileHeader button { display: flex; align-items: center; justify-content: center; min-height: 44px; font-size: 13px; color: var(--text); text-decoration: none; white-space: nowrap; }
+  #mobileHeader button { border: 1px solid var(--line); border-radius: 7px; background: var(--panel2); padding: 0 10px; }
+  #mobileHeader strong { font-size: 14px; text-align: center; }
+  .phone-layout #app > main { grid-row: 2; min-height: 0; min-width: 0; }
+  .phone-layout #stagewrap { padding: 10px; min-height: 0; overflow: hidden; }
+  .phone-layout #stage { height: 100%; width: auto; max-width: 100%; aspect-ratio: 5 / 6; flex: 0 1 auto; box-shadow: 0 3px 18px #0005; }
+  .phone-layout #touchHint { flex: none; text-align: center; padding: 0 8px 7px; margin: 0; font-size: 12px; color: var(--muted); }
+  .phone-layout #mobileTabs { grid-row: 3; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: #181b23; border-block: 1px solid var(--line); }
+  #mobileTabs button { min-height: 50px; padding: 6px 2px; border: 0; border-top: 3px solid transparent; background: transparent; color: var(--muted); font-size: 13px; font-weight: 600; }
+  #mobileTabs button[aria-selected="true"] { color: #ffdf7b; border-top-color: var(--accent); background: #c9a22712; }
+  .phone-layout #mobileControls { grid-row: 4; min-width: 0; overflow: auto; overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; background: var(--panel); padding: 0 max(0px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(0px, env(safe-area-inset-left, 0px)); }
+  .phone-layout section.pnl > h2 { min-height: 48px; padding: 12px 16px; font-size: 12px; }
+  .phone-layout .body { padding: 0 16px 18px; }
+  .phone-layout .btn, .phone-layout .btn.sm { min-height: 44px; padding: 10px 12px; font-size: 14px; }
+  .phone-layout button.opt { min-height: 66px; padding: 8px 5px; gap: 5px; font-size: 12px; }
+  .phone-layout .grid { gap: 8px; }
+  .phone-layout input[type="text"], .phone-layout input[type="number"], .phone-layout input[type="search"], .phone-layout select { min-height: 44px; font-size: 16px; }
+  .phone-layout input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius: 7px; background: var(--panel2); color: var(--text); padding: 8px; }
+  .phone-layout input[type="color"] { height: 46px; }
+  .phone-layout input[type="range"] { min-width: 0; min-height: 44px; margin: 0; }
+  .phone-layout .row > * { min-width: 0; }
+  .phone-layout .fld { font-size: 13px; margin-top: 12px; }
+  .phone-layout .hint, .phone-layout .empty, .phone-layout .drop, .phone-layout .blazon { font-size: 13px; }
+  .phone-layout .toggle { min-height: 44px; margin: 4px 0; font-size: 14px; }
+  .phone-layout .toggle input { width: 22px; height: 22px; flex: none; }
+  .phone-layout .rchip { min-height: 44px; font-size: 13px; padding-right: 12px; }
+  .phone-layout .rchip i { width: 26px; height: 26px; }
+  .phone-layout .tinctures { grid-template-columns: repeat(auto-fit, minmax(44px, 1fr)); gap: 8px; }
+  .phone-layout .tinctures button { min-height: 44px; aspect-ratio: auto; }
+  .phone-layout .toolbar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 12px 16px; gap: 8px; }
+  .phone-layout .toolbar .sp, .phone-layout .toolbar #hint { display: none; }
+  .phone-layout .toolbar .toggle { grid-column: 1 / -1; }
+  #mobileLayers, #mobileMove { padding: 12px 16px 0; }
+  #mobileLayers h2, #mobileMove p { font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 10px; }
+  #mobileMove { padding-bottom: 14px; }
+  .nudge-controls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .nudge-controls button { font-size: 20px !important; }
+  .phone-layout .layer { min-height: 58px; gap: 6px; padding: 6px; }
+  .phone-layout .layer .nm { min-width: 0; font-size: 13px; }
+  .phone-layout .layer .th { width: 32px; height: 38px; }
+  .phone-layout .iconbtn { min-width: 44px; width: 44px; height: 44px; font-size: 16px; border-color: var(--line); }
+  #mobileAddText { width: calc(100% - 32px); margin: 16px 16px 0; }
+  .phone-layout button, .phone-layout a, .phone-layout input, .phone-layout select { touch-action: manipulation; }
+  .phone-layout button:disabled { opacity: .45; cursor: default; }
+  .phone-layout button:focus-visible, .phone-layout a:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+  .phone-layout #catalogPicker { width: calc(100% - 16px); max-height: calc(var(--editor-height, 100dvh) - 16px); padding: 16px; overflow: auto; overscroll-behavior: contain; }
+  .phone-layout .picker-heading { position: sticky; top: -16px; z-index: 2; background: var(--panel); padding: 12px 0 8px; }
+  .phone-layout .picker-heading p { font-size: 13px; margin-bottom: 0; }
+  .phone-layout .picker-controls { gap: 10px; margin-top: 12px; }
+  .phone-layout .picker-controls label { min-width: 0; font-size: 13px; }
+  .phone-layout #pickerCount { font-size: 13px; }
+  .phone-layout .picker-item { font-size: 13px; }
+  .phone-layout #app.mobile-full-view { grid-template-rows: auto minmax(0, 1fr); }
+  .phone-layout .mobile-full-view #mobileControls, .phone-layout .mobile-full-view #mobileTabs { display: none; }
+}
+@media (max-width: 370px) {
+  #mobileHeader strong { max-width: 88px; line-height: 1.2; font-size: 13px; }
+  .phone-layout .layer .acts { gap: 0; }
+}
+@media (max-width: 1000px) and (orientation: landscape) and (max-height: 600px) {
+  .phone-layout #app { grid-template-columns: 42% minmax(0, 1fr); grid-template-rows: auto 52px minmax(0, 1fr); }
+  .phone-layout #mobileHeader { grid-column: 1 / -1; }
+  .phone-layout #app > main { grid-column: 1; grid-row: 2 / 4; }
+  .phone-layout #mobileTabs { grid-column: 2; grid-row: 2; }
+  .phone-layout #mobileControls { grid-column: 2; grid-row: 3; border-left: 1px solid var(--line); }
+  .phone-layout #app.mobile-full-view { grid-template-columns: minmax(0, 1fr); }
+  .phone-layout #app.mobile-full-view > main { grid-column: 1; grid-row: 2; }
+}

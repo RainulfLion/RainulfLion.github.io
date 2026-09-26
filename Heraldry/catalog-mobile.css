@@ -1,0 +1,56 @@
+@media (max-width: 800px) {
+  .topbar { padding-block: 10px; gap: 12px; }
+  nav { font-size: 14px; }
+  nav a, .brand { display: inline-flex; align-items: center; min-height: 44px; }
+  .category, .favorite-filter { min-height: 44px; font-size: 14px; }
+  .category span, .favorite-filter > span:last-child { font-size: 12px; }
+  .categories { padding-block: 6px; }
+  .search-box input, .sort select { font-size: 16px; min-height: 48px; }
+  .search-box { min-width: 0; }
+  .sort select { max-width: none; width: 100%; }
+  .result-tools { font-size: 13px; }
+  .swatch { width: 44px; height: 44px; min-width: 44px; }
+  .save { width: 44px; height: 44px; font-size: 24px; }
+  .card-content h3 { font-size: 14px; }
+  .card-content h3 button { min-height: 44px; }
+  .card-meta { font-size: 11px; flex-wrap: wrap; }
+  .card-bottom { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; margin-top: 10px; padding-top: 10px; font-size: 13px; }
+  .card-bottom a { display: flex; align-items: center; justify-content: center; min-height: 44px; background: #eef0e6; border-radius: 3px; }
+  .card-bottom .more { grid-column: 1 / -1; width: 100%; min-height: 44px; margin: 0; font-size: 13px; }
+  .button, .text-button { min-height: 44px; font-size: 14px; }
+  .close { position: sticky; display: block; top: 12px; margin: 12px 12px -56px auto; width: 44px; height: 44px; }
+  dialog { max-height: calc(100dvh - 24px); overscroll-behavior: contain; }
+  .detail-copy > p:not(.eyebrow), .attribution { font-size: 14px; }
+  .detail-copy .asset-spec { font-size: 12px; }
+  footer { font-size: 12px; flex-wrap: wrap; }
+  footer a { display: inline-flex; align-items: center; min-height: 44px; }
+  .toast { width: max-content; max-width: calc(100% - 24px); bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+@media (max-width: 540px) {
+  .desktop-label { display: none; }
+  .phone-label { display: inline; }
+  .brand { font-size: 10px; }
+  .hero { min-height: 330px; grid-template-columns: minmax(0, 1fr) 70px; }
+  .hero h1 { font-size: 38px; }
+  .intro { font-size: 14px; line-height: 1.65; }
+  .hero-link { font-size: 14px; min-height: 44px; align-items: center; }
+  .hero-art { margin-left: -70px; opacity: .25; }
+  .hero .eyebrow { font-size: 9px; }
+  .collection-note { font-size: 12px; }
+  .collection-heading { flex-direction: column; gap: 15px; }
+  .collection-heading h2 { max-width: none; font-size: 30px; }
+  .collection-heading .eyebrow { font-size: 10px; }
+  .collection-heading .button { font-size: 13px; min-height: 44px; padding: 10px 15px; }
+  .workspace { gap: 16px; }
+  .search-row { flex-direction: column; gap: 10px; }
+  .sort select { padding: 0 12px; }
+  .result-tools { flex-direction: column; gap: 14px; margin-block: 18px 23px; }
+  .preview-controls { gap: 10px; }
+  .card-grid { gap: 10px; }
+  .card-content { padding: 10px; }
+  .detail-actions { grid-template-columns: 1fr; }
+  .detail-art { min-height: 240px; height: 240px; }
+  .detail-art img { max-height: 190px; }
+  .detail-copy { padding: 24px 20px; }
+  .designer-banner p:last-child { font-size: 14px; }
+}

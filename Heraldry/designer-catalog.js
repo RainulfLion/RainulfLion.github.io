@@ -51,7 +51,10 @@
     finally{adding=false;renderPicker();}
   }
   document.getElementById('browseCatalog').onclick=async()=>{
-    picker.showModal();query.focus();renderPicker();
+    picker.showModal();
+    if(document.body.classList.contains('phone-layout'))document.getElementById('closePicker').focus();
+    else query.focus();
+    renderPicker();
     try{await loadAssets();renderPicker();}catch(error){count.textContent='The catalog could not load. Close it and try again.';console.error(error);}
   };
   document.getElementById('closePicker').onclick=()=>picker.close();

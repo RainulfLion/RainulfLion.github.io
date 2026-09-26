@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14161c">
 <title>Heraldry Designer — Coat of Arms Builder</title>
 <link rel="icon" href="assets/simple-fleur.svg" type="image/svg+xml">
 <link rel="stylesheet" href="designer-catalog.css">
@@ -154,9 +155,39 @@
     #stagewrap{min-height:46vh}
   }
 </style>
+<link rel="stylesheet" href="designer-mobile.css">
 </head>
 <body>
 <div id="app">
+<header id="mobileHeader" class="mobile-shell">
+  <a href="./" aria-label="Back to heraldry catalog">← Catalog</a>
+  <strong>Heraldry Designer</strong>
+  <button id="mobileFullView" type="button" aria-pressed="false">Full view</button>
+</header>
+<nav id="mobileTabs" class="mobile-shell" role="tablist" aria-label="Designer tools">
+  <button id="tab-shield" type="button" role="tab" aria-controls="phone-shield" aria-selected="true" data-pane="shield">Shield</button>
+  <button id="tab-colors" type="button" role="tab" aria-controls="phone-colors" aria-selected="false" tabindex="-1" data-pane="colors">Colors</button>
+  <button id="tab-charges" type="button" role="tab" aria-controls="phone-charges" aria-selected="false" tabindex="-1" data-pane="charges">Charges</button>
+  <button id="tab-adjust" type="button" role="tab" aria-controls="phone-adjust" aria-selected="false" tabindex="-1" data-pane="adjust">Adjust</button>
+  <button id="tab-save" type="button" role="tab" aria-controls="phone-save" aria-selected="false" tabindex="-1" data-pane="save">Save</button>
+</nav>
+<div id="mobileControls" class="mobile-shell">
+  <div id="phone-shield" role="tabpanel" aria-labelledby="tab-shield"></div>
+  <div id="phone-colors" role="tabpanel" aria-labelledby="tab-colors" hidden></div>
+  <div id="phone-charges" role="tabpanel" aria-labelledby="tab-charges" hidden>
+    <button id="mobileAddText" class="btn" type="button">Add text or a motto</button>
+  </div>
+  <div id="phone-adjust" role="tabpanel" aria-labelledby="tab-adjust" hidden>
+    <div id="mobileLayers"><h2>Your layers</h2></div>
+    <div id="mobileMove"><p>Move the selected charge</p><div class="nudge-controls">
+      <button type="button" class="btn" data-nudge="left" aria-label="Move charge left">←</button>
+      <button type="button" class="btn" data-nudge="up" aria-label="Move charge up">↑</button>
+      <button type="button" class="btn" data-nudge="down" aria-label="Move charge down">↓</button>
+      <button type="button" class="btn" data-nudge="right" aria-label="Move charge right">→</button>
+    </div></div>
+  </div>
+  <div id="phone-save" role="tabpanel" aria-labelledby="tab-save" hidden></div>
+</div>
 
 <!-- ============ LEFT ============ -->
 <aside class="left">
@@ -261,13 +292,14 @@
       <g id="ui"></g>
     </svg>
   </div>
+  <p id="touchHint" class="mobile-shell">Tap a charge to select it. Drag to move.</p>
 </main>
 
 <!-- ============ RIGHT ============ -->
 <aside class="right">
   <header class="brand"><h1>Layers &amp; Export</h1></header>
 
-  <section class="pnl"><h2>Charges / Images <span class="chev">▼</span></h2>
+  <section class="pnl" id="p-charges"><h2>Charges / Images <span class="chev">▼</span></h2>
     <div class="body">
       <button class="btn primary" id="browseCatalog" style="margin-bottom:10px">Browse the image catalog</button>
       <p id="catalogStatus" class="hint" role="status" style="margin:0 0 10px"></p>
@@ -284,7 +316,7 @@
     <div class="body" id="selBody"><div class="empty">No layer selected</div></div>
   </section>
 
-  <section class="pnl"><h2>Export <span class="chev">▼</span></h2>
+  <section class="pnl" id="p-export"><h2>Export <span class="chev">▼</span></h2>
     <div class="body">
       <label class="fld">Image width</label>
       <select id="expSize">
@@ -310,6 +342,14 @@
   <div class="picker-heading"><div><h2 id="pickerTitle">Choose a heraldic charge</h2><p>Transparent artwork, ready to add to your shield.</p></div><button class="btn sm" id="closePicker" aria-label="Close catalog">Close ×</button></div>
   <div class="picker-controls"><label>Search<input id="pickerSearch" type="search" placeholder="Lion, rose, sword…"></label><label>Category<select id="pickerCategory"><option>All charges</option><option>Beasts</option><option>Birds</option><option>Mythical</option><option>Plants</option><option>Symbols</option><option>Objects</option></select></label></div>
   <p id="pickerCount" role="status"></p><div id="pickerGrid"></div>
+</dialog>
+<dialog id="phoneExport" aria-labelledby="phoneExportTitle">
+  <div class="phone-export-heading"><h2 id="phoneExportTitle">Your coat of arms</h2><button type="button" id="closePhoneExport" class="btn sm">Close ×</button></div>
+  <img id="phoneExportImage" alt="Your exported coat of arms on a transparent background">
+  <p id="phoneExportHelp">Download the PNG to save your image.</p>
+  <button type="button" class="btn primary" id="phoneShare" hidden>Share / Save image</button>
+  <a id="phoneDownload" class="btn" download="coat-of-arms.png">Download PNG</a>
+  <p id="phoneShareStatus" role="status"></p>
 </dialog>
 
 <script>
@@ -899,6 +939,11 @@ function drawHandles(){
   uiLayer.innerHTML="";
   const l=state.layers.find(x=>x.id===state.sel);
   if(!l) return;
+  const touchHandles=matchMedia("(pointer: coarse)").matches;
+  const matrix=svg.getScreenCTM();
+  const scale=matrix?Math.hypot(matrix.a,matrix.b):1;
+  const handleSize=touchHandles?Math.max(HS,12/scale):HS;
+  const hitSize=44/scale;
   const cx=l.x+l.w/2, cy=l.y+l.h/2;
   const corners=[[l.x,l.y],[l.x+l.w,l.y],[l.x+l.w,l.y+l.h],[l.x,l.y+l.h]].map(p=>rotPt(p[0],p[1],cx,cy,l.rot));
   const box=document.createElementNS(SVGNS,"polygon");
@@ -908,7 +953,7 @@ function drawHandles(){
   box.setAttribute("pointer-events","none"); box.setAttribute("vector-effect","non-scaling-stroke");
   uiLayer.appendChild(box);
 
-  const rp=rotPt(cx,l.y-26,cx,cy,l.rot);
+  const rp=rotPt(cx,l.y-(touchHandles?Math.max(26,32/scale):26),cx,cy,l.rot);
   const line=document.createElementNS(SVGNS,"line");
   const topMid=rotPt(cx,l.y,cx,cy,l.rot);
   line.setAttribute("x1",topMid[0]); line.setAttribute("y1",topMid[1]);
@@ -919,17 +964,29 @@ function drawHandles(){
 
   corners.forEach((p,i)=>{
     const c=document.createElementNS(SVGNS,"rect");
-    c.setAttribute("x",p[0]-HS/2); c.setAttribute("y",p[1]-HS/2);
-    c.setAttribute("width",HS); c.setAttribute("height",HS); c.setAttribute("rx",1.5);
+    c.setAttribute("x",p[0]-handleSize/2); c.setAttribute("y",p[1]-handleSize/2);
+    c.setAttribute("width",handleSize); c.setAttribute("height",handleSize); c.setAttribute("rx",1.5);
     c.setAttribute("fill","#fff"); c.setAttribute("stroke","#3a6ad4"); c.setAttribute("stroke-width","1.4");
     c.style.cursor="nwse-resize"; c.dataset.handle="rs"+i;
     uiLayer.appendChild(c);
+    if(touchHandles){
+      const hit=document.createElementNS(SVGNS,"rect");
+      hit.setAttribute("x",p[0]-hitSize/2);hit.setAttribute("y",p[1]-hitSize/2);
+      hit.setAttribute("width",hitSize);hit.setAttribute("height",hitSize);
+      hit.setAttribute("fill","transparent");hit.dataset.handle="rs"+i;
+      uiLayer.appendChild(hit);
+    }
   });
   const rh=document.createElementNS(SVGNS,"circle");
-  rh.setAttribute("cx",rp[0]); rh.setAttribute("cy",rp[1]); rh.setAttribute("r",HS/1.6);
+  rh.setAttribute("cx",rp[0]); rh.setAttribute("cy",rp[1]); rh.setAttribute("r",handleSize/1.6);
   rh.setAttribute("fill","#7aa2ff"); rh.setAttribute("stroke","#fff"); rh.setAttribute("stroke-width","1.4");
   rh.style.cursor="grab"; rh.dataset.handle="rot";
   uiLayer.appendChild(rh);
+  if(touchHandles){
+    const hit=document.createElementNS(SVGNS,"circle");
+    hit.setAttribute("cx",rp[0]);hit.setAttribute("cy",rp[1]);hit.setAttribute("r",hitSize/2);
+    hit.setAttribute("fill","transparent");hit.dataset.handle="rot";uiLayer.appendChild(hit);
+  }
 }
 
 /* ============================================================
@@ -941,6 +998,7 @@ function toSvg(e){
 }
 let drag=null;
 svg.addEventListener("pointerdown",e=>{
+  if(!e.isPrimary || drag) return;
   const p=toSvg(e);
   const h=e.target.dataset && e.target.dataset.handle;
   const l=state.layers.find(x=>x.id===state.sel);
@@ -948,12 +1006,12 @@ svg.addEventListener("pointerdown",e=>{
     svg.setPointerCapture(e.pointerId);
     if(h==="rot"){
       const cx=l.x+l.w/2, cy=l.y+l.h/2;
-      drag={mode:"rot",l,cx,cy,start:Math.atan2(p.y-cy,p.x-cx)*180/Math.PI,rot0:l.rot};
+      drag={mode:"rot",pointerId:e.pointerId,l,cx,cy,start:Math.atan2(p.y-cy,p.x-cx)*180/Math.PI,rot0:l.rot};
     } else {
       const i=+h.slice(2);
       const cx=l.x+l.w/2, cy=l.y+l.h/2;
       const opp=[[l.x+l.w,l.y+l.h],[l.x,l.y+l.h],[l.x,l.y],[l.x+l.w,l.y]][i];
-      drag={mode:"rs",l,i,anchorLocal:opp.slice(),anchorScreen:rotPt(opp[0],opp[1],cx,cy,l.rot),
+      drag={mode:"rs",pointerId:e.pointerId,l,i,anchorLocal:opp.slice(),anchorScreen:rotPt(opp[0],opp[1],cx,cy,l.rot),
             aspect:l.w/l.h, fs0:l.fontSize, h0:l.h, w0:l.w};
     }
     e.preventDefault(); return;
@@ -964,13 +1022,13 @@ svg.addEventListener("pointerdown",e=>{
     select(+id);
     const lay=state.layers.find(x=>x.id===+id);
     svg.setPointerCapture(e.pointerId);
-    drag={mode:"move",l:lay,ox:p.x-lay.x,oy:p.y-lay.y};
+    drag={mode:"move",pointerId:e.pointerId,l:lay,ox:p.x-lay.x,oy:p.y-lay.y};
     e.preventDefault(); return;
   }
   select(null);
 });
 svg.addEventListener("pointermove",e=>{
-  if(!drag) return;
+  if(!drag || drag.pointerId!==e.pointerId) return;
   const p=toSvg(e), l=drag.l;
   if(drag.mode==="move"){ l.x=p.x-drag.ox; l.y=p.y-drag.oy; }
   else if(drag.mode==="rot"){
@@ -1002,11 +1060,11 @@ svg.addEventListener("pointermove",e=>{
   if(syncSelWH) syncSelWH();
 });
 ["pointerup","pointercancel"].forEach(ev=>svg.addEventListener(ev,e=>{
-  if(drag){ drag=null; try{svg.releasePointerCapture(e.pointerId);}catch(_){} syncSelPanel(); }
+  if(drag && drag.pointerId===e.pointerId){ drag=null; try{svg.releasePointerCapture(e.pointerId);}catch(_){} syncSelPanel(); }
 }));
 
 document.addEventListener("keydown",e=>{
-  if(document.getElementById("catalogPicker").open) return;
+  if(document.querySelector("dialog[open]") || e.target.closest('[role="tablist"]')) return;
   if(/input|select|textarea/i.test(e.target.tagName)) return;
   const l=state.layers.find(x=>x.id===state.sel); if(!l) return;
   const step=e.shiftKey?8:1.5;
@@ -1027,6 +1085,7 @@ function addImageLayer(href,name,natW,natH){
   const l={id:state.nextId++,type:"image",href,name:name||"Image",
     x:CX-w/2,y:110-h/2,w,h,rot:0,opacity:1,clip:true,flipH:false,flipV:false,natW,natH};
   state.layers.push(l); select(l.id); render(); buildLayerList();
+  document.dispatchEvent(new Event("heraldry-charge-added"));
   return l;
 }
 function addShapeLayer(k){
@@ -1035,12 +1094,14 @@ function addShapeLayer(k){
     color:"#1b1b1b",strokeColor:"#f7f7f5",strokeW:0,
     x:CX-s/2,y:108-s/2,w:s,h:s,rot:0,opacity:1,clip:false};
   state.layers.push(l); select(l.id); render(); buildLayerList();
+  document.dispatchEvent(new Event("heraldry-charge-added"));
 }
 function addTextLayer(){
   const l={id:state.nextId++,type:"text",name:"Text",text:"MOTTO",font:"Georgia, serif",
     fontSize:13,color:"#ffcc00",strokeColor:"#1b1b1b",strokeW:0.8,bold:true,
     x:70,y:176,w:60,h:14,rot:0,opacity:1,clip:false};
   state.layers.push(l); select(l.id); render(); buildLayerList();
+  document.dispatchEvent(new Event("heraldry-charge-added"));
 }
 function removeLayer(id){
   state.layers=state.layers.filter(l=>l.id!==id);
@@ -1480,6 +1541,8 @@ function download(blob,name){
   setTimeout(()=>URL.revokeObjectURL(url),4000);
 }
 $("saveBtn").onclick=()=>{
+  const button=$("saveBtn");button.disabled=true;button.textContent="Preparing image…";
+  const finish=()=>{button.disabled=false;button.textContent="⬇ Save & Download PNG";};
   select(state.sel); drawHandles();
   const {str,w,h}=exportSVGString();
   const img=new Image();
@@ -1490,9 +1553,16 @@ $("saveBtn").onclick=()=>{
     if(!$("expTrim").checked && !state.bgOn){ ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,w,h); }
     ctx.drawImage(img,0,0,w,h);
     URL.revokeObjectURL(blobUrl);
-    cv.toBlob(b=>download(b,"coat-of-arms.png"),"image/png");
+    try{
+      cv.toBlob(b=>{
+        finish();
+        if(!b){alert("Export failed. Try a smaller image size.");return;}
+        if(document.body.classList.contains("phone-layout") && window.presentPhoneExport)window.presentPhoneExport(b);
+        else download(b,"coat-of-arms.png");
+      },"image/png");
+    }catch(error){finish();alert("Export failed. Try a smaller image size.");}
   };
-  img.onerror=()=>{ URL.revokeObjectURL(blobUrl); alert("Export failed. Try a smaller size."); };
+  img.onerror=()=>{ URL.revokeObjectURL(blobUrl);finish();alert("Export failed. Try a smaller size."); };
   img.src=blobUrl;
 };
 $("saveSvgBtn").onclick=()=>{
@@ -1517,6 +1587,7 @@ $("ordDepth").oninput=e=>{state.ordDepth=+e.target.value; $("ordDepthV").textCon
 buildShapes(); buildDivs(); buildOrds(); buildTinctures(); buildCharges(); buildPresets(); buildRegions();
 buildLayerList(); render(); syncSelPanel();
 </script>
+<script src="designer-mobile.js"></script>
 <script src="designer-catalog.js"></script>
 </body>
 </html>

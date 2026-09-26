@@ -13,6 +13,8 @@ Gallows Humor Gaming homepage. Open `/Heraldry/` for the catalog and
 - Add any catalog charge to the designer; artwork is embedded so SVG and PNG exports work without external image requests.
 - Export source credits for the images used in a design. SVG designs include these credits as embedded metadata.
 - Responsive, keyboard-accessible catalog with a native preview dialog.
+- Phone designer with a persistent shield preview, five editing tabs, touch dragging and adjustment buttons, and a full-screen view. Landscape phones place controls beside the shield.
+- Phone PNG exports show an image preview and offer native file sharing where supported, with a download fallback.
 
 ## Files
 
@@ -21,6 +23,7 @@ Gallows Humor Gaming homepage. Open `/Heraldry/` for the catalog and
 - `catalog.js`, `catalog.css`, `index.html`: catalog application, no build step.
 - `designer.html`: supplied standalone designer, with catalog integration.
 - `designer-catalog.js`, `designer-catalog.css`: in-designer charge picker and import handling.
+- `designer-mobile.js`, `designer-mobile.css`, `catalog-mobile.css`: touch controls and small-screen layouts.
 - `credits.html`, `CREDITS.md`: attribution and reuse terms.
 - `heraldry-catalog.zip`: all image assets, the manifest, and credits.
 
