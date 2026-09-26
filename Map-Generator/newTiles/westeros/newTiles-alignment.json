@@ -207,16 +207,17 @@
       "kind": "hex",
       "fitHeight": true,
       "face": {
-        "left": 11.0,
-        "top": 188.86,
-        "w": 1002.0,
-        "h": 1165.622
+        "left": 0.0,
+        "top": 49.756,
+        "w": 1024.0,
+        "h": 1371.418
       },
       "adj": {
         "dx": 0,
         "dy": 0,
         "sc": 1
-      }
+      },
+      "alignmentFrame": "hexWesterosIceWallEastWest00.png"
     },
     "hexWesterosEastwatch00.png": {
       "imgW": 1024,
@@ -224,16 +225,17 @@
       "kind": "hex",
       "fitHeight": true,
       "face": {
-        "left": 9.0,
-        "top": 149.967,
-        "w": 1005.0,
-        "h": 1218.047
+        "left": 0.0,
+        "top": 49.756,
+        "w": 1024.0,
+        "h": 1371.418
       },
       "adj": {
         "dx": 0,
         "dy": 0,
         "sc": 1
-      }
+      },
+      "alignmentFrame": "hexWesterosIceWallEastWest00.png"
     },
     "hexWesterosTwins00.png": {
       "imgW": 1024,

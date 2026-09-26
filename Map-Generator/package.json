@@ -1,6 +1,6 @@
 {
   "name": "fantasy-hex-map-generator",
   "private": true,
-  "scripts": { "test": "node tests/smoke.cjs" },
+  "scripts": { "test": "node tests/smoke.cjs", "test:wall": "node tests/wall-alignment.cjs" },
   "devDependencies": { "playwright": "1.62.1" }
 }
