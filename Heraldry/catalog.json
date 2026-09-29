@@ -824,5 +824,28 @@
     "changes": "Redrawn as one connected outline to repair the ring-to-shaft cutout; exported with a light fill and dark outline. No additional reuse license supplied.",
     "width": 1024,
     "height": 1024
+  },
+  {
+    "id": "cross-moline",
+    "name": "Cross Moline",
+    "category": "Symbols",
+    "description": "A cross with eight outward-curled tips. Recolor or counterchange it across a divided field in the designer.",
+    "tags": [
+      "cross",
+      "moline",
+      "curled",
+      "forked",
+      "counterchanged",
+      "vector"
+    ],
+    "svg": "assets/cross-moline.svg",
+    "png": "assets/cross-moline.png",
+    "source": "",
+    "credit": "Original vector drawn for the Heraldry Designer, based on the traditional cross moline form.",
+    "license": "Project artwork",
+    "licenseUrl": "",
+    "changes": "New vector artwork with a light fill and dark outline; transparent PNG export.",
+    "width": 1024,
+    "height": 1024
   }
 ]

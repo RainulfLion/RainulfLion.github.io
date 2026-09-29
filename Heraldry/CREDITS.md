@@ -1,6 +1,6 @@
 # Heraldry catalog — artwork credits
 
-42 transparent heraldic charges for the Gallows Humor Gaming Heraldry Catalog.
+43 transparent heraldic charges for the Gallows Humor Gaming Heraldry Catalog.
 
 The 24 Traceable Heraldic Art SVGs and their PNG exports are distributed under
 Creative Commons Attribution-ShareAlike 4.0 International:
@@ -10,7 +10,7 @@ Collection compiled by Mathghamhain Ua Ruadháin (Matthew Simon Ryan Cavalletto)
 Original artists and source works are credited below. Prior adaptations are
 retained in those credits. These artists do not endorse this catalog.
 
-The two supplied PNGs and 16 vectors exported from the supplied designer are
+The two supplied PNGs, 16 vectors exported from the supplied designer, and the new cross moline are
 project artwork. Their original terms remain in effect; no additional reuse
 license was supplied. The CC license for the imported collection does not
 relicense these supplied files or the website application.
@@ -516,4 +516,14 @@ Built-in vector from the supplied Heraldry Designer.
 License: Project artwork 
 
 Changes: Redrawn as one connected outline to repair the ring-to-shaft cutout; exported with a light fill and dark outline. No additional reuse license supplied.
+
+## Cross Moline
+
+Files: assets/cross-moline.png, assets/cross-moline.svg
+
+Original vector drawn for the Heraldry Designer, based on the traditional cross moline form.
+
+License: Project artwork
+
+Changes: New vector artwork with a light fill and dark outline; transparent PNG export.
 
