@@ -64,6 +64,8 @@
     </div>
     <p class="hint">Player 2 faces police with lightning tasers after 10 customers.</p>
     <button id="startBtn">START SHOPPING</button>
+    <button id="continueBtn" hidden></button>
+    <p id="menuBest" class="statline" hidden></p>
     <p class="hint">Once all items are gathered, run to the green doors &mdash; escape with the cops chasing you for a <b>+250 per officer</b> bonus!</p>
   </div>
 </div>
@@ -507,6 +509,20 @@ const PAD_ROWS=[4,7,10,13,16], PAD_COLS=[5,9,13,17,21,25];
 let selectedCharacter='player';
 let level=1;
 let totalScore=0;
+const BEST_SCORE_KEY='insanityMartBestTotal';
+const SAVED_RUN_KEY='insanityMartSavedRun';
+function readSave(key){
+  try { return JSON.parse(localStorage.getItem(key)); }
+  catch { return null; }
+}
+function writeSave(key,value){
+  try {
+    localStorage.setItem(key,JSON.stringify(value));
+    return true;
+  } catch {
+    return false;
+  }
+}
 function levelSpeed(){ return 1+Math.min(level-1,10)*0.03; }
 function nextLevel(){
   if(state!=='won'&&state!=='lost') return;
@@ -520,7 +536,9 @@ let taserOrigin=null;
 let state='menu';           // menu | playing | rage | won | lost | paused
 let player, npcs, slots, listItems, exitActive, insanity, elapsed, smashed;
 let particles=[], texts=[], shakeT=0, shakeMag=0, time=0;
-let rageEnergy=0, nextHeart=0, shoveCd=0, best=+(localStorage.getItem('insanityMartBestTotal')||0);
+const savedBest=readSave(BEST_SCORE_KEY);
+let best=Number.isSafeInteger(savedBest)&&savedBest>0?savedBest:0;
+let rageEnergy=0, nextHeart=0, shoveCd=0;
 let police=[], policeT=0, policeShot=false, sirenFlip=false, nextSiren=0;
 let strikes=0, copsCalled=false, deadT=0;
 let winScore=0, winCopBonus=0, winT=0;
@@ -598,7 +616,7 @@ function win(){
   winCopBonus=copsCalled?police.length*250:0;   /* special bonus for escaping with cops hunting you */
   winScore=Math.max(0,Math.floor(1000+(100-insanity)*10+Math.max(0,300-elapsed)*2+smashed*25+winCopBonus));
   totalScore+=winScore;
-  if(totalScore>best){ best=totalScore; localStorage.setItem('insanityMartBestTotal',best); }
+  if(totalScore>best){ best=totalScore; writeSave(BEST_SCORE_KEY,best); }
   if(winCopBonus>0) sfx.escape(); else sfx.win();
   for(let i=0;i<70;i++) particles.push({x:player.x,y:player.y,vx:(Math.random()-0.5)*6,vy:-Math.random()*7-1,t:0,dur:1.6,color:['#ffd23b','#ff5f5f','#7dff8a','#5f9eff'][i%4],size:0.1+Math.random()*0.15});
   addText(player.x,player.y-1.5,winCopBonus>0?'ESCAPED THE COPS!':'SHOPPING COMPLETE!','#7dff8a');
@@ -631,11 +649,21 @@ function endScreen(won,score,shot,copBonus){
     '<div class="statline">Total points: <b>'+totalScore+'</b> &nbsp;·&nbsp; Best total: <b>'+best+'</b></div>'+
     '<div class="statline">Level: <b>'+level+'</b> &middot; Next: <b>'+upcomingLevel+'</b></div>'+
     '<button id="againBtn">'+(won?'NEXT LEVEL':'TRY AGAIN')+' &mdash; LEVEL '+upcomingLevel+'</button>'+
+    ' <button id="saveScoreBtn">SAVE RUN</button>'+
+    '<p id="saveScoreStatus" class="statline" role="status" hidden></p>'+
     '<p class="hint">'+(won?'Press R or click to advance &mdash; more shoppers, a little faster.':level>1?'Press R or click to go back one level.':'Press R or click to retry level 1.')+'</p>'+
     '</div>';
   overlay.style.display='flex';
-  InsanityLeaderboard.mount(document.querySelector('#overlay .panel'), {score:totalScore,level});
   document.getElementById('againBtn').onclick=()=>{ audio(); nextLevel(); };
+  document.getElementById('saveScoreBtn').onclick=()=>{
+    const saved=writeSave(SAVED_RUN_KEY,{totalScore,level:upcomingLevel,character:selectedCharacter});
+    const status=document.getElementById('saveScoreStatus');
+    status.textContent=saved
+      ? 'Run saved on this browser. Continue from level '+upcomingLevel+' on the start screen.'
+      : 'Could not save the run. Browser storage is unavailable.';
+    status.hidden=false;
+  };
+  window.InsanityLeaderboard?.mount(document.querySelector('#overlay .panel'), {score:totalScore,level});
 }
 
 /* ============================== STATIC LAYER ============================== */
@@ -707,7 +735,28 @@ addEventListener('keydown',e=>{
   if(k==='r'&&state!=='menu'&&!e.repeat){ if(state==='won'||state==='lost') nextLevel(); else { resetGame(); state='playing'; overlay.style.display='none'; } }
 });
 addEventListener('keyup',e=>{ keys[e.key.toLowerCase()]=false; });
-startBtn.onclick=()=>{ audio(); level=1; totalScore=0; resetGame(); state='playing'; overlay.style.display='none'; };
+function startRun(startLevel,score){
+  audio(); level=startLevel; totalScore=score;
+  resetGame(); state='playing'; overlay.style.display='none';
+}
+startBtn.onclick=()=>startRun(1,0);
+const menuBest=document.getElementById('menuBest');
+if(best>0){
+  menuBest.textContent='Best total: '+best;
+  menuBest.hidden=false;
+}
+const savedRun=readSave(SAVED_RUN_KEY);
+if(savedRun&&Number.isSafeInteger(savedRun.totalScore)&&savedRun.totalScore>=0
+    &&Number.isSafeInteger(savedRun.level)&&savedRun.level>=1
+    &&['player','player-2'].includes(savedRun.character)){
+  const continueBtn=document.getElementById('continueBtn');
+  continueBtn.textContent='CONTINUE — LEVEL '+savedRun.level+' ('+savedRun.totalScore+' PTS)';
+  continueBtn.hidden=false;
+  continueBtn.onclick=()=>{
+    document.querySelector('input[name="character"][value="'+savedRun.character+'"]').checked=true;
+    startRun(savedRun.level,savedRun.totalScore);
+  };
+}
 
 function fit(){
   const s=Math.min(innerWidth/W, innerHeight/H);
