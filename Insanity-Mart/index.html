@@ -29,7 +29,6 @@
   .character input{accent-color:#ffd23b;}
   .character-preview{display:inline-block;width:56px;height:56px;background-size:224px 224px;image-rendering:pixelated;}
   .hint{color:#6f8294;font-size:13px;margin-top:12px;}
-
   .overlay{overflow:auto;padding:16px;box-sizing:border-box;}
   .panel{max-height:90vh;overflow:auto;box-sizing:border-box;}
   #leaderboard table{width:100%;border-collapse:collapse;margin-top:12px;font-size:16px;}
@@ -40,7 +39,7 @@
 </style>
 </head>
 <body>
-<div id="wrap"><canvas id="cv" width="1440" height="960"></canvas></div>
+<div id="wrap"><canvas id="cv" width="1408" height="832"></canvas></div>
 
 <div id="overlay" class="overlay">
   <div class="panel">
@@ -75,9 +74,12 @@
 <script>
 'use strict';
 /* ============================== CONFIG ============================== */
-const TILE=16, SCALE=3, TW=TILE*SCALE, COLS=30, ROWS=20;
-const W=COLS*TW, H=ROWS*TW;
+const TILE=16, SCALE=4, TW=TILE*SCALE, COLS=30, ROWS=20;
+const MAP_W=COLS*TW, MAP_H=ROWS*TW;   /* full store in pixels */
+const VIEW_TW=22, VIEW_TH=13;         /* camera viewport in tiles (zoomed in) */
+const W=VIEW_TW*TW, H=VIEW_TH*TW;     /* canvas size */
 const cv=document.getElementById('cv');
+cv.width=W; cv.height=H;
 const ctx=cv.getContext('2d');
 ctx.imageSmoothingEnabled=false;
 
@@ -587,7 +589,9 @@ function resetGame(){
       spr:characterSprite('shopper-'+(i%8),makeCharSprites(NPC_PALS[i%NPC_PALS.length])),
       state:'wander',blockT:0,unwedgeT:0,
       guardSlot:null,home:null,guardBlocking:false,spin:0,downT:0,stunT:0,
-      seekTarget:'player',targetSlot:null,angryT:0
+      seekTarget:'player',targetSlot:null,angryT:0,
+      avoidT:0,avoidX:0,avoidY:0,
+      path:null,pathI:0,pathCd:0
     });
   }
   /* 4 guard npcs for 4 random list items */
@@ -667,7 +671,7 @@ function endScreen(won,score,shot,copBonus){
 }
 
 /* ============================== STATIC LAYER ============================== */
-const staticLayer=document.createElement('canvas'); staticLayer.width=W; staticLayer.height=H;
+const staticLayer=document.createElement('canvas'); staticLayer.width=MAP_W; staticLayer.height=MAP_H;
 (function drawStatic(){
   const g=staticLayer.getContext('2d');
   /* floor */
@@ -709,8 +713,8 @@ const staticLayer=document.createElement('canvas'); staticLayer.width=W; staticL
   }));
   /* subtle grid lines */
   g.strokeStyle='rgba(0,0,0,0.06)'; g.lineWidth=1;
-  for(let x=0;x<=COLS;x++){ g.beginPath(); g.moveTo(x*TW+0.5,0); g.lineTo(x*TW+0.5,H); g.stroke(); }
-  for(let y=0;y<=ROWS;y++){ g.beginPath(); g.moveTo(0,y*TW+0.5); g.lineTo(W,y*TW+0.5); g.stroke(); }
+  for(let x=0;x<=COLS;x++){ g.beginPath(); g.moveTo(x*TW+0.5,0); g.lineTo(x*TW+0.5,MAP_H); g.stroke(); }
+  for(let y=0;y<=ROWS;y++){ g.beginPath(); g.moveTo(0,y*TW+0.5); g.lineTo(MAP_W,y*TW+0.5); g.stroke(); }
 })();
 
 /* vignette */
@@ -866,8 +870,19 @@ function update(dt){
         case 'seek':{
           n.blockT=0;
           const tgt=n.seekTarget==='item'&&n.targetSlot?{x:n.targetSlot.c+0.5,y:n.targetSlot.r+0.5}:{x:player.x,y:player.y};
-          const dx=tgt.x-n.x, dy=tgt.y-n.y, d=Math.hypot(dx,dy)||1;
-          n.vx=dx/d*3.4; n.vy=dy/d*3.4;
+          const d=Math.hypot(tgt.x-n.x,tgt.y-n.y)||1;
+          /* pathfind through the aisles so they don't grind against shelves */
+          n.pathCd-=dt;
+          if(n.pathCd<=0){ n.pathCd=0.3; n.path=findPath(n.x,n.y,tgt.x,tgt.y); n.pathI=0; }
+          if(n.path&&n.path.length){
+            const t=n.path[Math.min(n.pathI,n.path.length-1)];
+            const wx=(t%COLS)+0.5, wy=((t/COLS)|0)+0.5;
+            const dx=wx-n.x, dy=wy-n.y, dd=Math.hypot(dx,dy)||1;
+            n.vx=dx/dd*3.4; n.vy=dy/dd*3.4;
+            if(dd<0.3) n.pathI++;
+          } else {
+            n.vx=(tgt.x-n.x)/d*3.4; n.vy=(tgt.y-n.y)/d*3.4;
+          }
           if(n.seekTarget==='item'){
             const li=listItems.find(l=>l.slot===n.targetSlot);
             if(!li||li.taken){ n.state='wander'; n.stateT=0; break; }
@@ -881,7 +896,7 @@ function update(dt){
           /* stand in front of the player */
           const tx=player.x+player.dir.x*0.75, ty=player.y+player.dir.y*0.75;
           const dx=tx-n.x, dy=ty-n.y, d=Math.hypot(dx,dy)||1;
-          n.vx=dx/d*3.0; n.vy=dy/d*3.0;
+          if(d>0.2){ n.vx=dx/d*3.0; n.vy=dy/d*3.0; } else { n.vx=0; n.vy=0; }
           if(dp>3.2){ n.state='wander'; n.stateT=0; }
           break;
         case 'guard':{
@@ -905,30 +920,54 @@ function update(dt){
           if(n.blockT<=0||(li&&li.taken)||dp>8){ n.state=(n.home?'guard':'wander'); n.stateT=0; break; }
           const px=n.guardSlot.c+0.5, py=n.guardSlot.r+0.5;
           const dx=px-n.x, dy=py-n.y, d=Math.hypot(dx,dy)||1;
-          n.vx=dx/d*3.0; n.vy=dy/d*3.0;
+          if(d>0.2){ n.vx=dx/d*3.0; n.vy=dy/d*3.0; } else { n.vx=0; n.vy=0; }
           break;
         }
       }
     }
 
-    /* unwedge: stuck against wall */
-    const px=n.x, py=n.y;
-    moveCircle(n,n.vx*dt*levelSpeed(),n.vy*dt*levelSpeed());
-    if(Math.hypot(n.x-px,n.y-py)<dt*0.4){ n.unwedgeT+=dt; if(n.unwedgeT>0.5){ n.state='wander'; n.stateT=0; n.vx=0; n.vy=0; n.unwedgeT=0; } }
-    else n.unwedgeT=0;
+    /* anti-stuck: brief sideways slide around obstacles (keeps seek/block states stable) */
+    if(n.avoidT>0){ n.avoidT-=dt; n.vx=n.avoidX*2.6; n.vy=n.avoidY*2.6; }
 
-    /* face dir */
-    if(Math.abs(n.vx)>Math.abs(n.vy)) n.dir= n.vx>0?'right':'left';
-    else n.dir= n.vy>0?'down':'up';
+    /* move, then detect being blocked */
+    const px=n.x, py=n.y;
+    const ivx=n.vx, ivy=n.vy;
+    moveCircle(n,n.vx*dt*levelSpeed(),n.vy*dt*levelSpeed());
+    const moved=Math.hypot(n.x-px,n.y-py)>=dt*0.4;
+    if(!moved){
+      n.vx=0; n.vy=0;   /* stop so walk anim doesn't play in place */
+      if(ivx||ivy){     /* it WANTED to move but couldn't — genuinely wedged */
+        n.unwedgeT+=dt;
+        if(n.unwedgeT>0.5){
+          n.unwedgeT=0;
+          if(n.state==='seek'||n.state==='block'||n.state==='guardBlock'){
+            /* slide sideways around whatever is in the way — no state flicker */
+            n.avoidT=0.6;
+            if(Math.abs(ivx)>Math.abs(ivy)){ n.avoidX=0; n.avoidY=Math.random()<0.5?-1:1; }
+            else { n.avoidX=Math.random()<0.5?-1:1; n.avoidY=0; }
+          } else { n.state='wander'; n.stateT=0; n.avoidT=0; }
+        }
+      } else n.unwedgeT=0;   /* intentionally idle (blocker on its spot) — not wedged */
+    } else n.unwedgeT=0;
+
+    /* face dir — only when actually moving, so blocked shoppers don't snap-flicker */
+    if(moved){
+      if(Math.abs(n.vx)>Math.abs(n.vy)) n.dir= n.vx>0?'right':'left';
+      else n.dir= n.vy>0?'down':'up';
+    }
   });
 
-  /* npc separation */
+  /* npc separation (and keep them out of the shelves) */
   for(let i=0;i<npcs.length;i++)for(let j=i+1;j<npcs.length;j++){
     const a=npcs[i], b=npcs[j];
     if(a.state==='down'||b.state==='down') continue;
     const dx=b.x-a.x, dy=b.y-a.y, d=Math.hypot(dx,dy);
-    if(d<0.5&&d>0.001){ const push=(0.5-d)/2; a.x-=dx/d*push; a.y-=dy/d*push; b.x+=dx/d*push; b.y+=dy/d*push; }
+    if(d<0.5){
+      if(d>0.001){ const push=(0.5-d)/2; a.x-=dx/d*push; a.y-=dy/d*push; b.x+=dx/d*push; b.y+=dy/d*push; }
+      else { a.x+=(Math.random()-0.5)*0.2; a.y+=(Math.random()-0.5)*0.2; b.x+=(Math.random()-0.5)*0.2; b.y+=(Math.random()-0.5)*0.2; }
+    }
   }
+  npcs.forEach(n=>{ if(n.state!=='down'&&n.state!=='stunned') unstick(n); });
 
   /* ----- blocking & insanity ----- */
   let contact=false;
@@ -1014,8 +1053,11 @@ function update(dt){
 }
 function respawn(n){
   const rows=[2,4,5,7,8,10,11,13,14,16,17];
-  const y=rows[Math.floor(Math.random()*rows.length)];
-  n.x=3+Math.random()*24; n.y=y; n.state='wander'; n.stateT=0; n.spin=0; n.downT=0; n.angryT=0;
+  let x,y,tries=0;
+  do{ y=rows[Math.floor(Math.random()*rows.length)]; x=3+Math.random()*24; tries++; }
+  while(dist({x,y},player)<5&&tries<20);
+  n.x=x; n.y=y; n.state='wander'; n.stateT=0; n.spin=0; n.downT=0; n.angryT=0; n.avoidT=0;
+  puff(x,y,6,'#cfe0ee');
 }
 
 /* ============================== POLICE ============================== */
@@ -1160,8 +1202,12 @@ function pickSpr(e){ return e.spr[(e.dir==='up'||e.dir==='down'?'b':'f')+ (e.dir
 
 function draw(){
   ctx.imageSmoothingEnabled=false;
-  /* shake */
   ctx.save();
+  /* camera: follow the player, clamped to the store bounds */
+  const camX=Math.max(VIEW_TW/2,Math.min(COLS-VIEW_TW/2,player.x));
+  const camY=Math.max(VIEW_TH/2,Math.min(ROWS-VIEW_TH/2,player.y));
+  ctx.translate(W/2-camX*TW, H/2-camY*TW);
+  /* shake */
   if(shakeMag>0){ ctx.translate((Math.random()-0.5)*shakeMag*14,(Math.random()-0.5)*shakeMag*14); }
 
   ctx.drawImage(staticLayer,0,0);
@@ -1257,22 +1303,14 @@ function draw(){
   drawList.sort((a,b)=>a.y-b.y);
   drawList.forEach(d=>d.fn());
 
-  /* police lasers & warnings */
+  /* police lasers (world space) */
   if(copsCalled&&(state==='playing'||state==='rage')){
-    /* laser sights from officers that are currently aiming */
     police.forEach(o=>{
       if(o.down||o.aimT<=0) return;
       const pulse=0.5+0.5*Math.sin(time*30);
       ctx.strokeStyle=(usesTasers()?'rgba(80,210,255,':'rgba(255,40,40,')+(0.45+pulse*0.4)+')'; ctx.lineWidth=2;
       ctx.beginPath(); ctx.moveTo(o.x*TW,o.y*TW-TW*0.5); ctx.lineTo(player.x*TW,player.y*TW-TW*0.5); ctx.stroke();
     });
-    /* flashing cop lights */
-    const f=Math.floor(time*4)%2;
-    ctx.fillStyle=f?'rgba(40,40,190,0.09)':'rgba(190,40,40,0.09)'; ctx.fillRect(0,0,W,H);
-  }
-  /* death flash after being shot */
-  if(state==='police'){
-    ctx.fillStyle=(usesTasers()?'rgba(90,210,255,':'rgba(255,60,40,')+(0.4*(1-policeT/1.8))+')'; ctx.fillRect(0,0,W,H);
   }
 
   /* Electric bolts remain connected during the takedown. */
@@ -1334,6 +1372,24 @@ function draw(){
     }
   }
 
+  /* particles (world space) */
+  particles.forEach(p=>{
+    ctx.globalAlpha=Math.max(0,1-p.t/p.dur);
+    ctx.fillStyle=p.color;
+    ctx.fillRect(p.x*TW-p.size*TW/2,p.y*TW-p.size*TW/2,p.size*TW,p.size*TW);
+    ctx.globalAlpha=1;
+  });
+  /* floating texts (world space) */
+  texts.forEach(t=>{
+    ctx.globalAlpha=Math.max(0,1-t.t/t.dur);
+    ctx.fillStyle=t.color; ctx.font='bold 16px monospace'; ctx.textAlign='center';
+    ctx.fillText(t.txt,t.x*TW,t.y*TW-t.t*22);
+    ctx.globalAlpha=1;
+  });
+
+  ctx.restore();
+
+  /* ===== screen-space overlays ===== */
   /* HUD */
   drawHUD();
 
@@ -1358,23 +1414,18 @@ function draw(){
     ctx.fillStyle='rgba(140,0,0,'+a+')'; ctx.fillRect(0,0,W,H);
   }
 
-  /* particles */
-  particles.forEach(p=>{
-    ctx.globalAlpha=Math.max(0,1-p.t/p.dur);
-    ctx.fillStyle=p.color;
-    ctx.fillRect(p.x*TW-p.size*TW/2,p.y*TW-p.size*TW/2,p.size*TW,p.size*TW);
-    ctx.globalAlpha=1;
-  });
-  /* floating texts */
-  texts.forEach(t=>{
-    ctx.globalAlpha=Math.max(0,1-t.t/t.dur);
-    ctx.fillStyle=t.color; ctx.font='bold 16px monospace'; ctx.textAlign='center';
-    ctx.fillText(t.txt,t.x*TW,t.y*TW-t.t*22);
-    ctx.globalAlpha=1;
-  });
+  /* flashing cop lights */
+  if(copsCalled&&(state==='playing'||state==='rage')){
+    const f=Math.floor(time*4)%2;
+    ctx.fillStyle=f?'rgba(40,40,190,0.09)':'rgba(190,40,40,0.09)'; ctx.fillRect(0,0,W,H);
+  }
+
+  /* death flash after being shot */
+  if(state==='police'){
+    ctx.fillStyle=(usesTasers()?'rgba(90,210,255,':'rgba(255,60,40,')+(0.4*(1-policeT/1.8))+')'; ctx.fillRect(0,0,W,H);
+  }
 
   ctx.drawImage(vig,0,0);
-  ctx.restore();
 }
 
 function drawHUD(){
